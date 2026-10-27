@@ -1,0 +1,49 @@
+name: Quality gate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run repository quality checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f package.json ]]; then
+            echo "Planning-only repository: no application package yet."
+            echo "Build and tests will be required once package.json exists."
+            exit 0
+          fi
+          if [[ ! -f package-lock.json ]]; then
+            echo "::error::package-lock.json is required for reproducible installs."
+            exit 1
+          fi
+          npm ci --no-audit --no-fund
+          node - <<'NODE'
+          const p = require('./package.json');
+          for (const script of ['test', 'build']) {
+            if (!p.scripts || !p.scripts[script]) {
+              console.error('Required npm script missing: ' + script);
+              process.exitCode = 1;
+            }
+          }
+          NODE
+          npm test
+          npm run build
