@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071321">
+  <meta name="description" content="Enter the Cosmic Heroes of Steel Museum and explore the machines that carried humanity beyond Earth.">
+  <title>Cosmic Heroes of Steel Museum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/styles.css">
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
+  </script>
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <main>
+    <section class="entrance" id="entrance" aria-labelledby="museum-title">
+      <div class="curtain curtain-left" aria-hidden="true"></div>
+      <div class="curtain curtain-right" aria-hidden="true"></div>
+      <div class="entrance-glow" aria-hidden="true"></div>
+      <div class="entrance-content">
+        <div class="museum-emblem" aria-hidden="true">
+          <svg viewBox="0 0 120 120" role="img">
+            <circle cx="60" cy="60" r="43" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".75"/>
+            <ellipse cx="60" cy="60" rx="53" ry="19" fill="none" stroke="currentColor" stroke-width="1.3" transform="rotate(-28 60 60)"/>
+            <circle cx="96" cy="35" r="4" fill="#c58b55"/>
+            <path d="M48 47 70 47 76 57 72 68 46 68 42 58Z" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M49 68 42 82M69 68 78 82M45 57 33 64M73 57 86 64M53 47 53 38M65 47 65 38" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="59" cy="57" r="5" fill="currentColor"/>
+          </svg>
+        </div>
+        <p class="eyebrow">A DIGITAL MUSEUM OF EXPLORATION</p>
+        <h1 id="museum-title">COSMIC HEROES <span>OF STEEL MUSEUM</span></h1>
+        <p class="entrance-copy">Every machine has a story. Every journey leaves a legacy.</p>
+        <div class="entrance-actions">
+          <button class="button button-primary" id="enter-button">Enter the museum <span aria-hidden="true">↗</span></button>
+          <button class="button button-quiet" id="skip-button">Skip intro</button>
+        </div>
+        <button class="audio-control" id="welcome-audio" aria-pressed="false">▶ Play welcome narration</button>
+        <p class="audio-transcript" id="audio-transcript">“Welcome to the Cosmic Heroes of Steel Museum. Here, we celebrate the machines that carried humanity's curiosity beyond Earth.”</p>
+      </div>
+      <p class="entrance-footer">HUMAN CURIOSITY · ENGINEERED TO EXPLORE</p>
+    </section>
+
+    <section class="museum hidden" id="museum" aria-label="Museum exploration">
+      <header class="museum-header">
+        <a class="brand" href="#top" id="brand-home">
+          <span class="brand-mark">✳</span>
+          <span>COSMIC HEROES <small>OF STEEL MUSEUM</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-link active" data-view="solar">Solar system</button>
+          <button class="nav-link" data-view="collection">The collection</button>
+        </nav>
+        <button class="header-enter" id="replay-intro">Museum entrance ↗</button>
+      </header>
+
+      <section class="view active-view" id="solar-view">
+        <div class="section-heading">
+          <div><p class="eyebrow">THE EXPLORATION HALL</p><h2>Choose your destination.</h2></div>
+          <p class="section-note">A guided journey through the places our machines have explored.</p>
+        </div>
+        <div class="universe-layout">
+          <div class="universe-frame">
+            <div class="universe-label">SOLAR SYSTEM <span>ILLUSTRATIVE · NOT TO SCALE</span></div>
+            <div id="solar-canvas" aria-label="Interactive three-dimensional solar system"></div>
+            <div class="canvas-hint">Drag to orbit · Scroll to zoom · Select a world</div>
+            <div class="canvas-fallback hidden" id="canvas-fallback">Your browser could not start the 3D view. Choose a destination below to continue.</div>
+          </div>
+          <aside class="destination-panel">
+            <p class="eyebrow">DESTINATIONS</p>
+            <div id="destination-list" class="destination-list">
+              <button class="destination active" data-destination="moon"><span class="destination-number">01</span><span><strong>The Moon</strong><small>Human footsteps & robotic pioneers</small></span><span>↗</span></button>
+              <button class="destination" data-destination="mars"><span class="destination-number">02</span><span><strong>Mars</strong><small>Our neighbouring world</small></span><span>↗</span></button>
+              <button class="destination" data-destination="deep-space"><span class="destination-number">03</span><span><strong>Deep Space</strong><small>Journeys beyond the planets</small></span><span>↗</span></button>
+            </div>
+            <div class="destination-detail" id="destination-detail">
+              <span class="detail-kicker">DESTINATION 01 / MOON</span>
+              <h3>The Moon</h3>
+              <p>Explore the machines that helped humanity reach and travel across another world.</p>
+              <button class="text-action" id="explore-destination">Explore destination <span>→</span></button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view hidden" id="collection-view">
+        <div class="section-heading">
+          <div><p class="eyebrow">THE MUSEUM COLLECTION</p><h2>Machines with a legacy.</h2></div>
+          <p class="section-note">Six remarkable explorers. Each one built to answer a different question.</p>
+        </div>
+        <div class="collection-grid" id="collection-grid"></div>
+      </section>
+
+      <section class="destination-view hidden" id="destination-view">
+        <button class="back-link" id="back-to-solar">← Back to Solar System</button>
+        <div class="destination-hero">
+          <p class="eyebrow" id="destination-eyebrow">DESTINATION / MOON</p>
+          <h2 id="destination-title">The Moon</h2>
+          <p id="destination-description"></p>
+        </div>
+        <div class="mission-grid" id="mission-grid"></div>
+      </section>
+
+      <footer class="museum-footer"><span>COSMIC HEROES OF STEEL MUSEUM</span><span>CELEBRATING THE MACHINES OF EXPLORATION</span></footer>
+    </section>
+  </main>
+</body>
+</html>
