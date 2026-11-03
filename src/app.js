@@ -136,7 +136,7 @@ function addRings(item){
 function addMoon(){
  const earth=planets.get("earth");const moonPivot=new THREE.Group();earth.sphere.add(moonPivot);
  const moon=new THREE.Mesh(new THREE.SphereGeometry(.18,32,24),new THREE.MeshStandardMaterial({color:0xbab8b1,roughness:1}));moon.position.set(1.35,0,0);moonPivot.add(moon);
- textureLoader.load(textureBase+"2k_moon.jpg",t=>{moon.material.map=t;t.colorSpace=THREE.SRGBColorSpace;moon.material.needsUpdate=true;},undefined,()=>{});
+ textureLoader.load("2k_moon.jpg",t=>{t.colorSpace=THREE.SRGBColorSpace;moon.material.map=t;moon.material.needsUpdate=true;},undefined,error=>{console.error("Failed to load Moon texture:",error);});
  earth.moonPivot=moonPivot;
 }
 function addAsteroidBelt(){
