@@ -16,7 +16,14 @@ const planets=new Map(), clock=new THREE.Clock();
 let target=new THREE.Vector3(0,0,0), cameraGoal=null, focusGoal=null, pointerDown=null;
 const textureLoader=new THREE.TextureLoader();
 textureLoader.setCrossOrigin("anonymous");
-const textureBase="https://www.solarsystemscope.com/textures/download/";
+textureLoader.setPath("https://www.solarsystemscope.com/textures/download/");
+let textureTotal=0,textureLoaded=0,textureFailed=0;
+function updateTextureStatus(){
+ const el=$("#texture-status");if(!el)return;
+ if(textureLoaded+textureFailed<textureTotal){el.textContent="LOADING PLANET SURFACES · "+(textureLoaded+textureFailed)+"/"+textureTotal;el.classList.remove("is-error");}
+ else if(textureFailed){el.textContent="SURFACE MAPS · "+textureLoaded+" LOADED · "+textureFailed+" FAILED";el.classList.add("is-error");}
+ else{el.textContent="PLANET SURFACE MAPS LOADED";el.classList.remove("is-error");}
+}
 const planetData=[
  {name:"Mercury",key:"mercury",radius:.38,distance:7.2,texture:"2k_mercury.jpg",color:0x9b9188,rotation:.0008},
  {name:"Venus",key:"venus",radius:.62,distance:10.1,texture:"2k_venus_surface.jpg",color:0xc99b62,rotation:.00035},
@@ -68,8 +75,8 @@ function initUniverse(){
   planetData.forEach((data,index)=>{
    const pivot=new THREE.Group();scene.add(pivot);
    const orbit=new THREE.Mesh(new THREE.RingGeometry(data.distance-.012,data.distance+.012,256),new THREE.MeshBasicMaterial({color:0x7b91a9,transparent:true,opacity:.16,side:THREE.DoubleSide}));orbit.rotation.x=-Math.PI/2;scene.add(orbit);
-   const material=new THREE.MeshStandardMaterial({color:data.color,roughness:.94,metalness:0});
-   const sphere=new THREE.Mesh(new THREE.SphereGeometry(data.radius,64,48),material);sphere.position.x=data.distance;sphere.userData.planet=data.key;pivot.add(sphere);
+   const material=new THREE.MeshStandardMaterial({color:data.color,roughness:.92,metalness:0});
+   const sphere=new THREE.Mesh(new THREE.SphereGeometry(data.radius,96,64),material);sphere.position.x=data.distance;sphere.userData.planet=data.key;pivot.add(sphere);
    const label=makeLabel(data.name);label.position.set(data.distance,data.radius+1.1,0);pivot.add(label);
    const item={...data,pivot,sphere,angle:index*.31,cloud:null};planets.set(data.key,item);
    if(data.rings)addRings(item);
@@ -93,9 +100,33 @@ function initUniverse(){
  }catch(err){console.error("Universe renderer failed",err);$("#canvas-fallback").classList.remove("hidden");}
 }
 function loadPlanetTexture(item){
- textureLoader.load(textureBase+item.texture,tex=>{tex.colorSpace=THREE.SRGBColorSpace;item.sphere.material.map=tex;item.sphere.material.color.set(0xffffff);item.sphere.material.needsUpdate=true;},undefined,()=>{});
+ textureTotal++;
+ textureLoader.load(item.texture,tex=>{
+  tex.colorSpace=THREE.SRGBColorSpace;
+  tex.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
+  tex.generateMipmaps=true;
+  tex.minFilter=THREE.LinearMipmapLinearFilter;
+  tex.magFilter=THREE.LinearFilter;
+  item.sphere.material.map=tex;
+  item.sphere.material.color.set(0xffffff);
+  item.sphere.material.needsUpdate=true;
+  textureLoaded++;
+  updateTextureStatus();
+ },undefined,error=>{
+  textureFailed++;
+  console.error("Failed to load surface map for "+item.name+": "+item.texture,error);
+  updateTextureStatus();
+ });
 }
-function loadClouds(item,file){textureLoader.load(textureBase+file,tex=>{tex.colorSpace=THREE.SRGBColorSpace;const cloud=new THREE.Mesh(new THREE.SphereGeometry(item.radius*1.012,48,36),new THREE.MeshStandardMaterial({map:tex,transparent:true,opacity:.36,depthWrite:false}));item.sphere.add(cloud);item.cloud=cloud;},undefined,()=>{});}
+function loadClouds(item,file){
+ textureTotal++;
+ textureLoader.load(file,tex=>{
+  tex.colorSpace=THREE.SRGBColorSpace;
+  tex.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
+  const cloud=new THREE.Mesh(new THREE.SphereGeometry(item.radius*1.018,96,64),new THREE.MeshStandardMaterial({map:tex,transparent:true,opacity:.48,depthWrite:false,roughness:1}));
+  item.sphere.add(cloud);item.cloud=cloud;textureLoaded++;updateTextureStatus();
+ },undefined,error=>{textureFailed++;console.error("Failed to load Earth cloud map:",file,error);updateTextureStatus();});
+}
 function addAtmosphere(mesh,radius,color,opacity){const shell=new THREE.Mesh(new THREE.SphereGeometry(radius*1.09,48,36),new THREE.MeshBasicMaterial({color,transparent:true,opacity,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false}));mesh.add(shell);}
 function addRings(item){
  const inner=item.key==="saturn"?item.radius*1.32:item.radius*1.35,outer=item.key==="saturn"?item.radius*2.25:item.radius*1.8;
