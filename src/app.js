@@ -60,22 +60,15 @@ function initUniverse(){
   renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.7));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;
   host.appendChild(renderer.domElement);resize();
   scene.add(new THREE.AmbientLight(0x8194b8,.28));
-  const sunlight=new THREE.PointLight(0xffe1b4,520,260,1.18);sunlight.position.set(0,0,0);scene.add(sunlight);\n  const fillLight=new THREE.HemisphereLight(0x819ac7,0x080b12,.12);scene.add(fillLight);
-  const sun=new THREE.Mesh(new THREE.SphereGeometry(2.9,96,72),new THREE.ShaderMaterial({
-   uniforms:{uTime:{value:0}},
-   vertexShader:`varying vec3 vNormal; varying vec3 vPosition; void main(){vNormal=normalize(normalMatrix*normal);vPosition=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-   fragmentShader:`uniform float uTime; varying vec3 vNormal; varying vec3 vPosition;
-    float hash(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}
-    float noise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.0-2.0);return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
-    void main(){float n=noise(normalize(vPosition)*8.0+vec3(0.0,uTime*.12,0.0));float cells=noise(normalize(vPosition)*22.0-vec3(uTime*.08));vec3 hot=vec3(1.0,.88,.56);vec3 orange=vec3(1.0,.34,.07);vec3 col=mix(orange,hot,smoothstep(.18,.82,n*.72+cells*.28));float limb=pow(max(dot(normalize(vNormal),vec3(0.0,0.0,1.0)),0.0),.35);gl_FragColor=vec4(col*(.82+.38*n)*(.72+.28*limb),1.0);}`
-  }));scene.add(sun);
-  const sunGlow=new THREE.Mesh(new THREE.SphereGeometry(3.55,64,48),new THREE.MeshBasicMaterial({color:0xff8c35,transparent:true,opacity:.18,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false}));scene.add(sunGlow);
+  const sunlight=new THREE.PointLight(0xffd5a0,260,220,1.45);scene.add(sunlight);
+  const sun=new THREE.Mesh(new THREE.SphereGeometry(2.9,64,48),new THREE.MeshBasicMaterial({color:0xffbd63}));scene.add(sun);
+  const sunGlow=new THREE.Mesh(new THREE.SphereGeometry(3.45,48,32),new THREE.MeshBasicMaterial({color:0xff8c35,transparent:true,opacity:.12,side:THREE.BackSide}));scene.add(sunGlow);
   const corona=new THREE.Sprite(new THREE.SpriteMaterial({map:radialTexture("#fff0c0","#ff8b35"),color:0xffffff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));corona.scale.set(17,17,1);scene.add(corona);
   createStars();createNebulaDust();
   planetData.forEach((data,index)=>{
    const pivot=new THREE.Group();scene.add(pivot);
    const orbit=new THREE.Mesh(new THREE.RingGeometry(data.distance-.012,data.distance+.012,256),new THREE.MeshBasicMaterial({color:0x7b91a9,transparent:true,opacity:.16,side:THREE.DoubleSide}));orbit.rotation.x=-Math.PI/2;scene.add(orbit);
-   const material=new THREE.MeshPhysicalMaterial({color:data.color,roughness:data.key==="earth"?.82:.96,metalness:0,clearcoat:data.key==="earth"?.16:0,clearcoatRoughness:.8});
+   const material=new THREE.MeshStandardMaterial({color:data.color,roughness:.94,metalness:0});
    const sphere=new THREE.Mesh(new THREE.SphereGeometry(data.radius,64,48),material);sphere.position.x=data.distance;sphere.userData.planet=data.key;pivot.add(sphere);
    const label=makeLabel(data.name);label.position.set(data.distance,data.radius+1.1,0);pivot.add(label);
    const item={...data,pivot,sphere,angle:index*.31,cloud:null};planets.set(data.key,item);
@@ -102,20 +95,8 @@ function initUniverse(){
 function loadPlanetTexture(item){
  textureLoader.load(textureBase+item.texture,tex=>{tex.colorSpace=THREE.SRGBColorSpace;item.sphere.material.map=tex;item.sphere.material.color.set(0xffffff);item.sphere.material.needsUpdate=true;},undefined,()=>{});
 }
-function loadClouds(item,file){textureLoader.load(textureBase+file,tex=>{
- tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);
- const cloud=new THREE.Mesh(new THREE.SphereGeometry(item.radius*1.018,72,48),new THREE.MeshStandardMaterial({map:tex,transparent:true,opacity:.48,depthWrite:false,roughness:1}));
- item.sphere.add(cloud);item.cloud=cloud;
-},undefined,error=>console.warn("Earth cloud texture could not load",error));}
-function addAtmosphere(mesh,radius,color,opacity){
- const shell=new THREE.Mesh(new THREE.SphereGeometry(radius*1.075,72,48),new THREE.ShaderMaterial({
-  uniforms:{glowColor:{value:new THREE.Color(color)},glowOpacity:{value:opacity}},
-  vertexShader:`varying vec3 vNormal;varying vec3 vView;void main(){vec4 mvPosition=modelViewMatrix*vec4(position,1.0);vNormal=normalize(normalMatrix*normal);vView=normalize(-mvPosition.xyz);gl_Position=projectionMatrix*mvPosition;}`,
-  fragmentShader:`uniform vec3 glowColor;uniform float glowOpacity;varying vec3 vNormal;varying vec3 vView;void main(){float fresnel=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),2.2);gl_FragColor=vec4(glowColor, fresnel*glowOpacity);}`,
-  transparent:true,blending:THREE.AdditiveBlending,side:THREE.BackSide,depthWrite:false
- }));
- mesh.add(shell);
-}
+function loadClouds(item,file){textureLoader.load(textureBase+file,tex=>{tex.colorSpace=THREE.SRGBColorSpace;const cloud=new THREE.Mesh(new THREE.SphereGeometry(item.radius*1.012,48,36),new THREE.MeshStandardMaterial({map:tex,transparent:true,opacity:.36,depthWrite:false}));item.sphere.add(cloud);item.cloud=cloud;},undefined,()=>{});}
+function addAtmosphere(mesh,radius,color,opacity){const shell=new THREE.Mesh(new THREE.SphereGeometry(radius*1.09,48,36),new THREE.MeshBasicMaterial({color,transparent:true,opacity,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false}));mesh.add(shell);}
 function addRings(item){
  const inner=item.key==="saturn"?item.radius*1.32:item.radius*1.35,outer=item.key==="saturn"?item.radius*2.25:item.radius*1.8;
  const ring=new THREE.Mesh(new THREE.RingGeometry(inner,outer,160),new THREE.MeshStandardMaterial({color:item.key==="saturn"?0xc8b18d:0x8daeb5,side:THREE.DoubleSide,transparent:true,opacity:item.key==="saturn"?.82:.34,roughness:1}));
@@ -165,7 +146,7 @@ $("#reset-camera").addEventListener("click",resetCamera);
 $("#close-popover").addEventListener("click",()=>$("#planet-popover").classList.add("hidden"));
 function animate(){
  raf=requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);
- planets.forEach(p=>{p.angle+=dt*(.035/(p.distance*.13));p.pivot.rotation.y=p.angle;p.sphere.rotation.y+=p.rotation*dt*60;if(p.cloud)p.cloud.rotation.y+=.00042*dt*60;if(p.moonPivot)p.moonPivot.rotation.y+=.003*dt*60;});\n const sunMesh=scene.children.find(o=>o.material?.uniforms?.uTime);if(sunMesh)sunMesh.material.uniforms.uTime.value+=dt;
+ planets.forEach(p=>{p.angle+=dt*(.035/(p.distance*.13));p.pivot.rotation.y=p.angle;p.sphere.rotation.y+=p.rotation*dt*60;if(p.cloud)p.cloud.rotation.y+=.0003*dt*60;if(p.moonPivot)p.moonPivot.rotation.y+=.003*dt*60;});
  if(cameraGoal){camera.position.lerp(cameraGoal,.06);if(camera.position.distanceTo(cameraGoal)<.08)cameraGoal=null;}
  controls?.update();renderer.render(scene,camera);
 }
