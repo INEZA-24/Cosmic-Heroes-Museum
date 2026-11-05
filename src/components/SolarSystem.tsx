@@ -42,6 +42,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
   ({ onOpenDestination }, ref) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [selectedPlanetKey, setSelectedPlanetKey] = useState<string | null>(null);
+    const [destinationMenuOpen, setDestinationMenuOpen] = useState(false);
     const [isOrbitPaused, setIsOrbitPaused] = useState(false);
     const [webglError, setWebglError] = useState(false);
 
@@ -63,6 +64,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
 
     const focusPlanet = (key: string) => {
       setSelectedPlanetKey(key);
+      setDestinationMenuOpen(false);
       controlsRef.current?.focus(key);
     };
 
@@ -996,11 +998,21 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
             <h2>Our Solar System</h2>
           </div>
           <div className="scale-note">
-            ILLUSTRATIVE DISTANCES · REALISTIC PLANETARY TEXTURES & AXIAL TILTS
+            ILLUSTRATIVE DISTANCES · ENHANCED PLANETARY SURFACES
           </div>
         </div>
 
-        <div className="planet-selector-bar" role="navigation" aria-label="Solar System Destinations">
+        <div className="planet-directory">
+          <button
+            className="planet-directory-toggle"
+            aria-controls="planet-selector-list"
+            aria-expanded={destinationMenuOpen}
+            onClick={() => setDestinationMenuOpen(open => !open)}
+          >
+            {destinationMenuOpen ? 'Close destinations −' : 'Browse destinations +'}
+          </button>
+          {destinationMenuOpen && (
+          <div id="planet-selector-list" className="planet-selector-bar" role="navigation" aria-label="Solar System destinations">
           <button
             className={`planet-chip ${selectedPlanetKey === 'sun' ? 'active' : ''}`}
             onClick={() => focusPlanet('sun')}
@@ -1034,6 +1046,8 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
           >
             Deep Space
           </button>
+          </div>
+          )}
         </div>
 
         <div className="hero-bottomline">
@@ -1073,28 +1087,20 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
         </div>
 
         {webglError && (
-          <div className="canvas-fallback" id="canvas-fallback">
+          <div className="canvas-fallback" id="canvas-fallback" role="alert">
             <div>
               <p style={{ marginBottom: 16 }}>
-                Your browser could not start the 3D universe. Please select a destination below:
+                The interactive Solar System could not initialize. You can still explore all six museum exhibits:
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
-                {planetDataList.map((p) => (
-                  <button
-                    key={p.key}
-                    className="button button-quiet"
-                    style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                    onClick={() => focusPlanet(p.key)}
-                  >
-                    {p.name}
-                  </button>
-                ))}
-                <button
-                  className="button button-quiet"
-                  style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                  onClick={() => focusPlanet('moon')}
-                >
-                  The Moon
+                <button className="button button-quiet" onClick={() => onOpenDestination('moon')}>
+                  Moon exhibitions
+                </button>
+                <button className="button button-quiet" onClick={() => onOpenDestination('mars')}>
+                  Mars exhibitions
+                </button>
+                <button className="button button-quiet" onClick={() => onOpenDestination('deep-space')}>
+                  Deep Space exhibition
                 </button>
               </div>
             </div>
