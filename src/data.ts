@@ -305,7 +305,8 @@ export const destinationNames: Record<DestinationArea, string> = {
 export const destinationDescriptions: Record<DestinationArea, string> = {
   moon: "Explore the machines that helped humanity reach, touch down, and travel across our celestial satellite.",
   mars: "Meet the robotic explorers, rovers, and geophysics landers that surveyed the Red Planet.",
-  "deep-space": "Follow humanity's pioneering probe whose journey carried it beyond the planets into interstellar space."
+  "deep-space": "Follow humanity's pioneering probe whose journey carried it beyond the planets into interstellar space.",
+  saturn: "Discover Cassini–Huygens, the orbiter that revealed Saturn's secrets and the Huygens probe that landed on Titan."
 };
 
 export const planetDescriptions: Record<string, string> = {
