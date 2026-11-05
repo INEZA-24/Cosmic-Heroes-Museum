@@ -20,6 +20,9 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
   const controlsRef = useRef<OrbitControls | null>(null);
   const homeDistanceRef = useRef(4);
   const [status, setStatus] = useState<ViewerStatus>('checking');
+  const [autoRotate, setAutoRotate] = useState(false);
+  const autoRotateRef = useRef(false);
+  autoRotateRef.current = autoRotate;
 
   useEffect(() => {
     const host = containerRef.current;
@@ -71,7 +74,7 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
         model.position.sub(center);
         scene.add(model);
 
-        const distance = Math.max(1, (size / (2 * Math.tan(THREE.MathUtils.degToRad(45 / 2)))) * 1.7);
+        const distance = Math.max(1, (size / (2 * Math.tan(THREE.MathUtils.degToRad(45 / 2)))) * 1.1);
         homeDistanceRef.current = distance;
         camera.position.set(distance * 0.65, distance * 0.38, distance * 0.85);
         camera.near = Math.max(0.001, size / 1000);
@@ -89,7 +92,8 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
         controlsRef.current = controls;
         controls.enableDamping = true;
         controls.enablePan = false;
-        controls.minDistance = distance * 0.25;
+        controls.minDistance = distance * 0.18;
+        controls.autoRotateSpeed = 1.1;
         controls.maxDistance = distance * 4;
 
         const resize = () => {
@@ -107,7 +111,7 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
 
         const renderFrame = () => {
           animationFrame = requestAnimationFrame(renderFrame);
-          controls?.update();
+          if (controls) { controls.autoRotate = autoRotateRef.current; controls.update(); }
           if (renderer && scene) renderer.render(scene, camera);
         };
         renderFrame();
@@ -142,6 +146,22 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
     };
   }, [machineId]);
 
+  const zoom = (factor: number) => {
+    const camera = cameraRef.current;
+    const controls = controlsRef.current;
+    if (!camera || !controls) return;
+    const target = controls.target;
+    const offset = camera.position.clone().sub(target);
+    const distance = THREE.MathUtils.clamp(
+      offset.length() * factor,
+      controls.minDistance,
+      controls.maxDistance,
+    );
+    offset.setLength(distance);
+    camera.position.copy(target).add(offset);
+    controls.update();
+  };
+
   const resetView = () => {
     const camera = cameraRef.current;
     const controls = controlsRef.current;
@@ -168,7 +188,12 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
       {status === 'ready' && (
         <div className="viewer-controls">
           <span>DRAG TO ROTATE · SCROLL OR PINCH TO ZOOM</span>
-          <button type="button" onClick={resetView} aria-label={'Reset ' + machineName + ' 3D view'}>Reset view ↺</button>
+          <div className="viewer-button-group">
+            <button type="button" onClick={() => zoom(0.8)} aria-label="Zoom in on model">Zoom +</button>
+            <button type="button" onClick={() => zoom(1.25)} aria-label="Zoom out from model">Zoom −</button>
+            <button type="button" aria-pressed={autoRotate} onClick={() => setAutoRotate(v => !v)}>{autoRotate ? 'Stop rotation' : 'Auto rotate'}</button>
+            <button type="button" onClick={resetView} aria-label={'Reset ' + machineName + ' 3D view'}>Reset ↺</button>
+          </div>
         </div>
       )}
     </div>
