@@ -1,5 +1,7 @@
 import { type FC } from 'react';
 import { machines } from '../data';
+import { MachineModelViewer } from './MachineModelViewer';
+import { MachineVisualGallery } from './MachineVisualGallery';
 
 interface ExhibitViewProps {
   machineId: string;
@@ -44,6 +46,18 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
           </div>
         )}
       </header>
+
+      {/* Machine first: real 3D structure, without blocking exhibition content if no model has been uploaded. */}
+      <section className="exhibit-model-section" aria-label={machine.name + ' 3D model'}>
+        <div className="section-label">
+          <p className="eyebrow">THE ENGINEERING HALL · INTERACTIVE 3D</p>
+          <h2>Examine the machine.</h2>
+          <p className="viewer-introduction">Rotate, zoom and inspect the structure of {machine.name} from every side.</p>
+        </div>
+        <MachineModelViewer machineId={machine.id} machineName={machine.name} />
+      </section>
+
+      <MachineVisualGallery machineId={machine.id} machineName={machine.name} />
 
       {/* Key Quick Facts Grid */}
       <section className="exhibit-facts-grid" aria-label="Key Machine Specifications">
