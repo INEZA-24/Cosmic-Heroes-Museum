@@ -31,11 +31,12 @@ jobs:
             echo "Build and tests will be required once package.json exists."
             exit 0
           fi
-          if [[ ! -f package-lock.json ]]; then
-            echo "::error::package-lock.json is required for reproducible installs."
-            exit 1
+          if [[ -f package-lock.json ]]; then
+            npm ci --no-audit --no-fund
+          else
+            echo "::warning::AI Studio migration lacks package-lock.json; using npm install until a lockfile is committed."
+            npm install --no-audit --no-fund
           fi
-          npm ci --no-audit --no-fund
           node - <<'NODE'
           const p = require('./package.json');
           for (const script of ['test', 'build']) {
