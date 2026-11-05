@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 
-const ids = ['surveyor-3', 'apollo-15-lrv', 'sojourner', 'opportunity', 'insight', 'pioneer-10'];
+const ids = ['cassini-huygens', 'apollo-15-lrv', 'sojourner', 'opportunity', 'insight', 'pioneer-10'];
 
 test('all six machine galleries are valid, future-ready and isolated', () => {
   for (const id of ids) {
