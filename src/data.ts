@@ -2,54 +2,6 @@ import { Machine, PlanetData, DestinationArea } from './types';
 
 export const machines: Machine[] = [
   {
-    id: "surveyor-3",
-    name: "Surveyor 3",
-    place: "Moon",
-    area: "moon",
-    kind: "Robotic lunar lander",
-    year: "1967",
-    summary: "A pioneering robotic lander that examined the lunar surface and returned close-up television images.",
-    location: "Ocean of Storms (Oceanus Procellarum)",
-    detail: "Surveyor 3 landed in the Ocean of Storms. Apollo 12 astronauts later visited the spacecraft.",
-    launchDate: "April 17, 1967",
-    landingDate: "April 20, 1967",
-    status: "Lunar Surface Artifact · Revisited by Apollo 12 in Nov 1969",
-    engineering: [
-      "Articulated soil mechanics surface sampler scoop arm extending up to 1.5 meters",
-      "Surveyor television camera with 360-degree azimuth and elevation scanning mirror",
-      "Three landing legs with crushable honeycomb aluminum footpads and strain gauges",
-      "Solid-propellant retro-rocket motor and three throttleable liquid vernier engines"
-    ],
-    story: [
-      {
-        title: "The Mission & Human Purpose",
-        content: "Before humanity could take 'one giant leap' onto the Moon, NASA engineers needed to answer a critical, terrifying question: would a heavy spacecraft sink into a deep layer of soft lunar dust like quicksand? Surveyor 3 was sent to touch down softly on the Moon, dig into the surface with a mechanical claw, and send back real-time visual proof of the terrain's bearing strength."
-      },
-      {
-        title: "Engineering & The Three Bounces",
-        content: "As Surveyor 3 descended into the Ocean of Storms inside a gentle crater, its radar detected highly reflective rocks, causing the vernier descent engines to remain firing after touchdown. The robotic craft bounced three times across the slope before safely settling. Its remote-controlled arm dug four trenches up to 17.5 cm deep, proving the lunar regolith was compact enough to support Apollo astronauts and the Lunar Module."
-      },
-      {
-        title: "The Apollo 12 Human Revisit",
-        content: "In November 1969, thirty-one months after Surveyor 3 landed, Apollo 12 astronauts Pete Conrad and Alan Bean executed a pinpoint landing of the Lunar Module Intrepid just 160 meters away. Walking down into the crater, they inspected the machine, took photographs, and removed its television camera and optical tubing to bring them back to Earth. It remains the only robotic probe ever revisited by human explorers on another celestial world."
-      }
-    ],
-    discoveries: [
-      "Demonstrated that lunar soil can support 0.7 kg/cm² bearing pressure—verifying the safety of Apollo human landings",
-      "Returned 6,315 high-resolution television photographs of the lunar surface and crater walls",
-      "Conducted the first mechanical trenching and bearing-strength experiments on extraterrestrial soil",
-      "Provided crucial data on long-term solar radiation and micrometeoroid exposure when its parts were recovered by Apollo 12"
-    ],
-    timeline: [
-      { date: "1967-04-17", title: "Launch", desc: "Launched atop an Atlas-Centaur rocket from Cape Canaveral Air Force Station." },
-      { date: "1967-04-20", title: "Lunar Touchdown", desc: "Soft-landed inside a crater in Oceanus Procellarum after three gentle bounces." },
-      { date: "1967-05-04", title: "Lunar Night", desc: "Completed prime surface television and mechanical trenching operations before sunset." },
-      { date: "1969-11-19", title: "Apollo 12 Rendezvous", desc: "Astronauts Pete Conrad and Alan Bean walked to Surveyor 3 and retrieved its camera for return to Earth." }
-    ],
-    sourceUrl: "https://nssdc.gsfc.nasa.gov/planetary/lunar/surveyor.html",
-    sourceLabel: "NASA Space Science Data Coordinated Archive — Surveyor 3"
-  },
-  {
     id: "apollo-15-lrv",
     name: "Apollo 15 Lunar Roving Vehicle",
     place: "Moon",
@@ -291,19 +243,70 @@ export const machines: Machine[] = [
     ],
     sourceUrl: "https://science.nasa.gov/mission/pioneer-10/",
     sourceLabel: "NASA Science Mission Directorate — Pioneer 10 Deep Space"
-  }
+  },
+  {
+    id: "cassini-huygens",
+    name: "Cassini–Huygens",
+    place: "Saturn / Titan",
+    area: "saturn",
+    kind: "Saturn orbiter and Titan atmospheric probe",
+    year: "1997",
+    summary: "A landmark international mission that explored Saturn, its rings and icy moons and delivered the Huygens probe to Titan.",
+    location: "Saturn system / Titan",
+    detail: "Cassini was the first spacecraft to orbit Saturn. ESA's Huygens probe descended through Titan's atmosphere and landed on its surface in January 2005.",
+    launchDate: "October 15, 1997",
+    landingDate: "July 1, 2004 (Saturn arrival); January 14, 2005 (Titan landing)",
+    status: "Mission complete · Cassini entered Saturn's atmosphere on September 15, 2017",
+    engineering: [
+      "Cassini orbiter carried 12 science instruments to investigate Saturn and its moons",
+      "A large high-gain dish antenna communicated across the vast distance to Earth",
+      "Radioisotope thermoelectric generators supplied electrical power far from the Sun",
+      "ESA's Huygens carried six science instruments for its parachute descent through Titan's atmosphere"
+    ],
+    story: [
+      {
+        title: "The journey to the ringed planet",
+        content: "Launched in 1997 as a collaboration among NASA, ESA and the Italian Space Agency, Cassini–Huygens used gravity assists to reach Saturn after nearly seven years in space. It entered Saturn orbit in 2004 to begin the first sustained exploration of the giant planet and its moons."
+      },
+      {
+        title: "Huygens touches a distant world",
+        content: "The European Huygens probe separated from Cassini and descended through Titan's hazy atmosphere in January 2005. Its images and measurements revealed river-like channels and a surprising, complex world shaped by liquid hydrocarbons."
+      },
+      {
+        title: "The Grand Finale",
+        content: "For more than a decade Cassini explored Saturn's rings, storms and moons. With fuel running low, engineers directed it into Saturn's atmosphere in September 2017 to reduce the chance of contaminating potentially habitable moons."
+      }
+    ],
+    discoveries: [
+      "Huygens completed the first landing on a moon of the outer solar system",
+      "Cassini revealed jets of water ice and vapor erupting from Saturn's moon Enceladus",
+      "The mission studied Titan's methane and ethane lakes and seas",
+      "Long-term observations transformed scientific understanding of Saturn's rings, atmosphere and moons"
+    ],
+    timeline: [
+      { date: "1997-10-15", title: "Launch", desc: "Cassini and the Huygens probe launched together from Cape Canaveral." },
+      { date: "2004-07-01", title: "Saturn arrival", desc: "Cassini entered orbit around Saturn (July 1 UTC; June 30 in California)." },
+      { date: "2005-01-14", title: "Huygens lands on Titan", desc: "The probe returned images and measurements during descent and from Titan's surface." },
+      { date: "2017-09-15", title: "Grand Finale", desc: "Cassini transmitted data as it entered Saturn's atmosphere, ending the mission." }
+    ],
+    sourceUrl: "https://science.nasa.gov/mission/cassini/",
+    sourceLabel: "NASA Science — Cassini-Huygens"
+  },
+
 ];
 
 export const destinationNames: Record<DestinationArea, string> = {
   moon: "The Moon",
   mars: "Mars",
-  "deep-space": "Deep Space"
+  "deep-space": "Deep Space",
+  saturn: "Saturn & Titan"
 };
 
 export const destinationDescriptions: Record<DestinationArea, string> = {
   moon: "Explore the machines that helped humanity reach, touch down, and travel across our celestial satellite.",
   mars: "Meet the robotic explorers, rovers, and geophysics landers that surveyed the Red Planet.",
-  "deep-space": "Follow humanity's pioneering probe whose journey carried it beyond the planets into interstellar space."
+  "deep-space": "Follow humanity's pioneering probe whose journey carried it beyond the planets into interstellar space.",
+  saturn: "Discover Cassini–Huygens, the orbiter that revealed Saturn's secrets and the Huygens probe that landed on Titan."
 };
 
 export const planetDescriptions: Record<string, string> = {

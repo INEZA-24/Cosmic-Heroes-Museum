@@ -953,23 +953,28 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
       selectedPlanetKey === 'moon' ||
       selectedPlanetKey === 'mars' ||
       selectedPlanetKey === 'jupiter' ||
+      selectedPlanetKey === 'saturn' ||
       selectedPlanetKey === 'deep-space';
 
     const getMissionTargetArea = (key: string): DestinationArea => {
       if (key === 'earth' || key === 'moon') return 'moon';
       if (key === 'mars') return 'mars';
+      if (key === 'saturn') return 'saturn';
       return 'deep-space';
     };
 
     const getActionLabel = (key: string): string => {
       if (key === 'earth' || key === 'moon') {
-        return 'Explore Moon Missions (Surveyor 3 & Apollo 15 LRV) ↗';
+        return "Explore Apollo 15 lunar rover ↗";
       }
       if (key === 'mars') {
         return 'Explore Mars Missions (Sojourner, Opportunity, InSight) ↗';
       }
       if (key === 'jupiter') {
         return 'Explore Jupiter Encounter (Pioneer 10) ↗';
+      }
+      if (key === 'saturn') {
+        return 'Explore Saturn & Titan (Cassini–Huygens) ↗';
       }
       return 'Explore Deep Space Missions (Pioneer 10) ↗';
     };
@@ -978,6 +983,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
       if (key === 'earth') return 'SOLAR SYSTEM / CRADLE OF EXPLORATION';
       if (key === 'moon') return 'SOLAR SYSTEM / LUNAR PROVING GROUND';
       if (key === 'mars') return 'SOLAR SYSTEM / THE RED PLANET';
+      if (key === 'saturn') return 'SOLAR SYSTEM / SATURN & TITAN';
       if (key === 'jupiter' || key === 'deep-space') return 'SOLAR SYSTEM / DEEP SPACE FRONTIER';
       return 'SOLAR SYSTEM / PLANETARY PROFILE';
     };

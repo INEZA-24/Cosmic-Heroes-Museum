@@ -26,3 +26,12 @@
 /* Approved standalone museum emblem; falls back to the original star until uploaded */
 .brand-emblem-image.brand-mark{display:block;width:34px;height:34px;object-fit:contain;flex-shrink:0}
 .brand-emblem-image.museum-emblem{display:block;width:clamp(86px,11vw,128px);height:clamp(86px,11vw,128px);object-fit:contain;margin:0 auto 20px}
+
+
+/* M6: museum crest and interactive spacecraft inspector */
+.brand-emblem-image.museum-emblem{width:clamp(132px,18vw,210px);height:auto;max-height:170px;filter:drop-shadow(0 10px 26px rgba(255,255,255,.10))}
+.brand-emblem-image.brand-mark{width:44px;height:38px;object-fit:contain}
+.viewer-button-group{pointer-events:auto;display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}
+.viewer-button-group button{font-size:.63rem}
+.viewer-button-group button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold);background:#14263b}
+@media(max-width:680px){.viewer-controls{flex-direction:column;align-items:stretch;gap:10px}.viewer-button-group{justify-content:space-between}.viewer-button-group button{font-size:.58rem;padding:8px 10px}}

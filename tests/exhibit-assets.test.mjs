@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 
-const ids = ['surveyor-3', 'apollo-15-lrv', 'sojourner', 'opportunity', 'insight', 'pioneer-10'];
+const ids = ['cassini-huygens', 'apollo-15-lrv', 'sojourner', 'opportunity', 'insight', 'pioneer-10'];
 
 test('all six machine galleries are valid, future-ready and isolated', () => {
   for (const id of ids) {
@@ -38,4 +38,16 @@ test('exhibition navigation retains collection, Moon, Mars and deep space', () =
   for (const view of ['solar', 'collection', 'destination', 'exhibit']) assert.ok(app.includes("'" + view + "'"));
   const data = readFileSync('src/data.ts', 'utf8');
   for (const id of ids) assert.ok(data.includes('id: "' + id + '"'), `Missing machine: ${id}`);
+});
+
+test('M6 uses Cassini at Saturn and displays the approved transparent emblem', () => {
+  const code = readFileSync('src/data.ts', 'utf8');
+  assert.match(code, /id: "cassini-huygens"/);
+  assert.match(code, /area: "saturn"/);
+  assert.doesNotMatch(code, /id: "surveyor-3"/);
+  const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
+  assert.match(solar, /Explore Saturn & Titan/);
+  assert.ok(existsSync('public/assets/branding/museum-emblem.svg'));
+  const brand = readFileSync('src/components/BrandEmblem.tsx', 'utf8');
+  assert.match(brand, /museum-emblem\.svg/);
 });

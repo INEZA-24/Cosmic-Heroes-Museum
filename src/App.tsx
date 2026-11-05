@@ -10,7 +10,7 @@ import { ExhibitView } from './components/ExhibitView';
 export const App: FC = () => {
   const [view, setView] = useState<ViewType>('entrance');
   const [selectedDestination, setSelectedDestination] = useState<DestinationArea>('moon');
-  const [selectedMachineId, setSelectedMachineId] = useState<string>('surveyor-3');
+  const [selectedMachineId, setSelectedMachineId] = useState<string>('apollo-15-lrv');
   const [previousView, setPreviousView] = useState<ViewType>('solar');
   const solarRef = useRef<SolarSystemHandle | null>(null);
 
