@@ -1,3 +1,4 @@
+import { BrandEmblem } from './BrandEmblem';
 import { useState, useEffect, useRef, type FC } from 'react';
 
 interface EntranceProps {
@@ -69,7 +70,7 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
       <div className="entrance-glow"></div>
 
       <div className="entrance-content">
-        <div className="museum-emblem" aria-hidden="true">✳</div>
+        <BrandEmblem className="museum-emblem" />
         <p className="eyebrow">A DIGITAL MUSEUM OF EXPLORATION</p>
         <h1 id="museum-title">
           COSMIC HEROES <span>OF STEEL MUSEUM</span>
