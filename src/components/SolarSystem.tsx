@@ -965,7 +965,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
 
     const getActionLabel = (key: string): string => {
       if (key === 'earth' || key === 'moon') {
-        return 'Explore Apollo 15's Moon rover ↗';
+        return "Explore Apollo 15 lunar rover ↗";
       }
       if (key === 'mars') {
         return 'Explore Mars Missions (Sojourner, Opportunity, InSight) ↗';
