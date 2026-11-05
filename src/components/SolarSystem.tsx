@@ -1087,28 +1087,20 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
         </div>
 
         {webglError && (
-          <div className="canvas-fallback" id="canvas-fallback">
+          <div className="canvas-fallback" id="canvas-fallback" role="alert">
             <div>
               <p style={{ marginBottom: 16 }}>
-                Your browser could not start the 3D universe. Please select a destination below:
+                The interactive Solar System could not initialize. You can still explore all six museum exhibits:
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
-                {planetDataList.map((p) => (
-                  <button
-                    key={p.key}
-                    className="button button-quiet"
-                    style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                    onClick={() => focusPlanet(p.key)}
-                  >
-                    {p.name}
-                  </button>
-                ))}
-                <button
-                  className="button button-quiet"
-                  style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                  onClick={() => focusPlanet('moon')}
-                >
-                  The Moon
+                <button className="button button-quiet" onClick={() => onOpenDestination('moon')}>
+                  Moon exhibitions
+                </button>
+                <button className="button button-quiet" onClick={() => onOpenDestination('mars')}>
+                  Mars exhibitions
+                </button>
+                <button className="button button-quiet" onClick={() => onOpenDestination('deep-space')}>
+                  Deep Space exhibition
                 </button>
               </div>
             </div>
