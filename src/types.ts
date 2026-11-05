@@ -13,7 +13,7 @@ export interface Machine {
   id: string;
   name: string;
   place: string;
-  area: 'moon' | 'mars' | 'deep-space';
+  area: 'moon' | 'mars' | 'deep-space' | 'saturn';
   kind: string;
   year: string;
   summary: string;
@@ -47,4 +47,4 @@ export interface PlanetData {
 
 export type ViewType = 'entrance' | 'solar' | 'collection' | 'destination' | 'exhibit';
 
-export type DestinationArea = 'moon' | 'mars' | 'deep-space';
+export type DestinationArea = 'moon' | 'mars' | 'deep-space' | 'saturn';
