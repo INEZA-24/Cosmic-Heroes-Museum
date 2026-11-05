@@ -1,3 +1,4 @@
+import { BrandEmblem } from './BrandEmblem';
 import { type FC, type MouseEvent } from 'react';
 import { ViewType } from '../types';
 
@@ -23,7 +24,7 @@ export const Header: FC<HeaderProps> = ({
   return (
     <header className="museum-header">
       <a className="brand" href="#top" id="brand-home" onClick={handleHomeClick}>
-        <span className="brand-mark">✳</span>
+        <BrandEmblem className="brand-mark" />
         <span>
           COSMIC HEROES <small>OF STEEL MUSEUM</small>
         </span>
