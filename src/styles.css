@@ -22,3 +22,7 @@
 .visual-gallery-item figcaption span{color:var(--muted);font-size:.67rem}
 .visual-gallery-item figcaption a{color:var(--gold);text-decoration:underline;font-size:.7rem}
 @media(max-width:680px){.visual-gallery-grid{grid-template-columns:1fr}.viewer-controls{align-items:flex-end}.viewer-controls span{font-size:.54rem;max-width:175px;line-height:1.6}.machine-viewer{min-height:340px}}
+
+/* Approved standalone museum emblem; falls back to the original star until uploaded */
+.brand-emblem-image.brand-mark{display:block;width:34px;height:34px;object-fit:contain;flex-shrink:0}
+.brand-emblem-image.museum-emblem{display:block;width:clamp(86px,11vw,128px);height:clamp(86px,11vw,128px);object-fit:contain;margin:0 auto 20px}
