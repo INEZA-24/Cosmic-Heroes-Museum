@@ -35,3 +35,19 @@
 .viewer-button-group button{font-size:.63rem}
 .viewer-button-group button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold);background:#14263b}
 @media(max-width:680px){.viewer-controls{flex-direction:column;align-items:stretch;gap:10px}.viewer-button-group{justify-content:space-between}.viewer-button-group button{font-size:.58rem;padding:8px 10px}}
+
+
+/* M7: bright, museum-grade inspection studio across all six GLB exhibits. */
+.machine-viewer{background:#fff;border-color:#dbe3ec;box-shadow:0 16px 40px rgba(10,31,50,.08)}
+.machine-viewer-canvas{background:#fff}
+.machine-viewer-placeholder{background:linear-gradient(145deg,#fff 0%,#f3f7fb 100%);color:#162739}
+.machine-viewer-placeholder strong{color:#162739}
+.machine-viewer-placeholder p{color:#526276}
+.machine-viewer-placeholder .viewer-symbol{color:#8a672f}
+.viewer-controls{color:#1f3045;text-shadow:none;font-weight:600;letter-spacing:.075em}
+.viewer-controls button,.viewer-button-group button{background:rgba(255,255,255,.97);color:#23364c;border:1px solid #b1bfce;border-radius:5px;box-shadow:0 2px 8px rgba(30,50,70,.12);text-shadow:none}
+.viewer-controls button:hover,.viewer-controls button:focus-visible{background:#eaf1f8;color:#132a42;border-color:#446c90}
+.viewer-button-group button[aria-pressed="true"]{color:#13314e;background:#dbeefa;border-color:#5d9ac4}
+.machine-viewer-placeholder .viewer-retry-button{pointer-events:auto;cursor:pointer;background:#143a56;color:#fff;padding:10px 15px;border:1px solid #286188;border-radius:5px;font:inherit}
+.machine-viewer-placeholder .viewer-retry-button:hover,.machine-viewer-placeholder .viewer-retry-button:focus-visible{background:#215779}
+@media(max-width:680px){.viewer-controls{font-size:.56rem}.viewer-button-group button{min-height:38px}}
