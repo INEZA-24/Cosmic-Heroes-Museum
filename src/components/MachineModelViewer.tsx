@@ -120,24 +120,24 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
         if (disposed || timedOut) return;
 
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xffffff);
+        scene.background = new THREE.Color(0xbac1c8);
         const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000);
         cameraRef.current = camera;
 
-        // Bright photo-studio lighting: illuminate metal, white panels and dark undersides
-        // without changing or replacing any of the original GLB materials.
-        scene.add(new THREE.HemisphereLight(0xffffff, 0xe2e7ed, 1.6));
-        scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-        const keyLight = new THREE.DirectionalLight(0xffffff, 2.7);
+        // Soft mid-gray photography studio: the backdrop separates white parts from
+        // the floor, while layered key/fill/rim lights reveal metal and dark panels.
+        scene.add(new THREE.HemisphereLight(0xffffff, 0x79838f, 1.45));
+        scene.add(new THREE.AmbientLight(0xffffff, 0.42));
+        const keyLight = new THREE.DirectionalLight(0xfff6ea, 2.55);
         keyLight.position.set(5, 9, 9);
         scene.add(keyLight);
-        const fillLight = new THREE.DirectionalLight(0xeaf2ff, 2.0);
+        const fillLight = new THREE.DirectionalLight(0xe3eeff, 1.7);
         fillLight.position.set(-8, 5, 4);
         scene.add(fillLight);
-        const rimLight = new THREE.DirectionalLight(0xffffff, 1.8);
+        const rimLight = new THREE.DirectionalLight(0xffffff, 1.9);
         rimLight.position.set(2, 6, -9);
         scene.add(rimLight);
-        const underLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        const underLight = new THREE.DirectionalLight(0xffffff, 0.65);
         underLight.position.set(1, -6, 3);
         scene.add(underLight);
 
@@ -174,8 +174,8 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.05;
-        renderer.setClearColor(0xffffff, 1);
+        renderer.toneMappingExposure = 0.95;
+        renderer.setClearColor(0xbac1c8, 1);
 
         // Direct lights alone make fully metallic glTF parts appear nearly black.
         // This generated studio environment gives reflective materials soft fill light.
@@ -194,7 +194,7 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
           const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
           for (const material of materials) {
             if (material instanceof THREE.MeshStandardMaterial) {
-              material.envMapIntensity = Math.max(1.2, material.envMapIntensity ?? 1);
+              material.envMapIntensity = Math.max(1.35, material.envMapIntensity ?? 1);
               material.needsUpdate = true;
             }
           }
@@ -321,7 +321,7 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
       )}
       {status === 'ready' && (
         <div className="viewer-controls">
-          <span>DRAG TO ROTATE · SCROLL OR PINCH TO ZOOM · BRIGHT STUDIO</span>
+          <span>DRAG TO ROTATE · SCROLL OR PINCH TO ZOOM · GRAY STUDIO</span>
           <div className="viewer-button-group">
             <button type="button" onClick={() => zoom(0.8)} aria-label="Zoom in on model">Zoom +</button>
             <button type="button" onClick={() => zoom(1.25)} aria-label="Zoom out from model">Zoom −</button>
