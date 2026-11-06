@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, openSync, readSync, closeSync, statSync } from 'node:fs';
 
 const ids = ['cassini-huygens', 'apollo-15-lrv', 'sojourner', 'opportunity', 'insight', 'pioneer-10'];
 
@@ -50,4 +50,42 @@ test('M6 uses Cassini at Saturn and displays the approved transparent emblem', (
   assert.ok(existsSync('public/assets/branding/museum-emblem.svg'));
   const brand = readFileSync('src/components/BrandEmblem.tsx', 'utf8');
   assert.match(brand, /museum-emblem\.svg/);
+});
+
+test('all six uploaded models are real GLB 2.0 binary files', () => {
+  for (const id of ids) {
+    const path = `public/assets/models/${id}/model.glb`;
+    assert.ok(existsSync(path), `Missing GLB for ${id}`);
+    const fd = openSync(path, 'r');
+    const header = Buffer.alloc(12);
+    try {
+      assert.equal(readSync(fd, header, 0, 12, 0), 12, `Truncated GLB: ${id}`);
+    } finally {
+      closeSync(fd);
+    }
+    assert.equal(header.toString('ascii', 0, 4), 'glTF', `Invalid GLB magic: ${id}`);
+    assert.equal(header.readUInt32LE(4), 2, `GLB version must be 2: ${id}`);
+    assert.equal(header.readUInt32LE(8), statSync(path).size, `Invalid GLB declared length: ${id}`);
+  }
+});
+
+test('model viewer uses neutral-gray studio lighting and visible download diagnostics', () => {
+  const code = readFileSync('src/components/MachineModelViewer.tsx', 'utf8');
+  assert.match(code, /RoomEnvironment/);
+  assert.match(code, /scene\.background = new THREE\.Color\(0xbac1c8\)/);
+  assert.match(code, /Loading 3D model/);
+  assert.match(code, /loader\.parseAsync\(/);
+  assert.match(code, /response\.body\?\.getReader\(\)/);
+  assert.match(code, /setLoadError/);
+  const style = readFileSync('src/styles.css', 'utf8');
+  assert.match(style, /M7: soft neutral-gray photography studio/);
+});
+
+test('NASA-compressed glTF models get Draco and Meshopt decoders', () => {
+  const code = readFileSync('src/components/MachineModelViewer.tsx', 'utf8');
+  assert.match(code, /import \{ DRACOLoader \}/);
+  assert.match(code, /import \{ MeshoptDecoder \}/);
+  assert.match(code, /loader\.setDRACOLoader\(draco\)/);
+  assert.match(code, /loader\.setMeshoptDecoder\(MeshoptDecoder\)/);
+  assert.match(code, /draco\?\.dispose\(\)/);
 });
