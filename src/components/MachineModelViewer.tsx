@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type FC } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
@@ -42,6 +44,7 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
     let resizeObserver: ResizeObserver | null = null;
     let animationFrame = 0;
     let environmentTexture: THREE.Texture | null = null;
+    let draco: DRACOLoader | null = null;
     let active = true;
     let timedOut = false;
     let loadTimer = 0;
@@ -116,7 +119,16 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
 
         setPhase('Preparing textures and engineering details…');
         setProgress(null);
-        const loaded = await new GLTFLoader().parseAsync(data, '/assets/models/' + machineId + '/');
+        // NASA's compact GLBs may rely on compressed geometry. A valid GLB header
+        // does not imply that a bare GLTFLoader can decode its extensions.
+        const loader = new GLTFLoader();
+        draco = new DRACOLoader();
+        // Pinned official Google Draco decoder release, fetched only by Draco models.
+        draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+        draco.setWorkerLimit(2);
+        loader.setDRACOLoader(draco);
+        loader.setMeshoptDecoder(MeshoptDecoder);
+        const loaded = await loader.parseAsync(data, '/assets/models/' + machineId + '/');
         if (disposed || timedOut) return;
 
         scene = new THREE.Scene();
@@ -245,7 +257,14 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
       } catch (error) {
         if (disposed || timedOut) return;
         console.error('3D exhibit failed to initialize:', machineId, error);
-        setLoadError(error instanceof Error ? error.message.slice(0, 160) : 'Unknown model-loading error');
+        const message = error instanceof Error ? error.message : 'Unknown model-loading error';
+        setLoadError(
+          /draco/i.test(message)
+            ? 'Compressed geometry could not be decoded. Please check the Draco connection and retry.'
+            : /meshopt/i.test(message)
+              ? 'Compressed geometry could not be decoded. Please retry on an updated browser.'
+              : message.slice(0, 160)
+        );
         setStatus('error');
       } finally {
         window.clearTimeout(loadTimer);
@@ -263,6 +282,7 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
       controls?.dispose();
       controlsRef.current = null;
       cameraRef.current = null;
+      draco?.dispose();
       environmentTexture?.dispose();
       renderer?.dispose();
       if (renderer && host.contains(renderer.domElement)) host.removeChild(renderer.domElement);
