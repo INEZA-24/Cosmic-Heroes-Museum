@@ -69,11 +69,14 @@ test('all six uploaded models are real GLB 2.0 binary files', () => {
   }
 });
 
-test('model viewer uses white studio lighting and visible network progress', () => {
+test('model viewer uses neutral-gray studio lighting and visible download diagnostics', () => {
   const code = readFileSync('src/components/MachineModelViewer.tsx', 'utf8');
   assert.match(code, /RoomEnvironment/);
-  assert.match(code, /scene\.background = new THREE\.Color\(0xffffff\)/);
+  assert.match(code, /scene\.background = new THREE\.Color\(0xbac1c8\)/);
   assert.match(code, /Loading 3D model/);
+  assert.match(code, /new GLTFLoader\(\)\.parseAsync/);
+  assert.match(code, /response\.body\?\.getReader\(\)/);
+  assert.match(code, /setLoadError/);
   const style = readFileSync('src/styles.css', 'utf8');
-  assert.match(style, /M7: bright, museum-grade inspection studio/);
+  assert.match(style, /M7: soft neutral-gray photography studio/);
 });
