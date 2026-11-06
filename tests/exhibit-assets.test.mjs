@@ -80,3 +80,12 @@ test('model viewer uses neutral-gray studio lighting and visible download diagno
   const style = readFileSync('src/styles.css', 'utf8');
   assert.match(style, /M7: soft neutral-gray photography studio/);
 });
+
+test('NASA-compressed glTF models get Draco and Meshopt decoders', () => {
+  const code = readFileSync('src/components/MachineModelViewer.tsx', 'utf8');
+  assert.match(code, /import \{ DRACOLoader \}/);
+  assert.match(code, /import \{ MeshoptDecoder \}/);
+  assert.match(code, /loader\.setDRACOLoader\(draco\)/);
+  assert.match(code, /loader\.setMeshoptDecoder\(MeshoptDecoder\)/);
+  assert.match(code, /draco\?\.dispose\(\)/);
+});
