@@ -11,6 +11,8 @@ interface MachineModelViewerProps {
   machineName: string;
 }
 
+const modelPathFor = (id: string) => '/assets/models/' + encodeURIComponent(id) + '/model.glb';
+
 /**
  * Looks for a single self-contained model in public/assets/models/<machineId>/model.glb.
  * A missing file is an ordinary museum state, not a broken exhibit.
@@ -23,6 +25,8 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
   const [status, setStatus] = useState<ViewerStatus>('checking');
   const [progress, setProgress] = useState<number | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [loadError, setLoadError] = useState('');
+  const [phase, setPhase] = useState('Downloading spacecraft model…');
   const [autoRotate, setAutoRotate] = useState(false);
   const autoRotateRef = useRef(false);
   autoRotateRef.current = autoRotate;
@@ -39,29 +43,81 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
     let animationFrame = 0;
     let environmentTexture: THREE.Texture | null = null;
     let active = true;
+    let timedOut = false;
+    let loadTimer = 0;
     const request = new AbortController();
-    const modelPath = '/assets/models/' + machineId + '/model.glb';
+    const modelPath = modelPathFor(machineId);
     setStatus('checking');
     setProgress(null);
+    setLoadError('');
+    setPhase('Connecting to exhibit archive…');
 
     const start = async () => {
       try {
-        // A missing static file sometimes returns the SPA's HTML instead of 404.
-        const response = await fetch(modelPath, { method: 'HEAD', signal: request.signal });
-        if (!response.ok || (response.headers.get('content-type') || '').includes('text/html')) {
+        // A single GET is more reliable than HEAD + GLTFLoader's second request:
+        // some CDNs/proxies handle HEAD differently, leaving the viewer spinning.
+        // Validate the actual GLB bytes before parsing so HTML/404 fallbacks are diagnosable.
+        loadTimer = window.setTimeout(() => {
+          timedOut = true;
+          request.abort();
+          if (!disposed) {
+            setLoadError('Loading exceeded 75 seconds. Check your connection, then retry.');
+            setStatus('error');
+          }
+        }, 75000);
+
+        setStatus('loading');
+        const response = await fetch(modelPath, { signal: request.signal, cache: 'default' });
+        if (response.status === 404 || (response.headers.get('content-type') || '').includes('text/html')) {
           if (!disposed) setStatus('missing');
           return;
         }
-        if (disposed) return;
-        setStatus('loading');
+        if (!response.ok) throw new Error('Model download returned HTTP ' + response.status);
 
-        const loaded = await new GLTFLoader().loadAsync(modelPath, (event) => {
-          if (!disposed && event.total > 0) {
-            const value = Math.min(99, Math.round(event.loaded * 100 / event.total));
-            setProgress(previous => previous === null || value >= previous + 5 ? value : previous);
+        const contentLength = Number(response.headers.get('content-length') || '0');
+        if (contentLength > 75 * 1024 * 1024) throw new Error('Model exceeds the 75 MB viewer safety limit');
+
+        const reader = response.body?.getReader();
+        let data: ArrayBuffer;
+        if (reader) {
+          const chunks: Uint8Array[] = [];
+          let received = 0;
+          setPhase('Downloading spacecraft model…');
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            if (!value) continue;
+            received += value.byteLength;
+            if (received > 75 * 1024 * 1024) {
+              await reader.cancel();
+              throw new Error('Model exceeds the 75 MB viewer safety limit');
+            }
+            chunks.push(value);
+            if (!disposed && !timedOut && contentLength > 0) {
+              setProgress(Math.min(100, Math.round(received / contentLength * 100)));
+            }
           }
-        });
-        if (disposed) return;
+          const bytes = new Uint8Array(received);
+          let offset = 0;
+          for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
+          data = bytes.buffer;
+        } else {
+          data = await response.arrayBuffer();
+        }
+        if (disposed || timedOut) return;
+
+        const header = new DataView(data);
+        if (data.byteLength < 12 ||
+            String.fromCharCode(...new Uint8Array(data, 0, 4)) !== 'glTF' ||
+            header.getUint32(4, true) !== 2 ||
+            header.getUint32(8, true) !== data.byteLength) {
+          throw new Error('The server did not return a valid GLB 2.0 file');
+        }
+
+        setPhase('Preparing textures and engineering details…');
+        setProgress(null);
+        const loaded = await new GLTFLoader().parseAsync(data, '/assets/models/' + machineId + '/');
+        if (disposed || timedOut) return;
 
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff);
@@ -70,42 +126,55 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
 
         // Bright photo-studio lighting: illuminate metal, white panels and dark undersides
         // without changing or replacing any of the original GLB materials.
-        scene.add(new THREE.HemisphereLight(0xffffff, 0xe2e7ed, 2.5));
-        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-        const keyLight = new THREE.DirectionalLight(0xffffff, 3.6);
+        scene.add(new THREE.HemisphereLight(0xffffff, 0xe2e7ed, 1.6));
+        scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+        const keyLight = new THREE.DirectionalLight(0xffffff, 2.7);
         keyLight.position.set(5, 9, 9);
         scene.add(keyLight);
-        const fillLight = new THREE.DirectionalLight(0xeaf2ff, 3.0);
+        const fillLight = new THREE.DirectionalLight(0xeaf2ff, 2.0);
         fillLight.position.set(-8, 5, 4);
         scene.add(fillLight);
-        const rimLight = new THREE.DirectionalLight(0xffffff, 2.4);
+        const rimLight = new THREE.DirectionalLight(0xffffff, 1.8);
         rimLight.position.set(2, 6, -9);
         scene.add(rimLight);
-        const underLight = new THREE.DirectionalLight(0xffffff, 1.25);
+        const underLight = new THREE.DirectionalLight(0xffffff, 0.8);
         underLight.position.set(1, -6, 3);
         scene.add(underLight);
 
         const model = loaded.scene;
+        // The GLBs come from different creators with dramatically different units.
+        // Normalize them to a consistent studio display size without altering originals.
+        const rawBounds = new THREE.Box3().setFromObject(model);
+        const rawSize = rawBounds.getSize(new THREE.Vector3());
+        const largestDimension = Math.max(rawSize.x, rawSize.y, rawSize.z);
+        if (!Number.isFinite(largestDimension) || largestDimension <= 0) {
+          throw new Error('This GLB has no visible geometry');
+        }
+        model.scale.multiplyScalar(3.6 / largestDimension);
+        model.updateMatrixWorld(true);
         const bounds = new THREE.Box3().setFromObject(model);
-        const extents = bounds.getSize(new THREE.Vector3());
-        const size = Math.max(extents.x, extents.y, extents.z);
-        if (!Number.isFinite(size) || size <= 0) throw new Error('Empty 3D model');
         const center = bounds.getCenter(new THREE.Vector3());
+        const radius = bounds.getBoundingSphere(new THREE.Sphere()).radius;
         model.position.sub(center);
+        model.updateMatrixWorld(true);
         scene.add(model);
 
-        const distance = Math.max(1, (size / (2 * Math.tan(THREE.MathUtils.degToRad(45 / 2)))) * 1.5);
+        const studioAspect = Math.max(0.4, host.clientWidth / Math.max(1, host.clientHeight));
+        const verticalHalfFov = THREE.MathUtils.degToRad(45 / 2);
+        const horizontalHalfFov = Math.atan(Math.tan(verticalHalfFov) * studioAspect);
+        const distance = Math.max(5, radius / Math.sin(Math.min(verticalHalfFov, horizontalHalfFov)) * 1.22);
         homeDistanceRef.current = distance;
-        camera.position.set(distance * 0.65, distance * 0.38, distance * 0.85);
-        camera.near = Math.max(0.001, size / 1000);
-        camera.far = Math.max(1000, size * 100);
+        camera.position.set(distance * 0.7, distance * 0.43, distance * 0.82);
+        camera.lookAt(0, 0, 0);
+        camera.near = 0.01;
+        camera.far = 300;
         camera.updateProjectionMatrix();
 
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.55;
+        renderer.toneMappingExposure = 1.05;
         renderer.setClearColor(0xffffff, 1);
 
         // Direct lights alone make fully metallic glTF parts appear nearly black.
@@ -125,7 +194,7 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
           const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
           for (const material of materials) {
             if (material instanceof THREE.MeshStandardMaterial) {
-              material.envMapIntensity = Math.max(1.8, material.envMapIntensity ?? 1);
+              material.envMapIntensity = Math.max(1.2, material.envMapIntensity ?? 1);
               material.needsUpdate = true;
             }
           }
@@ -134,6 +203,7 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
 
         controls = new OrbitControls(camera, renderer.domElement);
         controlsRef.current = controls;
+        controls.target.set(0, 0, 0);
         controls.enableDamping = true;
         controls.enablePan = false;
         controls.minDistance = distance * 0.18;
@@ -155,17 +225,30 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
 
         const renderFrame = () => {
           if (!active) return;
-          animationFrame = requestAnimationFrame(renderFrame);
-          if (controls) { controls.autoRotate = autoRotateRef.current; controls.update(); }
-          if (renderer && scene) renderer.render(scene, camera);
+          try {
+            if (controls) { controls.autoRotate = autoRotateRef.current; controls.update(); }
+            if (renderer && scene) renderer.render(scene, camera);
+            animationFrame = requestAnimationFrame(renderFrame);
+          } catch (error) {
+            active = false;
+            console.error('3D render failed:', machineId, error);
+            setLoadError('Your browser could not draw this model. Try reloading the exhibit.');
+            setStatus('error');
+          }
         };
+        // Don't hide the loading placeholder until an actual WebGL frame is drawn.
         renderFrame();
-        setProgress(null);
-        setStatus('ready');
+        if (active && !timedOut) {
+          setProgress(null);
+          setStatus('ready');
+        }
       } catch (error) {
-        if (disposed || request.signal.aborted) return;
+        if (disposed || timedOut) return;
         console.error('3D exhibit failed to initialize:', machineId, error);
+        setLoadError(error instanceof Error ? error.message.slice(0, 160) : 'Unknown model-loading error');
         setStatus('error');
+      } finally {
+        window.clearTimeout(loadTimer);
       }
     };
 
@@ -174,6 +257,7 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
       disposed = true;
       active = false;
       request.abort();
+      window.clearTimeout(loadTimer);
       cancelAnimationFrame(animationFrame);
       resizeObserver?.disconnect();
       controls?.dispose();
@@ -226,11 +310,12 @@ export const MachineModelViewer: FC<MachineModelViewerProps> = ({ machineId, mac
       {status !== 'ready' && (
         <div className="machine-viewer-placeholder" role="status">
           <span className="viewer-symbol" aria-hidden="true">✳</span>
-          <strong>{status === 'checking' || status === 'loading' ? (progress !== null ? `Loading 3D model… ${progress}%` : 'Preparing 3D model…') :
+          <strong>{status === 'checking' || status === 'loading' ? (progress !== null ? `Loading 3D model… ${progress}%` : phase) :
             status === 'missing' ? '3D model coming soon' : '3D preview unavailable'}</strong>
           <p>{status === 'missing' ? 'Our exhibition is ready for this machine\'s GLB file. The mission story and timeline are available below.' :
-            status === 'error' ? 'The model could not be displayed. Please check its file format and try again.' :
+            status === 'error' ? loadError || 'This model could not be displayed. Please try again.' :
             'Loading the engineering exhibit. Large detailed models can take a little longer.'}</p>
+          {status === 'error' && <a className="viewer-file-link" href={modelPathFor(machineId)} download={machineId + '.glb'}>Download model for troubleshooting</a>}
           {status === 'error' && <button type="button" className="viewer-retry-button" onClick={() => setReloadKey(key => key + 1)}>Try loading again ↻</button>}
         </div>
       )}
