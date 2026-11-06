@@ -74,7 +74,7 @@ test('model viewer uses neutral-gray studio lighting and visible download diagno
   assert.match(code, /RoomEnvironment/);
   assert.match(code, /scene\.background = new THREE\.Color\(0xbac1c8\)/);
   assert.match(code, /Loading 3D model/);
-  assert.match(code, /new GLTFLoader\(\)\.parseAsync/);
+  assert.match(code, /loader\.parseAsync\(/);
   assert.match(code, /response\.body\?\.getReader\(\)/);
   assert.match(code, /setLoadError/);
   const style = readFileSync('src/styles.css', 'utf8');
