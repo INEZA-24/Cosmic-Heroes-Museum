@@ -51,3 +51,51 @@
 .machine-viewer-placeholder .viewer-retry-button{pointer-events:auto;cursor:pointer;background:#143a56;color:#fff;padding:10px 15px;border:1px solid #286188;border-radius:5px;font:inherit}
 .machine-viewer-placeholder .viewer-retry-button:hover,.machine-viewer-placeholder .viewer-retry-button:focus-visible{background:#215779}
 @media(max-width:680px){.viewer-controls{font-size:.56rem}.viewer-button-group button{min-height:38px}}
+
+
+/* M8 cinematic mission entrance: 1 authentic NASA-backed hero per exhibit. */
+.exhibit-photo-hero{
+  width:100vw;min-height:clamp(450px,68vh,740px);
+  margin:0 0 58px calc(50% - 50vw);
+  padding:0;position:relative;isolation:isolate;overflow:hidden;
+  display:flex;align-items:flex-end;border:0;background:
+  radial-gradient(ellipse at 74% 35%,#394754 0%,#111e2b 64%,#040a12 100%);
+}
+.exhibit-hero-image{position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover;object-position:center 47%;z-index:-2;filter:saturate(.9) contrast(1.04)}
+.exhibit-hero-shade{position:absolute;inset:0;z-index:-1;background:
+  linear-gradient(90deg,rgba(3,8,18,.93) 0%,rgba(3,8,18,.74) 32%,rgba(3,8,18,.28) 70%,rgba(3,8,18,.22) 100%),
+  linear-gradient(0deg,rgba(2,7,13,.82) 0%,transparent 44%)}
+.exhibit-hero-content{width:min(1280px,100%);margin:0 auto;padding:
+  clamp(28px,5.4vw,88px);position:relative;color:#fff}
+.exhibit-photo-hero .eyebrow{color:#e6b570;letter-spacing:.22em;font-size:.7rem;margin-bottom:20px}
+.exhibit-hero-destination{font-size:.75rem;letter-spacing:.18em;font-weight:700;text-transform:uppercase;color:#dce5ef;margin:0 0 12px}
+.exhibit-hero-destination span{color:#e1a45c;padding:0 9px}
+.exhibit-photo-hero .exhibit-title{font:500 clamp(3rem,6.6vw,6rem)/1.06 "Playfair Display",Georgia,serif;
+  letter-spacing:-.025em;max-width:800px;margin:0 0 22px;text-shadow:0 3px 22px #050a1499}
+.exhibit-photo-hero .exhibit-lead{color:#f1f3f7;max-width:640px;font-size:clamp(.96rem,1.35vw,1.16rem);
+  line-height:1.72;margin:0 0 23px;text-shadow:0 2px 13px #0008}
+.exhibit-photo-hero .exhibit-status-pill{background:#0a1525b5;border-color:#fff5;max-width:680px;
+  color:#fff;margin:0 0 20px;letter-spacing:.09em}
+.exhibit-hero-actions{display:flex;align-items:center;gap:16px 30px;flex-wrap:wrap}
+.exhibit-hero-actions a{font-size:.74rem;letter-spacing:.04em}
+.exhibit-hero-cta{display:inline-flex;align-items:center;gap:13px;padding:12px 17px;
+  background:#d99b54;color:#081321;text-decoration:none;font-weight:800}
+.exhibit-hero-cta:hover,.exhibit-hero-cta:focus-visible{background:#f1ba79}
+.exhibit-hero-source{color:#e6e7eb;text-decoration:underline;text-underline-offset:4px}
+.exhibit-hero-source:hover{color:#fff}
+.exhibit-hero-caption{margin:18px 0 0;color:#dce3ec;font-size:.62rem;
+  line-height:1.55;letter-spacing:.035em;max-width:620px;text-shadow:0 1px 6px #000b}
+#exhibit-model{scroll-margin-top:36px}
+@media(max-width:720px){
+ .exhibit-photo-hero{min-height:580px;margin-bottom:40px}
+ .exhibit-hero-image{object-position:65% center}
+ .exhibit-hero-shade{background:
+   linear-gradient(0deg,rgba(2,8,17,.98) 0%,rgba(2,8,17,.80) 42%,rgba(2,8,17,.18) 100%),
+   linear-gradient(90deg,rgba(2,8,17,.32),transparent)}
+ .exhibit-hero-content{padding:40px 22px}
+ .exhibit-photo-hero .exhibit-title{font-size:clamp(2.8rem,10vw,4.2rem)}
+ .exhibit-photo-hero .exhibit-lead{font-size:.94rem}
+ .exhibit-hero-caption{font-size:.57rem}
+}
+@media(prefers-reduced-motion:reduce){.exhibit-hero-cta{scroll-behavior:auto}}
