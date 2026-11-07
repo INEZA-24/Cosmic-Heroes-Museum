@@ -115,3 +115,17 @@ test('M8 provides six credited NASA hero images and a full-width exhibit entry',
   assert.match(css, /M8 cinematic mission entrance/);
   assert.match(css, /prefers-reduced-motion/);
 });
+
+
+test('Opportunity hero points to the local uploaded rover illustration', () => {
+  const file = 'public/assets/exhibits/opportunity/hero.webp';
+  assert.ok(existsSync(file), 'Opportunity WebP hero missing');
+  const manifestPath = 'public/assets/exhibits/opportunity/slides.json';
+  assert.ok(existsSync(manifestPath), 'Opportunity slide manifest missing');
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  assert.ok(Array.isArray(manifest.items) && manifest.items.length === 1);
+  assert.equal(manifest.items[0].src, '/assets/exhibits/opportunity/hero.webp');
+  assert.match(manifest.items[0].kind, /ILLUSTRATION/);
+  const fallbacks = readFileSync('src/exhibitHeroes.ts', 'utf8');
+  assert.ok(fallbacks.includes("src: '/assets/exhibits/opportunity/hero.webp'"));
+});
