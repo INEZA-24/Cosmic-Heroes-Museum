@@ -25,6 +25,12 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
         <p className="exhibit-hero-destination">{machine.place.toUpperCase()} <span aria-hidden="true">/</span> {machine.year}</p>
         <h1 className="exhibit-title">{machine.name}</h1>
         <p className="exhibit-lead">{machine.summary}</p>
+        {machine.status && (
+          <div className="exhibit-status-pill">
+            <span className="status-label">STATUS</span>
+            <span className="status-value">{machine.status}</span>
+          </div>
+        )}
         <div className="exhibit-hero-actions">
           <a href="#exhibit-model" className="exhibit-hero-cta">Explore the 3D model <span aria-hidden="true">↓</span></a>
           {hero && (
