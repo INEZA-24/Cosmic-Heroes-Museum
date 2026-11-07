@@ -102,7 +102,7 @@ test('M8 provides six credited NASA hero images and a full-width exhibit entry',
   assert.match(hero, /exhibit-hero-image/);
   assert.match(hero, /onError/);
   assert.match(hero, /exhibit-hero-caption/);
-  assert.match(hero, /slides\\.json/);
+  assert.match(hero, /slides\.json/);
   assert.match(hero, /300_000/);
   assert.match(hero, /Previous mission image/);
   assert.match(hero, /Next mission image/);
