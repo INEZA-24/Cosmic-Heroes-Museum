@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { machines } from '../data';
 import { MachineModelViewer } from './MachineModelViewer';
-import { MachineVisualGallery } from './MachineVisualGallery';
+import { ExhibitHero } from './ExhibitHero';
 
 interface ExhibitViewProps {
   machineId: string;
@@ -33,22 +33,10 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
         </span>
       </div>
 
-      <header className="exhibit-header">
-        <p className="eyebrow">
-          MUSEUM EXHIBITION · {machine.place.toUpperCase()} · {machine.year}
-        </p>
-        <h1 className="exhibit-title">{machine.name}</h1>
-        <p className="exhibit-lead">{machine.summary}</p>
-        {machine.status && (
-          <div className="exhibit-status-pill">
-            <span className="status-label">STATUS</span>
-            <span className="status-value">{machine.status}</span>
-          </div>
-        )}
-      </header>
+      <ExhibitHero key={machine.id} machine={machine} />
 
       {/* Machine first: real 3D structure, without blocking exhibition content if no model has been uploaded. */}
-      <section className="exhibit-model-section" aria-label={machine.name + ' 3D model'}>
+      <section id="exhibit-model" className="exhibit-model-section" aria-label={machine.name + ' 3D model'}>
         <div className="section-label">
           <p className="eyebrow">THE ENGINEERING HALL · INTERACTIVE 3D</p>
           <h2>Examine the machine.</h2>
@@ -56,8 +44,6 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
         </div>
         <MachineModelViewer machineId={machine.id} machineName={machine.name} />
       </section>
-
-      <MachineVisualGallery machineId={machine.id} machineName={machine.name} />
 
       {/* Key Quick Facts Grid */}
       <section className="exhibit-facts-grid" aria-label="Key Machine Specifications">

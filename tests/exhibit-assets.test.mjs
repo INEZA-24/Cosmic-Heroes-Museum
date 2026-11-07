@@ -27,10 +27,10 @@ test('3D viewer uses the static GLB convention and OrbitControls', () => {
   assert.match(code, /status === 'missing'/);
 });
 
-test('each exhibition embeds the 3D viewer and the optional media archive', () => {
+test('each exhibition embeds the 3D viewer without a separate image gallery', () => {
   const exhibit = readFileSync('src/components/ExhibitView.tsx', 'utf8');
   assert.match(exhibit, /<MachineModelViewer/);
-  assert.match(exhibit, /<MachineVisualGallery/);
+  assert.doesNotMatch(exhibit, /<MachineVisualGallery/);
 });
 
 test('exhibition navigation retains collection, Moon, Mars and deep space', () => {
@@ -88,4 +88,30 @@ test('NASA-compressed glTF models get Draco and Meshopt decoders', () => {
   assert.match(code, /loader\.setDRACOLoader\(draco\)/);
   assert.match(code, /loader\.setMeshoptDecoder\(MeshoptDecoder\)/);
   assert.match(code, /draco\?\.dispose\(\)/);
+});
+
+test('M8 provides six credited NASA hero images and a full-width exhibit entry', () => {
+  const heroes = readFileSync('src/exhibitHeroes.ts', 'utf8');
+  for (const id of ids) {
+    assert.ok(heroes.includes("'"+id+"'") || heroes.includes(id + ':'), 'Missing hero: ' + id);
+  }
+  assert.match(heroes, /assets\.science\.nasa\.gov/);
+  assert.match(heroes, /sourceUrl:/);
+  assert.match(heroes, /NASA VISUAL COMPOSITE/);
+  const hero = readFileSync('src/components/ExhibitHero.tsx', 'utf8');
+  assert.match(hero, /exhibit-hero-image/);
+  assert.match(hero, /onError/);
+  assert.match(hero, /exhibit-hero-caption/);
+  assert.match(hero, /slides\.json/);
+  assert.match(hero, /300_000/);
+  assert.match(hero, /Previous mission image/);
+  assert.match(hero, /Next mission image/);
+  assert.match(hero, /rel="noopener noreferrer"/);
+  const exhibit = readFileSync('src/components/ExhibitView.tsx', 'utf8');
+  assert.match(exhibit, /<ExhibitHero/);
+  assert.match(exhibit, /<MachineModelViewer/);
+  assert.doesNotMatch(exhibit, /<MachineVisualGallery/);
+  const css = readFileSync('src/styles.css', 'utf8');
+  assert.match(css, /M8 cinematic mission entrance/);
+  assert.match(css, /prefers-reduced-motion/);
 });
