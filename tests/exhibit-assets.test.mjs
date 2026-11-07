@@ -89,3 +89,25 @@ test('NASA-compressed glTF models get Draco and Meshopt decoders', () => {
   assert.match(code, /loader\.setMeshoptDecoder\(MeshoptDecoder\)/);
   assert.match(code, /draco\?\.dispose\(\)/);
 });
+
+test('M8 provides six credited NASA hero images and a full-width exhibit entry', () => {
+  const heroes = readFileSync('src/exhibitHeroes.ts', 'utf8');
+  for (const id of ids) {
+    assert.ok(heroes.includes("'"+id+"'") || heroes.includes(id + ':'), 'Missing hero: ' + id);
+  }
+  assert.match(heroes, /assets\.science\.nasa\.gov/);
+  assert.match(heroes, /sourceUrl:/);
+  assert.match(heroes, /NASA VISUAL COMPOSITE/);
+  const hero = readFileSync('src/components/ExhibitHero.tsx', 'utf8');
+  assert.match(hero, /exhibit-hero-image/);
+  assert.match(hero, /onError/);
+  assert.match(hero, /exhibit-hero-caption/);
+  assert.match(hero, /rel="noopener noreferrer"/);
+  const exhibit = readFileSync('src/components/ExhibitView.tsx', 'utf8');
+  assert.match(exhibit, /<ExhibitHero/);
+  assert.match(exhibit, /<MachineModelViewer/);
+  assert.match(exhibit, /<MachineVisualGallery/);
+  const css = readFileSync('src/styles.css', 'utf8');
+  assert.match(css, /M8 cinematic mission entrance/);
+  assert.match(css, /prefers-reduced-motion/);
+});
