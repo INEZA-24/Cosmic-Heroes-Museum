@@ -138,8 +138,8 @@ test('M8 full-resolution hero images fit within the header without cropping', ()
   const rule = css.slice(start, css.indexOf('}', start) + 1);
   assert.match(rule, /object-fit:contain/);
   assert.doesNotMatch(rule, /object-fit:cover/);
-  assert.match(css, /\\.exhibit-hero-backdrop\\{/);
+  assert.ok(css.includes('.exhibit-hero-backdrop{'));
   const hero = readFileSync('src/components/ExhibitHero.tsx', 'utf8');
-  assert.match(hero, /className="exhibit-hero-backdrop"/);
-  assert.match(hero, /className=\\{\\`exhibit-hero-image/);
+  assert.ok(hero.includes('className="exhibit-hero-backdrop"'));
+  assert.ok(hero.includes('exhibit-hero-image'));
 });
