@@ -14,7 +14,7 @@ export interface MuseumHero {
   sourceUrl: string;
   credit: string;
   description: string;
-  kind: 'NASA ARCHIVE PHOTOGRAPH' | 'NASA MISSION ARTWORK' | 'NASA VISUAL COMPOSITE';
+  kind: 'NASA ARCHIVE PHOTOGRAPH' | 'NASA MISSION ARTWORK' | 'NASA VISUAL COMPOSITE' | 'MISSION ILLUSTRATION';
 }
 
 export const exhibitHeroes: Record<string, MuseumHero> = {
@@ -33,11 +33,11 @@ export const exhibitHeroes: Record<string, MuseumHero> = {
     description: 'Sojourner on its Mars Pathfinder landing platform, surrounded by Martian terrain.'
   },
   opportunity: {
-    src: 'https://assets.science.nasa.gov/dynamicimage/assets/science/psd/mars/downloadable_items/4/40167_PIA08814_Sol952B_P2389_L257atc_withNew_Rover_v008.jpg?crop=faces%2Cfocalpoint&fit=clip&h=1012&w=3536',
-    sourceUrl: 'https://science.nasa.gov/resource/superimposed-rover-on-rim-of-victoria-crater/',
-    credit: 'NASA/JPL-Caltech',
-    kind: 'NASA VISUAL COMPOSITE',
-    description: 'NASA visualization of Opportunity at Victoria Crater.'
+    src: '/assets/exhibits/opportunity/hero.webp',
+    sourceUrl: '',
+    credit: 'Illustration; artist credit not verified',
+    kind: 'MISSION ILLUSTRATION',
+    description: 'Illustration of the Opportunity rover exploring the Martian surface.'
   },
   insight: {
     src: 'https://assets.science.nasa.gov/dynamicimage/assets/science/psd/photojournal/pia/pia22/pia22228/PIA22228.jpg?crop=faces%2Cfocalpoint&fit=clip&h=4320&w=7680',
