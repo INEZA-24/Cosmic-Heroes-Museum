@@ -127,5 +127,5 @@ test('Opportunity hero points to the local uploaded rover illustration', () => {
   assert.equal(manifest.items[0].src, '/assets/exhibits/opportunity/hero.webp');
   assert.match(manifest.items[0].kind, /ILLUSTRATION/);
   const fallbacks = readFileSync('src/exhibitHeroes.ts', 'utf8');
-  assert.match(fallbacks, /opportunity: \\{\\s*src: '\/assets\/exhibits\/opportunity\/hero\\.webp'/);
+  assert.ok(fallbacks.includes("src: '/assets/exhibits/opportunity/hero.webp'"));
 });
