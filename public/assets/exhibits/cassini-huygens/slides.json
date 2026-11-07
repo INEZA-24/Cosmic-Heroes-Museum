@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "src": "/assets/exhibits/cassini-huygens/hero.webp",
+      "title": "Cassini at Saturn",
+      "kind": "NASA MISSION ARTWORK",
+      "description": "Artwork depicting Cassini near Saturn and its rings.",
+      "credit": "NASA/JPL",
+      "sourceUrl": "https://science.nasa.gov/photojournal/artistss-conception-of-cassini-saturn-orbit-insertion/",
+      "lowResolution": false
+    }
+  ]
+}

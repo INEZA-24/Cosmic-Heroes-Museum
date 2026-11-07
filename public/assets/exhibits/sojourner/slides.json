@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "src": "/assets/exhibits/sojourner/hero.webp",
+      "title": "Sojourner on Mars",
+      "kind": "MARS PATHFINDER ARCHIVE",
+      "description": "The small Sojourner rover beside a large rock in the Martian landscape.",
+      "credit": "NASA/JPL (specific image credit not verified)",
+      "sourceUrl": null,
+      "lowResolution": false
+    },
+    {
+      "src": "/assets/exhibits/sojourner/gallery-2.jpg",
+      "title": "Sojourner mission imagery",
+      "kind": "MISSION REFERENCE IMAGE",
+      "description": "Additional imagery associated with the Mars Pathfinder mission.",
+      "credit": "Source not independently verified",
+      "sourceUrl": null,
+      "lowResolution": true
+    },
+    {
+      "src": "/assets/exhibits/sojourner/gallery-4.jpg",
+      "title": "Mars Pathfinder terrain and equipment",
+      "kind": "MISSION REFERENCE IMAGE",
+      "description": "Additional archival view associated with the Pathfinder mission.",
+      "credit": "Source not independently verified",
+      "sourceUrl": null,
+      "lowResolution": false
+    }
+  ]
+}

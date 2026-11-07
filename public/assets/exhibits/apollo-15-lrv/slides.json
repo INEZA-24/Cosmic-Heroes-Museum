@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "src": "/assets/exhibits/apollo-15-lrv/hero.webp",
+      "title": "Apollo 15 on the Moon",
+      "kind": "NASA ARCHIVE PHOTOGRAPH",
+      "description": "Apollo 15 astronaut and Lunar Roving Vehicle on the lunar surface.",
+      "credit": "NASA",
+      "sourceUrl": "https://science.nasa.gov/resource/apollo-15-on-the-moon/",
+      "lowResolution": false
+    },
+    {
+      "src": "/assets/exhibits/apollo-15-lrv/gallery-2.jpg",
+      "title": "Apollo 15 lunar mission archive",
+      "kind": "MISSION REFERENCE IMAGE",
+      "description": "Additional Apollo 15 lunar mission imagery.",
+      "credit": "Source not independently verified",
+      "sourceUrl": null,
+      "lowResolution": false
+    },
+    {
+      "src": "/assets/exhibits/apollo-15-lrv/Gallery-3.jpg",
+      "title": "Apollo 15 exploration",
+      "kind": "MISSION REFERENCE IMAGE",
+      "description": "Additional view of the Apollo 15 expedition.",
+      "credit": "Source not independently verified",
+      "sourceUrl": null,
+      "lowResolution": false
+    }
+  ]
+}

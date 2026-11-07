@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "src": "/assets/exhibits/pioneer-10/hero.webp",
+      "title": "Pioneer 10 at Jupiter",
+      "kind": "NASA MISSION ARTWORK",
+      "description": "Artist's depiction of Pioneer 10 near Jupiter.",
+      "credit": "NASA",
+      "sourceUrl": "https://science.nasa.gov/resource/pioneer-10-at-jupiter-artists-concept/",
+      "lowResolution": false
+    }
+  ]
+}
