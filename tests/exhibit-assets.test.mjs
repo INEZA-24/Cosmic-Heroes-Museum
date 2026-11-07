@@ -129,3 +129,17 @@ test('Opportunity hero points to the local uploaded rover illustration', () => {
   const fallbacks = readFileSync('src/exhibitHeroes.ts', 'utf8');
   assert.ok(fallbacks.includes("src: '/assets/exhibits/opportunity/hero.webp'"));
 });
+
+
+test('M8 full-resolution hero images fit within the header without cropping', () => {
+  const css = readFileSync('src/styles.css', 'utf8');
+  const start = css.indexOf('.exhibit-hero-image{');
+  assert.ok(start !== -1, 'Missing full-size hero image style');
+  const rule = css.slice(start, css.indexOf('}', start) + 1);
+  assert.match(rule, /object-fit:contain/);
+  assert.doesNotMatch(rule, /object-fit:cover/);
+  assert.match(css, /\\.exhibit-hero-backdrop\\{/);
+  const hero = readFileSync('src/components/ExhibitHero.tsx', 'utf8');
+  assert.match(hero, /className="exhibit-hero-backdrop"/);
+  assert.match(hero, /className=\\{\\`exhibit-hero-image/);
+});

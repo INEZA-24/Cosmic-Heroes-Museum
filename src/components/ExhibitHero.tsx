@@ -100,6 +100,16 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
     >
       {src && (
         <img
+          key={`backdrop-${machine.id}-${activeIndex}-${imageState}`}
+          className="exhibit-hero-backdrop"
+          src={src}
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+        />
+      )}
+      {src && (
+        <img
           key={`${machine.id}-${activeIndex}-${imageState}`}
           className={`exhibit-hero-image${displayed?.lowResolution ? ' exhibit-hero-image--archival' : ''}`}
           src={src}
