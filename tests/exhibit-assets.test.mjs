@@ -27,10 +27,10 @@ test('3D viewer uses the static GLB convention and OrbitControls', () => {
   assert.match(code, /status === 'missing'/);
 });
 
-test('each exhibition embeds the 3D viewer and the optional media archive', () => {
+test('each exhibition embeds the 3D viewer without a separate image gallery', () => {
   const exhibit = readFileSync('src/components/ExhibitView.tsx', 'utf8');
   assert.match(exhibit, /<MachineModelViewer/);
-  assert.match(exhibit, /<MachineVisualGallery/);
+  assert.doesNotMatch(exhibit, /<MachineVisualGallery/);
 });
 
 test('exhibition navigation retains collection, Moon, Mars and deep space', () => {
@@ -102,11 +102,15 @@ test('M8 provides six credited NASA hero images and a full-width exhibit entry',
   assert.match(hero, /exhibit-hero-image/);
   assert.match(hero, /onError/);
   assert.match(hero, /exhibit-hero-caption/);
+  assert.match(hero, /slides\\.json/);
+  assert.match(hero, /300_000/);
+  assert.match(hero, /Previous mission image/);
+  assert.match(hero, /Next mission image/);
   assert.match(hero, /rel="noopener noreferrer"/);
   const exhibit = readFileSync('src/components/ExhibitView.tsx', 'utf8');
   assert.match(exhibit, /<ExhibitHero/);
   assert.match(exhibit, /<MachineModelViewer/);
-  assert.match(exhibit, /<MachineVisualGallery/);
+  assert.doesNotMatch(exhibit, /<MachineVisualGallery/);
   const css = readFileSync('src/styles.css', 'utf8');
   assert.match(css, /M8 cinematic mission entrance/);
   assert.match(css, /prefers-reduced-motion/);

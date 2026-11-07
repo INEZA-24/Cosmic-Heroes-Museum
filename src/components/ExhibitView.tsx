@@ -1,7 +1,6 @@
 import { type FC } from 'react';
 import { machines } from '../data';
 import { MachineModelViewer } from './MachineModelViewer';
-import { MachineVisualGallery } from './MachineVisualGallery';
 import { ExhibitHero } from './ExhibitHero';
 
 interface ExhibitViewProps {
@@ -45,8 +44,6 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
         </div>
         <MachineModelViewer machineId={machine.id} machineName={machine.name} />
       </section>
-
-      <MachineVisualGallery machineId={machine.id} machineName={machine.name} />
 
       {/* Key Quick Facts Grid */}
       <section className="exhibit-facts-grid" aria-label="Key Machine Specifications">
