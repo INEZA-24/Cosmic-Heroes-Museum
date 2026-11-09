@@ -155,7 +155,7 @@ test('M8 hero background spans the page while the spacecraft stays intact', () =
 test('M8 InSight and Opportunity images are separate, versioned and never use blurred backdrops', () => {
   const insight = JSON.parse(readFileSync('public/assets/exhibits/insight/slides.json', 'utf8'));
   const opportunity = JSON.parse(readFileSync('public/assets/exhibits/opportunity/slides.json', 'utf8'));
-  assert.match(insight.items[0].src, /^\\/assets\\/exhibits\\/insight\\/hero\\.webp\\?v=e37434c9$/);
+  assert.equal(insight.items[0].src, '/assets/exhibits/insight/hero.webp?v=e37434c9');
   assert.equal(opportunity.items[0].src, '/assets/exhibits/opportunity/hero.webp');
   const insightFile = readFileSync('public/assets/exhibits/insight/hero.webp');
   const opportunityFile = readFileSync('public/assets/exhibits/opportunity/hero.webp');
@@ -169,6 +169,6 @@ test('M8 InSight and Opportunity images are separate, versioned and never use bl
   const backdropStart = css.indexOf('.exhibit-hero-backdrop{');
   assert.ok(backdropStart !== -1);
   const backdrop = css.slice(backdropStart, css.indexOf('}', backdropStart));
-  assert.doesNotMatch(backdrop, /blur\\(/);
+  assert.ok(!backdrop.includes('blur('), 'Backdrop must be sharp, without blur');
   assert.match(backdrop, /object-fit:cover/);
 });
