@@ -62,13 +62,20 @@
   radial-gradient(ellipse at 74% 35%,#394754 0%,#111e2b 64%,#040a12 100%);
 }
 /* A softly blurred backdrop fills the edges; the sharp image remains fully in frame. */
-.exhibit-hero-backdrop{position:absolute;inset:-28px;width:calc(100% + 56px);height:calc(100% + 56px);
+/* Fill the entire hero with a softened crop, then blend the intact image above it.
+   Keeping the sharp image intrinsic-width prevents extreme zoom on portrait archives. */
+.exhibit-hero-backdrop{position:absolute;inset:-18px;width:calc(100% + 36px);height:calc(100% + 36px);
   object-fit:cover;object-position:center;z-index:-3;pointer-events:none;
-  filter:blur(28px) saturate(.78) brightness(.42)}
-.exhibit-hero-image{position:absolute;inset:0;width:100%;height:100%;display:block;
-  object-fit:contain;object-position:center;z-index:-2;filter:saturate(.9) contrast(1.04)}
+  filter:blur(13px) saturate(.88) brightness(.86);transform:scale(1.025)}
+.exhibit-hero-image{position:absolute;top:0;right:clamp(0px,5vw,88px);left:auto;
+  width:auto;max-width:100%;height:100%;display:block;
+  object-fit:contain;object-position:center;z-index:-2;filter:saturate(.96) contrast(1.03);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 16%,black 84%,transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0%,black 16%,black 84%,transparent 100%);
+  animation:exhibit-image-reveal .4s ease-out both}
+@keyframes exhibit-image-reveal{from{opacity:.45}to{opacity:1}}
 .exhibit-hero-shade{position:absolute;inset:0;z-index:-1;background:
-  linear-gradient(90deg,rgba(3,8,18,.93) 0%,rgba(3,8,18,.74) 32%,rgba(3,8,18,.28) 70%,rgba(3,8,18,.22) 100%),
+  linear-gradient(90deg,rgba(3,8,18,.91) 0%,rgba(3,8,18,.73) 32%,rgba(3,8,18,.17) 70%,rgba(3,8,18,.10) 100%),
   linear-gradient(0deg,rgba(2,7,13,.82) 0%,transparent 44%)}
 .exhibit-hero-content{width:min(1280px,100%);margin:0 auto;padding:
   clamp(28px,5.4vw,88px);position:relative;color:#fff}
@@ -93,7 +100,7 @@
 #exhibit-model{scroll-margin-top:36px}
 @media(max-width:720px){
  .exhibit-photo-hero{min-height:580px;margin-bottom:40px}
- .exhibit-hero-image{object-position:center}
+ .exhibit-hero-image{right:0;object-position:center;max-width:100%;opacity:.8}
  .exhibit-hero-shade{background:
    linear-gradient(0deg,rgba(2,8,17,.98) 0%,rgba(2,8,17,.80) 42%,rgba(2,8,17,.18) 100%),
    linear-gradient(90deg,rgba(2,8,17,.32),transparent)}
@@ -122,3 +129,8 @@
   .exhibit-hero-slide-count{width:100%;font-size:.62rem}
   .exhibit-hero-arrow{width:36px;height:36px}
 }
+
+.exhibit-hero-slide-nav[aria-busy="true"] .exhibit-hero-arrow{opacity:.6;cursor:progress}
+.exhibit-hero-slide-nav button:disabled{cursor:progress}
+.exhibit-hero-slide-error{font-size:.72rem;color:#ffe2bd}
+@media(prefers-reduced-motion:reduce){.exhibit-hero-image{animation:none}}

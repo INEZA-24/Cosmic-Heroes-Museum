@@ -131,15 +131,22 @@ test('Opportunity hero points to the local uploaded rover illustration', () => {
 });
 
 
-test('M8 full-resolution hero images fit within the header without cropping', () => {
+test('M8 hero background spans the page while the spacecraft stays intact', () => {
   const css = readFileSync('src/styles.css', 'utf8');
-  const start = css.indexOf('.exhibit-hero-image{');
-  assert.ok(start !== -1, 'Missing full-size hero image style');
-  const rule = css.slice(start, css.indexOf('}', start) + 1);
-  assert.match(rule, /object-fit:contain/);
-  assert.doesNotMatch(rule, /object-fit:cover/);
-  assert.ok(css.includes('.exhibit-hero-backdrop{'));
+  const imageStart = css.indexOf('.exhibit-hero-image{');
+  assert.ok(imageStart !== -1);
+  const imageStyle = css.slice(imageStart, css.indexOf('}', imageStart) + 1);
+  assert.match(imageStyle, /object-fit:contain/);
+  assert.match(imageStyle, /width:auto/);
+  assert.match(imageStyle, /mask-image:/);
+  const backdropStart = css.indexOf('.exhibit-hero-backdrop{');
+  assert.ok(backdropStart !== -1);
+  assert.match(css.slice(backdropStart, css.indexOf('}', backdropStart) + 1), /object-fit:cover/);
   const hero = readFileSync('src/components/ExhibitHero.tsx', 'utf8');
   assert.ok(hero.includes('className="exhibit-hero-backdrop"'));
-  assert.ok(hero.includes('exhibit-hero-image'));
+  assert.ok(hero.includes('preload.decode()'));
+  assert.ok(hero.includes('loadingNext'));
+  assert.ok(hero.includes('localHero'));
+  assert.ok(hero.includes('fetchPriority="high"'));
 });
+
