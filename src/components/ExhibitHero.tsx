@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FC } from 'react';
+import { useCallback, useEffect, useRef, useState, type FC } from 'react';
 import { type Machine } from '../types';
 import { exhibitHeroes } from '../exhibitHeroes';
 
@@ -26,17 +26,35 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
     sourceUrl: fallback.sourceUrl,
   } : null;
 
-  const [scenes, setScenes] = useState<HeroScene[]>(fallbackScene ? [fallbackScene] : []);
+  // Start with the local image immediately: avoid fetching a large remote NASA
+  // fallback while slides.json is loading, which caused an unnecessary flash.
+  const localHeroPath = `/assets/exhibits/${machine.id}/hero.webp`;
+  const localHeroSource = fallback?.src.startsWith(localHeroPath) ? fallback.src : localHeroPath;
+  const localHero: HeroScene = {
+    src: localHeroSource,
+    title: machine.name,
+    kind: fallback?.kind ?? 'MUSEUM EXHIBIT IMAGE',
+    description: fallback?.description ?? 'Mission exhibit imagery.',
+    credit: fallback?.credit ?? 'Museum collection',
+    sourceUrl: fallback?.sourceUrl || null,
+  };
+  const [scenes, setScenes] = useState<HeroScene[]>([localHero]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [imageState, setImageState] = useState<'local' | 'fallback' | 'failed'>('local');
+  const [loadingNext, setLoadingNext] = useState(false);
+  const [imageNotice, setImageNotice] = useState('');
+  const imageRequest = useRef(0);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  // Do not let a decoded image update an exhibit after it has unmounted.
+  useEffect(() => () => { imageRequest.current += 1; }, []);
 
   useEffect(() => {
     const controller = new AbortController();
     const prefix = `/assets/exhibits/${machine.id}/`;
     const loadManifest = async () => {
       try {
-        const response = await fetch(`${prefix}slides.json`, { signal: controller.signal });
+        const response = await fetch(`${prefix}slides.json`, { signal: controller.signal, cache: 'no-store' });
         // Some SPA hosts return index.html (HTTP 200) for missing JSON files.
         if (!response.ok || !(response.headers.get('content-type') || '').includes('json')) return;
         const manifest = await response.json() as { items?: HeroScene[] };
@@ -59,22 +77,52 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
     return () => controller.abort();
   }, [machine.id]);
 
+  // Preload adjacent slides so arrows and the five-minute rotation feel immediate.
+  // The browser normally shares the decoded/cached bytes with the visible <img>.
+  useEffect(() => {
+    if (scenes.length < 2) return;
+    const targets = new Set([
+      (activeIndex + 1) % scenes.length,
+      (activeIndex - 1 + scenes.length) % scenes.length,
+    ]);
+    targets.forEach(index => {
+      const preload = new Image();
+      preload.decoding = 'async';
+      preload.src = scenes[index].src;
+      void preload.decode().catch(() => undefined);
+    });
+  }, [scenes, activeIndex]);
+
+  // Keep the current slide visible while the requested picture is loading.
+  const changeScene = useCallback((next: number) => {
+    if (scenes.length < 2 || loadingNext) return;
+    const target = ((next % scenes.length) + scenes.length) % scenes.length;
+    if (target === activeIndex) return;
+    const request = ++imageRequest.current;
+    const preload = new Image();
+    preload.decoding = 'async';
+    setLoadingNext(true);
+    setImageNotice('');
+    preload.src = scenes[target].src;
+    void preload.decode().then(() => {
+      if (imageRequest.current !== request) return;
+      setActiveIndex(target);
+      setImageState('local');
+      setLoadingNext(false);
+    }).catch(() => {
+      if (imageRequest.current !== request) return;
+      setLoadingNext(false);
+      setImageNotice('This image could not load. Please try again.');
+    });
+  }, [scenes, activeIndex, loadingNext]);
+
   useEffect(() => {
     if (scenes.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const handle = window.setInterval(() => {
-      if (!document.hidden) {
-        setActiveIndex(index => (index + 1) % scenes.length);
-        setImageState('local');
-      }
+      if (!document.hidden) changeScene(activeIndex + 1);
     }, FIVE_MINUTES);
     return () => window.clearInterval(handle);
-  }, [machine.id, scenes.length]);
-
-  const changeScene = (next: number) => {
-    if (scenes.length < 2) return;
-    setActiveIndex(((next % scenes.length) + scenes.length) % scenes.length);
-    setImageState('local');
-  };
+  }, [scenes.length, activeIndex, changeScene]);
 
   const scene = scenes[activeIndex] ?? fallbackScene;
   const displayed = imageState === 'fallback' && fallbackScene ? fallbackScene : scene;
@@ -100,12 +148,24 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
     >
       {src && (
         <img
+          key={`backdrop-${machine.id}-${activeIndex}-${imageState}`}
+          className="exhibit-hero-backdrop"
+          src={src}
+          loading="eager"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+        />
+      )}
+      {src && (
+        <img
           key={`${machine.id}-${activeIndex}-${imageState}`}
           className={`exhibit-hero-image${displayed?.lowResolution ? ' exhibit-hero-image--archival' : ''}`}
           src={src}
           alt=""
           loading="eager"
           decoding="async"
+          fetchPriority="high"
           onError={() => {
             if (imageState === 'local' && fallbackScene && scene?.src !== fallbackScene.src) {
               setImageState('fallback');
@@ -137,15 +197,19 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
             <span className="exhibit-hero-source">Image credit: {displayed.credit}</span>
           ) : null}
         </div>
+        {imageState === 'failed' && (
+          <p role="status" className="exhibit-hero-image-error">Mission image unavailable. The exhibit story is still available below.</p>
+        )}
         {src && displayed && <p className="exhibit-hero-caption">{displayed.kind} · {displayed.description}</p>}
         {showControls && (
-          <nav className="exhibit-hero-slide-nav" aria-label={`Images of ${machine.name}`}>
-            <button type="button" className="exhibit-hero-arrow" onClick={() => changeScene(activeIndex - 1)} aria-label="Previous mission image">←</button>
+          <nav className="exhibit-hero-slide-nav" aria-label={`Images of ${machine.name}`} aria-busy={loadingNext}>
+            <button type="button" className="exhibit-hero-arrow" disabled={loadingNext} onClick={() => changeScene(activeIndex - 1)} aria-label="Previous mission image">←</button>
             <div className="exhibit-hero-slide-dots" role="group" aria-label="Choose a mission image">
               {scenes.map((item, index) => (
                 <button
                   key={`${item.src}-${index}`}
                   type="button"
+                  disabled={loadingNext}
                   className={`exhibit-hero-dot${activeIndex === index ? ' is-active' : ''}`}
                   onClick={() => changeScene(index)}
                   aria-label={`Show image ${index + 1} of ${scenes.length}: ${item.title}`}
@@ -153,8 +217,9 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
                 />
               ))}
             </div>
-            <button type="button" className="exhibit-hero-arrow" onClick={() => changeScene(activeIndex + 1)} aria-label="Next mission image">→</button>
-            <span className="exhibit-hero-slide-count">{activeIndex + 1} / {scenes.length} · Auto-change every 5 min</span>
+            <button type="button" className="exhibit-hero-arrow" disabled={loadingNext} onClick={() => changeScene(activeIndex + 1)} aria-label="Next mission image">→</button>
+            <span className="exhibit-hero-slide-count">{activeIndex + 1} / {scenes.length} · {loadingNext ? 'Loading next image…' : 'Auto-change every 5 min'}</span>
+            {imageNotice && <span className="exhibit-hero-slide-error" role="status">{imageNotice}</span>}
           </nav>
         )}
       </div>

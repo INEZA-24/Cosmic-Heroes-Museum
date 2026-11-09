@@ -4,16 +4,17 @@ import { readFileSync, existsSync, openSync, readSync, closeSync, statSync } fro
 
 const ids = ['cassini-huygens', 'apollo-15-lrv', 'sojourner', 'opportunity', 'insight', 'pioneer-10'];
 
-test('all six machine galleries are valid, future-ready and isolated', () => {
+test('all six exhibit slide manifests reference image files that exist', () => {
   for (const id of ids) {
-    const path = `public/assets/exhibits/${id}/gallery.json`;
-    assert.ok(existsSync(path), `Missing gallery: ${id}`);
-    const gallery = JSON.parse(readFileSync(path, 'utf8'));
-    assert.ok(Array.isArray(gallery.items), `Invalid gallery items: ${id}`);
-    for (const item of gallery.items) {
-      assert.ok(['image', 'video'].includes(item.type));
-      assert.match(item.file, /^[A-Za-z0-9_.-]+\.(?:jpg|jpeg|png|webp|mp4|webm)$/);
-      assert.equal(typeof item.caption, 'string');
+    const path = `public/assets/exhibits/${id}/slides.json`;
+    assert.ok(existsSync(path), `Missing slideshow: ${id}`);
+    const slideshow = JSON.parse(readFileSync(path, 'utf8'));
+    assert.ok(Array.isArray(slideshow.items) && slideshow.items.length > 0, `No slides for ${id}`);
+    for (const item of slideshow.items) {
+      assert.equal(typeof item.src, 'string');
+      assert.ok(item.src.startsWith(`/assets/exhibits/${id}/`), `Wrong machine image: ${item.src}`);
+      assert.ok(existsSync(`public${item.src.split('?')[0]}`), `Image referenced in slides.json is missing: ${item.src}`);
+      assert.equal(typeof item.description, 'string');
     }
     assert.ok(existsSync(`public/assets/models/${id}/.gitkeep`));
   }
@@ -128,4 +129,65 @@ test('Opportunity hero points to the local uploaded rover illustration', () => {
   assert.match(manifest.items[0].kind, /ILLUSTRATION/);
   const fallbacks = readFileSync('src/exhibitHeroes.ts', 'utf8');
   assert.ok(fallbacks.includes("src: '/assets/exhibits/opportunity/hero.webp'"));
+});
+
+
+test('M8 hero background spans the page while the spacecraft stays intact', () => {
+  const css = readFileSync('src/styles.css', 'utf8');
+  const imageStart = css.indexOf('.exhibit-hero-image{');
+  assert.ok(imageStart !== -1);
+  const imageStyle = css.slice(imageStart, css.indexOf('}', imageStart) + 1);
+  assert.match(imageStyle, /object-fit:contain/);
+  assert.match(imageStyle, /width:auto/);
+  assert.match(imageStyle, /mask-image:/);
+  const backdropStart = css.indexOf('.exhibit-hero-backdrop{');
+  assert.ok(backdropStart !== -1);
+  assert.match(css.slice(backdropStart, css.indexOf('}', backdropStart) + 1), /object-fit:cover/);
+  const hero = readFileSync('src/components/ExhibitHero.tsx', 'utf8');
+  assert.ok(hero.includes('className="exhibit-hero-backdrop"'));
+  assert.ok(hero.includes('preload.decode()'));
+  assert.ok(hero.includes('loadingNext'));
+  assert.ok(hero.includes('localHero'));
+  assert.ok(hero.includes('fetchPriority="high"'));
+});
+
+
+test('M8 InSight and Opportunity images are separate, versioned and never use blurred backdrops', () => {
+  const insight = JSON.parse(readFileSync('public/assets/exhibits/insight/slides.json', 'utf8'));
+  const opportunity = JSON.parse(readFileSync('public/assets/exhibits/opportunity/slides.json', 'utf8'));
+  assert.equal(insight.items[0].src, '/assets/exhibits/insight/hero.webp?v=e37434c9');
+  assert.equal(opportunity.items[0].src, '/assets/exhibits/opportunity/hero.webp');
+  const insightFile = readFileSync('public/assets/exhibits/insight/hero.webp');
+  const opportunityFile = readFileSync('public/assets/exhibits/opportunity/hero.webp');
+  assert.notDeepEqual(insightFile, opportunityFile, 'InSight must not contain the Opportunity hero image');
+  const heroes = readFileSync('src/exhibitHeroes.ts', 'utf8');
+  assert.ok(heroes.includes("src: '/assets/exhibits/insight/hero.webp?v=e37434c9'"));
+  const hero = readFileSync('src/components/ExhibitHero.tsx', 'utf8');
+  assert.match(hero, /cache: 'no-store'/);
+  assert.match(hero, /localHeroSource/);
+  const css = readFileSync('src/styles.css', 'utf8');
+  const backdropStart = css.indexOf('.exhibit-hero-backdrop{');
+  assert.ok(backdropStart !== -1);
+  const backdrop = css.slice(backdropStart, css.indexOf('}', backdropStart));
+  assert.ok(!backdrop.includes('blur('), 'Backdrop must be sharp, without blur');
+  assert.match(backdrop, /object-fit:cover/);
+});
+
+test('M8 image loading is guarded on unmount and full-width backgrounds have no blur', () => {
+  const code = readFileSync('src/components/ExhibitHero.tsx', 'utf8');
+  assert.ok(code.includes('imageRequest.current += 1'));
+  assert.ok(code.includes('preload.decode()'));
+  assert.ok(code.includes("cache: 'no-store'"));
+  assert.ok(code.includes("imageState === 'failed'"));
+  const styles = readFileSync('src/styles.css', 'utf8');
+  const bgStart = styles.indexOf('.exhibit-hero-backdrop{');
+  const bgStyle = styles.slice(bgStart, styles.indexOf('}', bgStart));
+  assert.ok(bgStart > -1);
+  assert.ok(bgStyle.includes('inset:0'));
+  assert.ok(bgStyle.includes('object-fit:cover'));
+  assert.ok(!bgStyle.includes('blur('));
+  const imageStart = styles.indexOf('.exhibit-hero-image{');
+  const imageStyle = styles.slice(imageStart, styles.indexOf('}', imageStart));
+  assert.ok(imageStyle.includes('object-fit:contain'));
+  assert.ok(imageStyle.includes('right:0'));
 });

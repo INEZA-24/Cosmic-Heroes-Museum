@@ -61,10 +61,20 @@
   display:flex;align-items:flex-end;border:0;background:
   radial-gradient(ellipse at 74% 35%,#394754 0%,#111e2b 64%,#040a12 100%);
 }
-.exhibit-hero-image{position:absolute;inset:0;width:100%;height:100%;display:block;
-  object-fit:cover;object-position:center 47%;z-index:-2;filter:saturate(.9) contrast(1.04)}
+/* Sharp full-width image under an uncropped, detailed subject image.
+   Feather only image boundaries; no blur or artificial zoom. */
+.exhibit-hero-backdrop{position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;z-index:-3;pointer-events:none;
+  filter:brightness(.67) saturate(.95)}
+.exhibit-hero-image{position:absolute;top:0;right:0;left:auto;
+  width:auto;max-width:100%;height:100%;display:block;
+  object-fit:contain;object-position:center;z-index:-2;filter:none;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 6%,black 96%,transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0%,black 6%,black 96%,transparent 100%);
+  animation:exhibit-image-reveal .4s ease-out both}
+@keyframes exhibit-image-reveal{from{opacity:.45}to{opacity:1}}
 .exhibit-hero-shade{position:absolute;inset:0;z-index:-1;background:
-  linear-gradient(90deg,rgba(3,8,18,.93) 0%,rgba(3,8,18,.74) 32%,rgba(3,8,18,.28) 70%,rgba(3,8,18,.22) 100%),
+  linear-gradient(90deg,rgba(3,8,18,.91) 0%,rgba(3,8,18,.73) 32%,rgba(3,8,18,.17) 70%,rgba(3,8,18,.10) 100%),
   linear-gradient(0deg,rgba(2,7,13,.82) 0%,transparent 44%)}
 .exhibit-hero-content{width:min(1280px,100%);margin:0 auto;padding:
   clamp(28px,5.4vw,88px);position:relative;color:#fff}
@@ -89,7 +99,7 @@
 #exhibit-model{scroll-margin-top:36px}
 @media(max-width:720px){
  .exhibit-photo-hero{min-height:580px;margin-bottom:40px}
- .exhibit-hero-image{object-position:65% center}
+ .exhibit-hero-image{right:0;object-position:center;max-width:100%;opacity:.8}
  .exhibit-hero-shade{background:
    linear-gradient(0deg,rgba(2,8,17,.98) 0%,rgba(2,8,17,.80) 42%,rgba(2,8,17,.18) 100%),
    linear-gradient(90deg,rgba(2,8,17,.32),transparent)}
@@ -102,7 +112,7 @@
 
 
 /* M8 rotating mission heroes — no separate gallery. */
-.exhibit-hero-image--archival{object-fit:contain;object-position:center;background:#101820;filter:none}
+.exhibit-hero-image--archival{object-fit:contain;object-position:center;background:transparent;filter:none}
 .exhibit-hero-slide-nav{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:21px;position:relative;z-index:2}
 .exhibit-hero-arrow{width:38px;height:38px;border:1px solid #e6edf5a0;background:#06121dbb;color:#fff;
   border-radius:50%;cursor:pointer;font-size:1.15rem;display:inline-grid;place-items:center}
@@ -118,3 +128,10 @@
   .exhibit-hero-slide-count{width:100%;font-size:.62rem}
   .exhibit-hero-arrow{width:36px;height:36px}
 }
+
+.exhibit-hero-slide-nav[aria-busy="true"] .exhibit-hero-arrow{opacity:.6;cursor:progress}
+.exhibit-hero-slide-nav button:disabled{cursor:progress}
+.exhibit-hero-slide-error{font-size:.72rem;color:#ffe2bd}
+@media(prefers-reduced-motion:reduce){.exhibit-hero-image{animation:none}}
+
+.exhibit-hero-image-error{max-width:540px;font-size:.77rem;line-height:1.55;color:#ffe0bf}
