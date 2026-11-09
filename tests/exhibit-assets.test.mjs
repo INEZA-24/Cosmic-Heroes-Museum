@@ -13,7 +13,7 @@ test('all six exhibit slide manifests reference image files that exist', () => {
     for (const item of slideshow.items) {
       assert.equal(typeof item.src, 'string');
       assert.ok(item.src.startsWith(`/assets/exhibits/${id}/`), `Wrong machine image: ${item.src}`);
-      assert.ok(existsSync(`public${item.src}`), `Image referenced in slides.json is missing: ${item.src}`);
+      assert.ok(existsSync(`public${item.src.split('?')[0]}`), `Image referenced in slides.json is missing: ${item.src}`);
       assert.equal(typeof item.description, 'string');
     }
     assert.ok(existsSync(`public/assets/models/${id}/.gitkeep`));
@@ -151,3 +151,24 @@ test('M8 hero background spans the page while the spacecraft stays intact', () =
   assert.ok(hero.includes('fetchPriority="high"'));
 });
 
+
+test('M8 InSight and Opportunity images are separate, versioned and never use blurred backdrops', () => {
+  const insight = JSON.parse(readFileSync('public/assets/exhibits/insight/slides.json', 'utf8'));
+  const opportunity = JSON.parse(readFileSync('public/assets/exhibits/opportunity/slides.json', 'utf8'));
+  assert.match(insight.items[0].src, /^\\/assets\\/exhibits\\/insight\\/hero\\.webp\\?v=e37434c9$/);
+  assert.equal(opportunity.items[0].src, '/assets/exhibits/opportunity/hero.webp');
+  const insightFile = readFileSync('public/assets/exhibits/insight/hero.webp');
+  const opportunityFile = readFileSync('public/assets/exhibits/opportunity/hero.webp');
+  assert.notDeepEqual(insightFile, opportunityFile, 'InSight must not contain the Opportunity hero image');
+  const heroes = readFileSync('src/exhibitHeroes.ts', 'utf8');
+  assert.ok(heroes.includes("src: '/assets/exhibits/insight/hero.webp?v=e37434c9'"));
+  const hero = readFileSync('src/components/ExhibitHero.tsx', 'utf8');
+  assert.match(hero, /cache: 'no-store'/);
+  assert.match(hero, /localHeroSource/);
+  const css = readFileSync('src/styles.css', 'utf8');
+  const backdropStart = css.indexOf('.exhibit-hero-backdrop{');
+  assert.ok(backdropStart !== -1);
+  const backdrop = css.slice(backdropStart, css.indexOf('}', backdropStart));
+  assert.doesNotMatch(backdrop, /blur\\(/);
+  assert.match(backdrop, /object-fit:cover/);
+});

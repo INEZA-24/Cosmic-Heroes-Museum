@@ -28,8 +28,10 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
 
   // Start with the local image immediately: avoid fetching a large remote NASA
   // fallback while slides.json is loading, which caused an unnecessary flash.
+  const localHeroPath = `/assets/exhibits/${machine.id}/hero.webp`;
+  const localHeroSource = fallback?.src.startsWith(localHeroPath) ? fallback.src : localHeroPath;
   const localHero: HeroScene = {
-    src: `/assets/exhibits/${machine.id}/hero.webp`,
+    src: localHeroSource,
     title: machine.name,
     kind: 'MUSEUM EXHIBIT IMAGE',
     description: 'Mission exhibit imagery.',
@@ -49,7 +51,7 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
     const prefix = `/assets/exhibits/${machine.id}/`;
     const loadManifest = async () => {
       try {
-        const response = await fetch(`${prefix}slides.json`, { signal: controller.signal });
+        const response = await fetch(`${prefix}slides.json`, { signal: controller.signal, cache: 'no-store' });
         // Some SPA hosts return index.html (HTTP 200) for missing JSON files.
         if (!response.ok || !(response.headers.get('content-type') || '').includes('json')) return;
         const manifest = await response.json() as { items?: HeroScene[] };

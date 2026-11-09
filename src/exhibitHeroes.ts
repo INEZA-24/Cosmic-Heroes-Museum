@@ -40,7 +40,8 @@ export const exhibitHeroes: Record<string, MuseumHero> = {
     description: 'Illustration of the Opportunity rover exploring the Martian surface.'
   },
   insight: {
-    src: 'https://assets.science.nasa.gov/dynamicimage/assets/science/psd/photojournal/pia/pia22/pia22228/PIA22228.jpg?crop=faces%2Cfocalpoint&fit=clip&h=4320&w=7680',
+    // Version matches the verified InSight landing illustration; bypasses any stale CDN image.
+    src: '/assets/exhibits/insight/hero.webp?v=e37434c9',
     sourceUrl: 'https://science.nasa.gov/photojournal/insight-on-the-surface-of-mars/',
     credit: 'NASA/JPL-Caltech',
     kind: 'NASA MISSION ARTWORK',
