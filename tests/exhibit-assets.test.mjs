@@ -4,16 +4,17 @@ import { readFileSync, existsSync, openSync, readSync, closeSync, statSync } fro
 
 const ids = ['cassini-huygens', 'apollo-15-lrv', 'sojourner', 'opportunity', 'insight', 'pioneer-10'];
 
-test('all six machine galleries are valid, future-ready and isolated', () => {
+test('all six exhibit slide manifests reference image files that exist', () => {
   for (const id of ids) {
-    const path = `public/assets/exhibits/${id}/gallery.json`;
-    assert.ok(existsSync(path), `Missing gallery: ${id}`);
-    const gallery = JSON.parse(readFileSync(path, 'utf8'));
-    assert.ok(Array.isArray(gallery.items), `Invalid gallery items: ${id}`);
-    for (const item of gallery.items) {
-      assert.ok(['image', 'video'].includes(item.type));
-      assert.match(item.file, /^[A-Za-z0-9_.-]+\.(?:jpg|jpeg|png|webp|mp4|webm)$/);
-      assert.equal(typeof item.caption, 'string');
+    const path = `public/assets/exhibits/${id}/slides.json`;
+    assert.ok(existsSync(path), `Missing slideshow: ${id}`);
+    const slideshow = JSON.parse(readFileSync(path, 'utf8'));
+    assert.ok(Array.isArray(slideshow.items) && slideshow.items.length > 0, `No slides for ${id}`);
+    for (const item of slideshow.items) {
+      assert.equal(typeof item.src, 'string');
+      assert.ok(item.src.startsWith(`/assets/exhibits/${id}/`), `Wrong machine image: ${item.src}`);
+      assert.ok(existsSync(`public${item.src}`), `Image referenced in slides.json is missing: ${item.src}`);
+      assert.equal(typeof item.description, 'string');
     }
     assert.ok(existsSync(`public/assets/models/${id}/.gitkeep`));
   }

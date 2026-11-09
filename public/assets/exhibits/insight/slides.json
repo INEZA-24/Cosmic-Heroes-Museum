@@ -8,15 +8,6 @@
       "credit": "NASA/JPL-Caltech",
       "sourceUrl": "https://science.nasa.gov/photojournal/insight-on-the-surface-of-mars/",
       "lowResolution": false
-    },
-    {
-      "src": "/assets/exhibits/insight/gallery-2.jpg",
-      "title": "InSight mission imagery",
-      "kind": "MISSION REFERENCE IMAGE",
-      "description": "Additional archival imagery from the InSight mission.",
-      "credit": "Source not independently verified",
-      "sourceUrl": null,
-      "lowResolution": false
     }
   ]
 }
