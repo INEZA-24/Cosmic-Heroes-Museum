@@ -214,6 +214,7 @@ test('M9 tour guide, mission room, and planet portal are available', () => {
   assert.match(exhibit, /OPTIONAL RESEARCH REFERENCE/);
   assert.match(entrance, /1600/);
   assert.match(css, /curtain-hem-flex/);
+  assert.match(css, /\\.entrance \\.curtain\\{/);
   assert.match(css, /clip-path:polygon/);
   assert.match(css, /mission-story-shell/);
 });

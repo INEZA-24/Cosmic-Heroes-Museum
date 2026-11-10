@@ -148,6 +148,8 @@
   box-shadow:inset -28px 0 35px #12030790,inset 18px 0 24px #ae354644,0 8px 38px #0007;
   transition:transform 1.55s cubic-bezier(.32,.05,.12,1);
   will-change:transform;
+  /* The cloth itself has a falling, uneven hem; not just a painted stripe. */
+  clip-path:polygon(0 0,100% 0,100% 97%,95% 100%,90% 97%,85% 99%,80% 96%,75% 100%,70% 97%,65% 99%,60% 96%,55% 100%,50% 97%,45% 99%,40% 96%,35% 100%,30% 97%,25% 99%,20% 96%,15% 100%,10% 97%,5% 99%,0 96%);
 }
 .entrance .curtain:before{content:"";position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(90deg,transparent 0 8%,#00000038 10%,transparent 14%,#ffffff0d 18%,transparent 22%);
