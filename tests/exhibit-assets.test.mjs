@@ -114,7 +114,7 @@ test('M8 provides six credited NASA hero images and a full-width exhibit entry',
   assert.match(exhibit, /<MachineModelViewer/);
   assert.doesNotMatch(exhibit, /<MachineVisualGallery/);
   const css = readFileSync('src/styles.css', 'utf8');
-  assert.ok(css.includes('.entrance .curtain{'));
+  assert.match(css, /M8 cinematic mission entrance/);
   assert.match(css, /prefers-reduced-motion/);
 });
 
@@ -214,7 +214,7 @@ test('M9 tour guide, mission room, and planet portal are available', () => {
   assert.match(exhibit, /OPTIONAL RESEARCH REFERENCE/);
   assert.match(entrance, /1600/);
   assert.match(css, /curtain-hem-flex/);
-  assert.match(css, /\\.entrance \\.curtain\\{/);
+  assert.ok(css.includes('.entrance .curtain{'));
   assert.match(css, /clip-path:polygon/);
   assert.match(css, /mission-story-shell/);
 });
