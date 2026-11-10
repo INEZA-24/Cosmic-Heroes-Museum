@@ -135,3 +135,132 @@
 @media(prefers-reduced-motion:reduce){.exhibit-hero-image{animation:none}}
 
 .exhibit-hero-image-error{max-width:540px;font-size:.77rem;line-height:1.55;color:#ffe0bf}
+
+
+/* M9 — Theatrical fabric with pleats, a scalloped hem, and gathered opening. */
+.entrance .curtain{
+  top:0;bottom:0;width:50.4%;min-width:0;z-index:2;
+  background:
+    repeating-linear-gradient(90deg,rgba(0,0,0,.38) 0%,rgba(0,0,0,.02) 5%,
+      rgba(244,129,144,.14) 10%,rgba(0,0,0,.34) 16%,rgba(0,0,0,.04) 22%,
+      rgba(252,162,148,.15) 26%,rgba(0,0,0,.36) 31%),
+    linear-gradient(95deg,#330710,#841e31 35%,#5a0c1e 67%,#300812);
+  box-shadow:inset -28px 0 35px #12030790,inset 18px 0 24px #ae354644,0 8px 38px #0007;
+  transition:transform 1.55s cubic-bezier(.32,.05,.12,1);
+  will-change:transform;
+}
+.entrance .curtain:before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent 0 8%,#00000038 10%,transparent 14%,#ffffff0d 18%,transparent 22%);
+}
+.entrance .curtain:after{content:"";position:absolute;bottom:-2px;left:0;right:0;height:78px;
+  background:linear-gradient(0deg,#2b0611 4%,#641728 75%,transparent);
+  clip-path:polygon(0 0,100% 0,100% 77%,95% 92%,90% 82%,85% 100%,80% 79%,75% 95%,70% 84%,65% 100%,60% 79%,55% 96%,50% 82%,45% 100%,40% 80%,35% 95%,30% 83%,25% 100%,20% 78%,15% 94%,10% 82%,5% 100%,0 80%);
+}
+.entrance .curtain-left{left:0;transform:none;transform-origin:left center;border-right:3px solid #210611}
+.entrance .curtain-right{right:0;transform:none;transform-origin:right center;border-left:3px solid #230711}
+.entrance.opening .curtain-left{transform:translateX(-6%) scaleX(.20) skewY(-1.4deg)}
+.entrance.opening .curtain-right{transform:translateX(6%) scaleX(.20) skewY(1.4deg)}
+.entrance.opening .curtain:after{animation:curtain-hem-flex 1.3s ease-in-out both}
+@keyframes curtain-hem-flex{0%{transform:translateY(0) skewY(0)}55%{transform:translateY(7px) skewY(2deg)}100%{transform:translateY(0) skewY(-1deg)}}
+.entrance .entrance-content{z-index:3;text-shadow:0 2px 18px #000}
+.entrance .entrance-footer{z-index:3}
+@media(prefers-reduced-motion:reduce){
+  .entrance .curtain{transition:none!important}
+  .entrance.opening .curtain:after{animation:none!important}
+}
+
+/* M9 — Mission portal for every planet, with separate Discover and Missions tabs. */
+.planet-mission-portal{width:min(485px,calc(100vw - 28px));top:53%;
+  max-height:min(76svh,720px);overflow-y:auto;overscroll-behavior:contain;
+  padding:0;background:linear-gradient(145deg,#101f32f7,#060e1af9);
+  border:1px solid #d7a56c88;border-radius:16px;
+  box-shadow:0 26px 90px #000c,0 0 0 1px #ffffff10;
+  transform:translateY(-43%);backdrop-filter:blur(18px)}
+.planet-portal-top{display:flex;align-items:center;gap:10px;padding:22px 26px 8px}
+.planet-portal-top .eyebrow{margin:0;font-size:.53rem;line-height:1.5;letter-spacing:.14em;padding-right:25px}
+.planet-portal-orbit{border:1px solid #d69a5d73;background:#d69a5d14;color:var(--gold);display:grid;place-items:center;width:36px;height:36px;flex-shrink:0;border-radius:50%}
+.planet-mission-portal .popover-close{top:12px;right:17px;width:36px;height:36px;border-radius:50%;background:#ffffff12}
+.planet-mission-portal h3{padding:0 26px;font:500 clamp(2rem,3vw,2.8rem)/1.1 "Playfair Display",Georgia,serif;margin:8px 0 6px}
+.planet-portal-subtitle{padding:0 26px;color:#aebcce!important;font-size:.72rem!important;line-height:1.5!important;margin:0 0 23px}
+.planet-portal-tabs{display:flex;gap:8px;border-top:1px solid #ffffff19;border-bottom:1px solid #ffffff19;padding:12px 26px}
+.planet-portal-tabs button{flex:1;background:#ffffff08;color:#bac9d7;border:1px solid #ffffff14;padding:10px;font-size:.7rem;cursor:pointer;border-radius:8px}
+.planet-portal-tabs button.is-active{background:#d69a5d22;border-color:#d69a5d8c;color:#f5d4ad}
+.planet-portal-pane{padding:19px 26px 24px}
+.planet-portal-pane>p{font-size:.82rem;line-height:1.75;color:#d1dbe6;margin:0 0 18px}
+.planet-portal-insight{padding:15px 18px;border-left:2px solid var(--gold);background:#ffffff08;display:flex;flex-direction:column;gap:8px;margin:17px 0}
+.planet-portal-insight span,.planet-mission-number{font-size:.58rem;letter-spacing:.17em;color:#dba772}
+.planet-portal-insight strong{font:500 1.15rem "Playfair Display",Georgia,serif}
+.planet-portal-primary,.planet-portal-region{border:1px solid #e3ae7385;background:#c89153;color:#081321;font-weight:700;cursor:pointer;padding:12px 16px;width:100%;text-align:left;font-size:.73rem;border-radius:8px}
+.planet-portal-region{margin-top:8px;background:#c891531a;color:#f6c58b}
+.planet-portal-missions{display:grid;gap:10px}
+.planet-portal-machine{text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:8px;background:#ffffff08;border:1px solid #ffffff20;padding:15px 17px;color:#f2eee7;cursor:pointer;border-radius:10px}
+.planet-portal-machine:hover,.planet-portal-machine:focus-visible{border-color:#d69a5d;background:#ffffff12}
+.planet-portal-machine strong{font:500 1.22rem "Playfair Display",Georgia,serif}
+.planet-portal-machine span:not(.planet-mission-number){font-size:.72rem;line-height:1.6;color:#c0cad4}
+.planet-portal-machine em{font-size:.65rem;font-style:normal;letter-spacing:.08em;color:#e8af70}
+.planet-portal-empty p{color:#c0cad4;font-size:.82rem;line-height:1.7}
+@media(max-width:700px){
+  .planet-mission-portal{top:auto;bottom:95px;right:14px;transform:none;max-height:min(60svh,610px)}
+  .planet-portal-top{padding:16px 18px 6px}
+  .planet-mission-portal h3{padding:0 18px}
+  .planet-portal-subtitle{padding:0 18px}
+  .planet-portal-tabs{padding:9px 18px}
+  .planet-portal-pane{padding:15px 18px 20px}
+}
+
+/* M9 — Stella: persistent, accessible museum navigation and narrated tour. */
+.museum-guide{position:fixed;z-index:20;left:clamp(12px,2.4vw,38px);bottom:clamp(12px,2.6vw,32px);width:min(360px,calc(100vw - 24px));pointer-events:none}
+.museum-guide button,.museum-guide-panel{pointer-events:auto}
+.museum-guide-launcher{border:1px solid #d69a5d96;border-radius:50px;background:#0c1a29ee;color:#f6e9dc;padding:13px 18px;display:flex;gap:10px;align-items:center;box-shadow:0 15px 40px #0009;cursor:pointer;font-size:.76rem;font-weight:700}
+.guide-orbit{display:grid;place-items:center;width:37px;height:37px;border-radius:50%;border:1px solid #d5a26395;background:#d9a56821;color:#edbd82;font-size:1.1rem;flex-shrink:0}
+.museum-guide-panel{background:linear-gradient(150deg,#152c3bef,#06101ef7);border:1px solid #cb9863b0;box-shadow:0 20px 65px #000b;border-radius:18px;overflow:hidden;backdrop-filter:blur(20px)}
+.museum-guide-head{display:flex;gap:11px;align-items:center;padding:16px 17px;border-bottom:1px solid #ffffff24}
+.museum-guide-head>div{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.guide-eyebrow{font-size:.54rem;letter-spacing:.17em;color:#dfad77}
+.museum-guide-head strong{font-size:.83rem}
+.museum-guide-dismiss{border:0;background:none;color:#d1d6df;cursor:pointer;font-size:1.5rem;line-height:1;padding:5px}
+.museum-guide-body{padding:17px 19px 6px;max-height:38vh;overflow:auto}
+.museum-guide-body h3{font:500 1.5rem "Playfair Display",Georgia,serif;margin:0 0 10px}
+.museum-guide-body p{font-size:.79rem;line-height:1.67;color:#cad5e0;margin:0 0 10px}
+.guide-progress{display:inline-block;color:#f3b67b;font-size:.64rem;letter-spacing:.1em;margin:6px 0 0}
+.museum-guide-actions{padding:12px 17px 5px;display:flex;flex-wrap:wrap;gap:8px}
+.museum-guide-actions button{cursor:pointer;border-radius:8px;padding:9px 12px;font-size:.66rem}
+.guide-primary{color:#102033;background:#d5a064;border:1px solid #f5cb94;font-weight:700}
+.guide-secondary{color:#f2eee7;background:#ffffff10;border:1px solid #ffffff30}
+.guide-text-action{color:#eec18d;background:transparent;border:0!important;text-decoration:underline}
+.guide-audio-note{padding:0 18px 12px;margin:4px 0 0;font-size:.59rem;color:#98a8bb}
+@media(max-width:700px){
+  .museum-guide{left:12px;bottom:12px;width:min(340px,calc(100vw - 24px))}
+  .museum-guide-body{max-height:24vh}
+}
+
+/* M9 — Story room: visitor-controlled chapters instead of a long article. */
+.mission-story-experience{margin-bottom:56px;border-bottom:1px solid var(--line);padding-bottom:52px}
+.mission-story-prompt{font-size:.82rem;line-height:1.6;color:var(--muted);margin:-8px 0 22px}
+.mission-story-shell{display:grid;grid-template-columns:minmax(200px,31%) minmax(0,1fr);gap:0;border:1px solid #d4a16455;background:linear-gradient(145deg,#142335,#090f1b);border-radius:14px;overflow:hidden}
+.mission-story-index{border-right:1px solid #ffffff23;display:flex;flex-direction:column;gap:4px;padding:16px;background:#050e1b85}
+.story-step{background:transparent;color:#d0dae5;border:1px solid transparent;text-align:left;padding:14px;cursor:pointer;border-radius:8px}
+.story-step span,.story-stage-label{display:block;color:#d7a46b;font-size:.6rem;letter-spacing:.15em;margin-bottom:8px}
+.story-step strong{font:500 1.02rem "Playfair Display",Georgia,serif}
+.story-step.is-active,.story-step:hover{border-color:#d4a16466;background:#d4a16416;color:white}
+.mission-story-stage{padding:clamp(22px,4vw,40px);display:flex;flex-direction:column;min-height:335px}
+.story-stage-label span{margin:0 7px;color:#6e7b89}
+.story-stage-page{flex:1;animation:story-stage-rise .28s ease both}
+.story-stage-page h3{font:500 clamp(1.6rem,3vw,2.35rem)/1.15 "Playfair Display",Georgia,serif;margin:15px 0 18px}
+.story-stage-page p{color:#d6dfe9;line-height:1.85;font-size:clamp(.85rem,1.1vw,.98rem);max-width:720px}
+.story-stage-controls{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:27px}
+.story-stage-controls button{cursor:pointer;padding:10px 12px;background:#ffffff0b;border:1px solid #ffffff3a;color:#f1eee8;font-size:.7rem;border-radius:7px}
+.story-stage-controls .story-stage-speak{border-color:#d69a5d88;color:#f1c18b}
+.story-stage-controls button:disabled{opacity:.36;cursor:not-allowed}
+@keyframes story-stage-rise{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:none}}
+.exhibit-archive-reference{background:#09141de0;border-color:#ffffff27;padding:20px 24px;gap:20px}
+.exhibit-archive-reference .source-tag{color:#aab7c8}
+.exhibit-archive-reference h3{font-size:1.06rem}
+.exhibit-archive-reference .button-primary{background:transparent;color:#d7ad7a;border:1px solid #d7ad7a72;font-size:.65rem;padding:10px 13px}
+@media(max-width:850px){
+  .mission-story-shell{grid-template-columns:1fr}
+  .mission-story-index{border-right:0;border-bottom:1px solid #ffffff23;flex-direction:row;overflow-x:auto}
+  .story-step{min-width:150px}
+  .mission-story-stage{min-height:290px}
+}
+@media(prefers-reduced-motion:reduce){.story-stage-page{animation:none!important}}

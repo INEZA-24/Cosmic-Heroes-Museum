@@ -10,12 +10,14 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
   const [isPlayingNarration, setIsPlayingNarration] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(true);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const openingTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!('speechSynthesis' in window)) {
       setSpeechSupported(false);
     }
     return () => {
+      if (openingTimerRef.current !== null) window.clearTimeout(openingTimerRef.current);
       if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
       }
@@ -23,14 +25,15 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
   }, []);
 
   const handleEnter = () => {
+    if (isOpening) return;
     if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
       setIsPlayingNarration(false);
     }
     setIsOpening(true);
-    setTimeout(() => {
+    openingTimerRef.current = window.setTimeout(() => {
       onEnter();
-    }, 650);
+    }, 1600);
   };
 
   const handleSkip = () => {
@@ -38,6 +41,7 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
       window.speechSynthesis.cancel();
       setIsPlayingNarration(false);
     }
+    if (openingTimerRef.current !== null) window.clearTimeout(openingTimerRef.current);
     onEnter();
   };
 
@@ -78,7 +82,7 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
         <p className="entrance-copy">Every machine has a story. Every journey leaves a legacy.</p>
 
         <div className="entrance-actions">
-          <button className="button button-primary" id="enter-button" onClick={handleEnter}>
+          <button className="button button-primary" id="enter-button" onClick={handleEnter} disabled={isOpening}>
             Enter the museum ↗
           </button>
           <button className="button button-quiet" id="skip-button" onClick={handleSkip}>

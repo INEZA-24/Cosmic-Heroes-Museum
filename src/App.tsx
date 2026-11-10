@@ -1,4 +1,6 @@
 import { useState, useRef, type FC } from 'react';
+import { machines } from './data';
+import { MuseumGuide } from './components/MuseumGuide';
 import { ViewType, DestinationArea } from './types';
 import { Entrance } from './components/Entrance';
 import { Header } from './components/Header';
@@ -12,6 +14,7 @@ export const App: FC = () => {
   const [selectedDestination, setSelectedDestination] = useState<DestinationArea>('moon');
   const [selectedMachineId, setSelectedMachineId] = useState<string>('apollo-15-lrv');
   const [previousView, setPreviousView] = useState<ViewType>('solar');
+  const [guidePlanetKey, setGuidePlanetKey] = useState<string | null>(null);
   const solarRef = useRef<SolarSystemHandle | null>(null);
 
   const handleOpenDestination = (area: DestinationArea) => {
@@ -69,7 +72,7 @@ export const App: FC = () => {
           />
 
           <div className={view !== 'solar' ? 'hidden' : ''}>
-            <SolarSystem ref={solarRef} onOpenDestination={handleOpenDestination} />
+            <SolarSystem ref={solarRef} onOpenDestination={handleOpenDestination} onSelectExhibit={handleSelectExhibit} onOpenCollection={() => setView('collection')} onPlanetSelected={setGuidePlanetKey} />
           </div>
 
           {view === 'collection' && (
@@ -94,6 +97,16 @@ export const App: FC = () => {
               }}
             />
           )}
+
+          <MuseumGuide
+            view={view}
+            machine={view === 'exhibit' ? machines.find(item => item.id === selectedMachineId) ?? null : null}
+            destination={selectedDestination}
+            planetKey={guidePlanetKey}
+            onSelectExhibit={handleSelectExhibit}
+            onFocusPlanet={(key) => { setView('solar'); solarRef.current?.focusPlanet(key); }}
+            onNavigate={(newView) => { setView(newView); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          />
 
           <footer className="museum-footer">
             <span>COSMIC HEROES OF STEEL MUSEUM</span>

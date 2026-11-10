@@ -2,6 +2,7 @@ import { type FC } from 'react';
 import { machines } from '../data';
 import { MachineModelViewer } from './MachineModelViewer';
 import { ExhibitHero } from './ExhibitHero';
+import { MissionStory } from './MissionStory';
 
 interface ExhibitViewProps {
   machineId: string;
@@ -65,24 +66,7 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
         </div>
       </section>
 
-      {/* Story Chapters */}
-      {machine.story && machine.story.length > 0 && (
-        <section className="exhibit-story-section">
-          <div className="section-label">
-            <p className="eyebrow">EXHIBIT CHAPTERS</p>
-            <h2>The Journey & Legacy</h2>
-          </div>
-          <div className="story-chapters-list">
-            {machine.story.map((chap, idx) => (
-              <div key={idx} className="story-chapter-card">
-                <span className="chapter-number">CHAPTER 0{idx + 1}</span>
-                <h3>{chap.title}</h3>
-                <p>{chap.content}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      <MissionStory key={machine.id} machine={machine} />
 
       {/* Engineering Highlights */}
       {machine.engineering && machine.engineering.length > 0 && (
@@ -142,14 +126,14 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
         </section>
       )}
 
-      {/* Verified NASA Sources */}
+      {/* NASA remains a secondary archival reference, not the museum's main story. */}
       {machine.sourceUrl && (
-        <section className="exhibit-source-card">
+        <aside className="exhibit-source-card exhibit-archive-reference">
           <div>
-            <span className="source-tag">VERIFIED ARCHIVAL SOURCE</span>
+            <span className="source-tag">OPTIONAL RESEARCH REFERENCE</span>
             <h3>{machine.sourceLabel || 'NASA Mission Archives'}</h3>
             <p>
-              Primary mission records, scientific papers, and telemetry archived by the National Aeronautics and Space Administration.
+              Want to go deeper? This NASA archive is a reference. Your guided mission story and interactive model are here in the museum.
             </p>
           </div>
           <a
@@ -159,9 +143,9 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
             className="button button-primary"
             style={{ textDecoration: 'none', display: 'inline-block' }}
           >
-            Read NASA Mission Record ↗
+            NASA archival source ↗
           </a>
-        </section>
+        </aside>
       )}
 
       {/* Previous / Next Machine Navigation */}

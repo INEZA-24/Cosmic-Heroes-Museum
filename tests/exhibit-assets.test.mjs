@@ -191,3 +191,28 @@ test('M8 image loading is guarded on unmount and full-width backgrounds have no 
   assert.ok(imageStyle.includes('object-fit:contain'));
   assert.ok(imageStyle.includes('right:0'));
 });
+
+test('M9 tour guide, mission room, and planet portal are available', () => {
+  const app = readFileSync('src/App.tsx','utf8');
+  const solar = readFileSync('src/components/SolarSystem.tsx','utf8');
+  const tour = readFileSync('src/components/MuseumGuide.tsx','utf8');
+  const story = readFileSync('src/components/MissionStory.tsx','utf8');
+  const entrance = readFileSync('src/components/Entrance.tsx','utf8');
+  const exhibit = readFileSync('src/components/ExhibitView.tsx','utf8');
+  const css = readFileSync('src/styles.css','utf8');
+  assert.match(app, /<MuseumGuide/);
+  assert.match(tour, /Begin guided tour/);
+  assert.match(tour, /speechSynthesis/);
+  assert.match(tour, /machines\[tourIndex \+ 1\]/);
+  assert.match(solar, /planet-mission-portal/);
+  assert.match(solar, /planet-portal-tabs/);
+  assert.match(solar, /onSelectExhibit\(machine.id\)/);
+  assert.match(story, /Narrate this chapter/);
+  assert.match(story, /chapterIndex/);
+  assert.match(exhibit, /<MissionStory/);
+  assert.match(exhibit, /OPTIONAL RESEARCH REFERENCE/);
+  assert.match(entrance, /1600/);
+  assert.match(css, /curtain-hem-flex/);
+  assert.match(css, /clip-path:polygon/);
+  assert.match(css, /mission-story-shell/);
+});

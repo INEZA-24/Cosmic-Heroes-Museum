@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import * as THREE from 'three';
-import { planetDataList, planetDescriptions } from '../data';
+import { planetDataList, planetDescriptions, machines } from '../data';
 import { DestinationArea, PlanetData } from '../types';
 import {
   createSunTexture,
@@ -27,6 +27,9 @@ export interface SolarSystemHandle {
 
 interface SolarSystemProps {
   onOpenDestination: (area: DestinationArea) => void;
+  onSelectExhibit: (machineId: string) => void;
+  onOpenCollection: () => void;
+  onPlanetSelected: (key: string | null) => void;
 }
 
 interface PlanetSceneItem extends PlanetData {
@@ -39,9 +42,10 @@ interface PlanetSceneItem extends PlanetData {
 }
 
 export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
-  ({ onOpenDestination }, ref) => {
+  ({ onOpenDestination, onSelectExhibit, onOpenCollection, onPlanetSelected }, ref) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [selectedPlanetKey, setSelectedPlanetKey] = useState<string | null>(null);
+    const [portalTab, setPortalTab] = useState<'overview' | 'missions'>('overview');
     const [destinationMenuOpen, setDestinationMenuOpen] = useState(false);
     const [isOrbitPaused, setIsOrbitPaused] = useState(false);
     const [webglError, setWebglError] = useState(false);
@@ -59,11 +63,14 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
 
     const resetCamera = () => {
       setSelectedPlanetKey(null);
+      onPlanetSelected(null);
       controlsRef.current?.reset();
     };
 
     const focusPlanet = (key: string) => {
       setSelectedPlanetKey(key);
+      setPortalTab('overview');
+      onPlanetSelected(key);
       setDestinationMenuOpen(false);
       controlsRef.current?.focus(key);
     };
@@ -956,6 +963,15 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
       selectedPlanetKey === 'saturn' ||
       selectedPlanetKey === 'deep-space';
 
+    useEffect(() => {
+      if (!selectedPlanetKey) return;
+      const handleEscape = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') { setSelectedPlanetKey(null); onPlanetSelected(null); }
+      };
+      window.addEventListener('keydown', handleEscape);
+      return () => window.removeEventListener('keydown', handleEscape);
+    }, [selectedPlanetKey, onPlanetSelected]);
+
     const getMissionTargetArea = (key: string): DestinationArea => {
       if (key === 'earth' || key === 'moon') return 'moon';
       if (key === 'mars') return 'mars';
@@ -987,6 +1003,10 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
       if (key === 'jupiter' || key === 'deep-space') return 'SOLAR SYSTEM / DEEP SPACE FRONTIER';
       return 'SOLAR SYSTEM / PLANETARY PROFILE';
     };
+
+    const featuredMissions = selectedPlanetKey && hasMissionAction
+      ? machines.filter(machine => machine.area === getMissionTargetArea(selectedPlanetKey))
+      : [];
 
     return (
       <section className="solar-hero" id="solar-view">
@@ -1114,34 +1134,54 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
         )}
 
         {selectedPlanet && (
-          <div className="planet-popover" id="planet-popover">
-            <button
-              className="popover-close"
-              id="close-popover"
-              aria-label="Close"
-              onClick={() => setSelectedPlanetKey(null)}
-            >
-              ×
-            </button>
-            <p className="eyebrow" id="planet-kind">
-              {getPopoverEyebrow(selectedPlanetKey || '')}
-            </p>
-            <h3 id="planet-name">{selectedPlanet.name}</h3>
-            <p id="planet-copy">{selectedDescription}</p>
-            <div id="planet-missions">
-              {hasMissionAction && (
-                <button
-                  className="popover-action"
-                  onClick={() => {
-                    const dest = getMissionTargetArea(selectedPlanetKey!);
-                    onOpenDestination(dest);
-                  }}
-                >
-                  {getActionLabel(selectedPlanetKey!)}
-                </button>
-              )}
+          <aside className="planet-popover planet-mission-portal" id="planet-popover" role="dialog" aria-modal="false" aria-labelledby="planet-name">
+            <div className="planet-portal-top">
+              <span className="planet-portal-orbit" aria-hidden="true">✦</span>
+              <span className="eyebrow" id="planet-kind">{getPopoverEyebrow(selectedPlanetKey || '')}</span>
+              <button className="popover-close" id="close-popover" aria-label="Close planet mission portal" onClick={() => { setSelectedPlanetKey(null); onPlanetSelected(null); }}>×</button>
             </div>
-          </div>
+            <h3 id="planet-name">{selectedPlanet.name}</h3>
+            <p className="planet-portal-subtitle">A window into this world — and humanity's journey to explore it.</p>
+            <div className="planet-portal-tabs" role="tablist" aria-label="Planet information">
+              <button type="button" role="tab" aria-selected={portalTab === 'overview'} className={portalTab === 'overview' ? 'is-active' : ''} onClick={() => setPortalTab('overview')}>Discover</button>
+              <button type="button" role="tab" aria-selected={portalTab === 'missions'} className={portalTab === 'missions' ? 'is-active' : ''} onClick={() => setPortalTab('missions')}>Missions {featuredMissions.length ? '(' + featuredMissions.length + ')' : ''}</button>
+            </div>
+            {portalTab === 'overview' ? (
+              <div className="planet-portal-pane" role="tabpanel">
+                <p id="planet-copy">{selectedDescription}</p>
+                <div className="planet-portal-insight">
+                  <span>{featuredMissions.length ? 'FEATURED IN THIS MUSEUM' : 'BEYOND OUR COLLECTION'}</span>
+                  <strong>{featuredMissions.length ? featuredMissions.length + ' explorers to meet' : 'More missions await discovery'}</strong>
+                </div>
+                <button type="button" className="planet-portal-primary" onClick={() => setPortalTab('missions')}>
+                  {featuredMissions.length ? 'Meet the explorers →' : 'Explore more of the museum →'}
+                </button>
+              </div>
+            ) : (
+              <div className="planet-portal-pane" role="tabpanel">
+                {featuredMissions.length > 0 ? (
+                  <div className="planet-portal-missions">
+                    {featuredMissions.map((machine, index) => (
+                      <button key={machine.id} className="planet-portal-machine" type="button" onClick={() => onSelectExhibit(machine.id)}>
+                        <span className="planet-mission-number">0{index + 1} · {machine.year}</span>
+                        <strong>{machine.name}</strong>
+                        <span>{machine.summary}</span>
+                        <em>Enter interactive exhibit ↗</em>
+                      </button>
+                    ))}
+                    <button className="planet-portal-region" type="button" onClick={() => onOpenDestination(getMissionTargetArea(selectedPlanetKey!))}>
+                      Explore the whole mission region →
+                    </button>
+                  </div>
+                ) : (
+                  <div className="planet-portal-empty">
+                    <p>We have no featured machine for this world yet. Follow the collection to discover the six missions currently on display.</p>
+                    <button type="button" className="planet-portal-primary" onClick={onOpenCollection}>Browse all six exhibits →</button>
+                  </div>
+                )}
+              </div>
+            )}
+          </aside>
         )}
       </section>
     );
