@@ -23,6 +23,12 @@ export const MuseumGuide: FC<MuseumGuideProps> = ({
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const tourIndex = machine ? machines.findIndex(item => item.id === machine.id) : -1;
 
+  // Let the planet mission portal take priority over the floating guide on
+  // narrow screens. The visitor can reopen Stella at any time.
+  useEffect(() => {
+    if (view === 'solar' && planetKey) setOpen(false);
+  }, [view, planetKey]);
+
   const stopSpeech = () => {
     if (speechAvailable) window.speechSynthesis.cancel();
     utteranceRef.current = null;

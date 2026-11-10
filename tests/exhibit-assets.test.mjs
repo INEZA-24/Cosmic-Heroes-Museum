@@ -47,7 +47,8 @@ test('M6 uses Cassini at Saturn and displays the approved transparent emblem', (
   assert.match(code, /area: "saturn"/);
   assert.doesNotMatch(code, /id: "surveyor-3"/);
   const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
-  assert.match(solar, /Explore Saturn & Titan/);
+  assert.match(solar, /selectedPlanetKey === 'saturn'/);
+  assert.match(solar, /planet-mission-portal/);
   assert.ok(existsSync('public/assets/branding/museum-emblem.svg'));
   const brand = readFileSync('src/components/BrandEmblem.tsx', 'utf8');
   assert.match(brand, /museum-emblem\.svg/);
