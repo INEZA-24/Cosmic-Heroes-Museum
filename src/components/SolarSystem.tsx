@@ -979,22 +979,6 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
       return 'deep-space';
     };
 
-    const getActionLabel = (key: string): string => {
-      if (key === 'earth' || key === 'moon') {
-        return "Explore Apollo 15 lunar rover ↗";
-      }
-      if (key === 'mars') {
-        return 'Explore Mars Missions (Sojourner, Opportunity, InSight) ↗';
-      }
-      if (key === 'jupiter') {
-        return 'Explore Jupiter Encounter (Pioneer 10) ↗';
-      }
-      if (key === 'saturn') {
-        return 'Explore Saturn & Titan (Cassini–Huygens) ↗';
-      }
-      return 'Explore Deep Space Missions (Pioneer 10) ↗';
-    };
-
     const getPopoverEyebrow = (key: string): string => {
       if (key === 'earth') return 'SOLAR SYSTEM / CRADLE OF EXPLORATION';
       if (key === 'moon') return 'SOLAR SYSTEM / LUNAR PROVING GROUND';
