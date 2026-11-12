@@ -194,3 +194,76 @@
   .exhibit-photo-hero .exhibit-status-pill{letter-spacing:0;font-size:.62rem}
   .exhibit-hero-content{padding:22px}
 }
+
+
+/* Guided tour: museum entrance and first-time welcome */
+.entrance-scroll-hint{font-size:.7rem;letter-spacing:.12em;color:#dfb77a;margin:8px 0 24px}
+.guide-welcome{position:absolute;z-index:7;left:clamp(16px,3.2vw,58px);bottom:clamp(170px,23vh,240px);display:flex;align-items:flex-end;gap:10px;width:min(390px,32vw);pointer-events:auto;animation:guide-arrive .6s ease-out both}
+.guide-portrait{display:grid;place-items:center;flex-shrink:0;border:1px solid #dba55d;border-radius:50%;width:66px;height:66px;background:linear-gradient(140deg,#795a37,#192e47);color:#f6cb8a;font-size:2rem;box-shadow:0 5px 30px #0009}
+.guide-dialogue{position:relative;background:#091627f0;border:1px solid #dba55da8;border-radius:16px 16px 16px 4px;padding:19px 24px;box-shadow:0 12px 45px #0009;backdrop-filter:blur(16px)}
+.guide-dialogue .eyebrow{font-size:.54rem;margin:0 0 9px}
+.guide-dialogue p{font-size:.76rem;line-height:1.6;color:#e2e8f0;margin:0 0 8px}
+.guide-dialogue p:last-child{margin:0;color:#c7d3df}
+.guide-dismiss{position:absolute;right:6px;top:5px;border:0;background:transparent;font-size:1.3rem;cursor:pointer;color:#cbd4dc}
+.guide-dismiss:hover{color:#e5ac62}
+.guided-tour-invite{position:absolute;z-index:5;bottom:clamp(90px,12vh,130px);left:50%;transform:translateX(-50%);width:min(560px,calc(100vw - 32px));text-align:center;pointer-events:auto}
+.guided-tour-invite .eyebrow{margin:0 0 7px}
+.guided-tour-invite>p:not(.eyebrow){font-size:.82rem;line-height:1.5;color:#eef0f7;text-shadow:0 2px 9px #000;margin:0 0 13px}
+.guided-tour-play{border:1px solid #efbb7f;border-radius:999px;background:linear-gradient(140deg,#dca55d,#a96b2d);color:#07111f;box-shadow:0 0 32px #dba15c77,0 12px 30px #0009;padding:18px 32px;font-weight:800;font-size:1.09rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.guided-tour-play span{padding-right:12px}
+.guided-tour-play:hover,.guided-tour-play:focus-visible{transform:translateY(-3px);box-shadow:0 0 42px #e3aa6baf,0 16px 35px #000b}
+@keyframes guide-arrive{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Story-first museum mode */
+.guided-journey{max-width:1460px;margin:0 auto;padding:110px clamp(20px,6vw,80px) 80px}
+.guided-topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:18px}
+.guided-topbar .eyebrow{margin:0}
+.guided-progress{display:flex;gap:7px;margin:0 0 30px}
+.guided-progress button{flex:1;height:5px;background:#263348;border:0;cursor:pointer;transition:background .2s}
+.guided-progress button.is-current{background:#dfa65e}
+.guided-progress button:hover{background:#a77e50}
+.guided-cover{position:relative;min-height:510px;display:flex;align-items:center;background:radial-gradient(ellipse at 78% 48%,#2b3441,#101923 63%,#09111c);border:1px solid #ffffff20;overflow:hidden}
+.guided-cover-copy{position:relative;z-index:2;width:57%;padding:clamp(28px,5vw,70px);background:linear-gradient(90deg,#0a111ce8,#0a111c9e 73%,transparent)}
+.guided-cover-copy h1{font:500 clamp(2.5rem,5vw,5.25rem)/1.08 "Playfair Display",Georgia,serif;margin:0 0 20px}
+.guided-cover-copy>p:not(.eyebrow){font-size:1rem;line-height:1.7;color:#d4dfeb}
+.guided-cover-image{position:absolute;top:0;right:0;width:65%;height:100%;object-fit:contain;object-position:right center;mask-image:linear-gradient(90deg,transparent 0%,black 28%)}
+.guided-audio{margin-top:15px;padding:14px 18px;background:#daa060;color:#081321;border:0;cursor:pointer;font-weight:700}
+.guided-audio:hover{background:#f2bd80}
+.guided-audio:disabled{opacity:.55;cursor:not-allowed}
+.guided-cover-copy .guided-audio-note{font-size:.7rem!important;color:#aebbc8!important}
+.guided-body{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.85fr);gap:clamp(25px,5vw,78px);margin:70px auto}
+.guided-story-chapter{margin:0 0 38px}
+.guided-story-chapter h2,.guided-milestones h2{font:500 clamp(1.6rem,3vw,2.5rem)/1.2 "Playfair Display",Georgia,serif}
+.guided-story-chapter p{font-size:1rem;line-height:1.95;color:#d0d8e2;padding:16px 20px;border-left:2px solid transparent;transition:background .2s,border-color .2s}
+.guided-story-chapter p.is-speaking{background:#d59e5d18;border-left-color:#e6ae6c;color:#fff}
+.guided-details{align-self:start;background:#101c2a;border:1px solid #ffffff1c;padding:28px}
+.guided-details dl>div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #ffffff20;padding:14px 0}
+.guided-details dt{font-size:.58rem;letter-spacing:.13em;color:#dba55f}
+.guided-details dd{font-size:.78rem;text-align:right;margin:0;color:#e6eaf0}
+.guided-details h3{font:500 1.6rem "Playfair Display",Georgia,serif;margin:30px 0 12px}
+.guided-details li{font-size:.8rem;line-height:1.7;color:#c7d0dc;margin:0 0 12px}
+.guided-milestones{border-top:1px solid #ffffff24;padding-top:40px}
+.guided-milestones ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin:24px 0 0;padding:0}
+.guided-milestones li{border-top:2px solid #d69a5d;background:#101c2a;padding:18px}
+.guided-milestones time{display:block;font-size:.65rem;color:#dba55f;margin-bottom:12px}
+.guided-milestones strong{font:500 1.15rem "Playfair Display",Georgia,serif}
+.guided-milestones li p{font-size:.77rem;line-height:1.65;color:#bfcad5}
+.guided-navigation{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;padding:45px 0 0;margin-top:45px;border-top:1px solid #ffffff25}
+@media(max-width:1050px){.guide-welcome{bottom:220px;width:min(345px,43vw)}}
+@media(max-width:780px){
+.guide-welcome{bottom:270px;left:12px;width:min(360px,calc(100vw - 24px))}
+.guide-portrait{width:44px;height:44px;font-size:1.4rem}
+.guide-dialogue{padding:14px 18px}
+.guide-dialogue p{font-size:.68rem}
+.guided-tour-invite{bottom:84px}
+.guided-tour-invite>p:not(.eyebrow){font-size:.73rem}
+.guided-tour-play{font-size:.9rem;padding:13px 22px}
+.guided-cover{min-height:680px;align-items:flex-end}
+.guided-cover-image{width:100%;height:62%;top:0;object-position:center top;mask-image:linear-gradient(180deg,black 40%,transparent 100%)}
+.guided-cover-copy{width:100%;padding:24px;background:linear-gradient(0deg,#09111cee,#09111caa 80%,transparent)}
+.guided-body{display:block;margin:40px auto}
+.guided-details{margin:30px 0}
+.guided-journey{padding-top:95px}
+}
+@media(max-width:480px){.guide-welcome{bottom:235px}.guide-dialogue p:last-child{display:none}.guided-tour-invite{bottom:88px}.guided-tour-invite .eyebrow{font-size:.57rem}.guided-navigation button{width:100%}}
+@media(prefers-reduced-motion:reduce){.guide-welcome{animation:none}.guided-tour-play{transition:none}}

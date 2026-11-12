@@ -45,6 +45,6 @@ export interface PlanetData {
   metalness?: number;
 }
 
-export type ViewType = 'entrance' | 'solar' | 'collection' | 'destination' | 'exhibit';
+export type ViewType = 'entrance' | 'solar' | 'collection' | 'destination' | 'exhibit' | 'guided';
 
 export type DestinationArea = 'moon' | 'mars' | 'deep-space' | 'saturn';

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-label="Illustrated museum guide">
+<defs><linearGradient id="coat" x2=".9" y2="1"><stop stop-color="#233d58"/><stop offset="1" stop-color="#081522"/></linearGradient><linearGradient id="skin" x2=".7" y2="1"><stop stop-color="#ba8063"/><stop offset="1" stop-color="#8e4b35"/></linearGradient></defs>
+<path d="M30 320Q30 248 84 229L91 210h65l10 21Q218 249 220 320" fill="url(#coat)" stroke="#dba565" stroke-width="3"/>
+<path d="M98 213l20 44 22-44 17 13-38 80-39-80z" fill="#f3eadb"/>
+<path d="M107 227l11 33 13-33-12-9z" fill="#d9a15a"/>
+<path d="M91 210q-25-24-30-69-17-33-4-74C74 10 166 9 187 66q13 41-9 80-6 43-27 64z" fill="#26202a"/>
+<ellipse cx="120" cy="130" rx="59" ry="75" fill="url(#skin)"/>
+<path d="M64 123q-10-63 26-81 53-24 95 30-24 4-37-9-25 23-84 28z" fill="#211b24"/>
+<path d="M88 129q14-7 25 0m20 0q14-7 25 0" fill="none" stroke="#32252a" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="100" cy="130" rx="3" ry="4" fill="#171b26"/><ellipse cx="145" cy="130" rx="3" ry="4" fill="#171b26"/>
+<path d="M124 136l-4 20 10 2" fill="none" stroke="#7a4334" stroke-width="3" stroke-linecap="round"/>
+<path d="M102 174q19 17 39-1" fill="none" stroke="#592e34" stroke-width="4" stroke-linecap="round"/>
+<circle cx="63" cy="155" r="8" fill="none" stroke="#e8b66f" stroke-width="3"/><circle cx="176" cy="155" r="8" fill="none" stroke="#e8b66f" stroke-width="3"/>
+<path d="M61 207q-16-38-13-86l-19 10q-21-76 30-105 41-34 96-14 54 14 59 78-13-16-34-17-29-51-83-31-38 9-36 68z" fill="#241b25"/>
+<path d="M65 245l31 14-5 54m84-68-31 14 5 54" fill="none" stroke="#dba565" stroke-width="3"/>
+<rect x="158" y="269" width="43" height="21" rx="3" fill="#dba565"/><text x="179" y="281" font-size="8" text-anchor="middle" fill="#0d2132" font-family="sans-serif">GUIDE</text>
+</svg>

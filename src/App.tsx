@@ -6,6 +6,7 @@ import { SolarSystem, SolarSystemHandle } from './components/SolarSystem';
 import { CollectionView } from './components/CollectionView';
 import { DestinationView } from './components/DestinationView';
 import { ExhibitView } from './components/ExhibitView';
+import { GuidedJourneyView } from './components/GuidedJourneyView';
 
 export const App: FC = () => {
   const [view, setView] = useState<ViewType>('entrance');
@@ -69,7 +70,7 @@ export const App: FC = () => {
           />
 
           <div className={view !== 'solar' ? 'hidden' : ''}>
-            <SolarSystem ref={solarRef} onOpenDestination={handleOpenDestination} />
+            <SolarSystem ref={solarRef} onOpenDestination={handleOpenDestination} onBeginGuidedTour={() => { setView('guided'); window.scrollTo({top: 0, behavior: 'smooth'}); }} />
           </div>
 
           {view === 'collection' && (
@@ -83,6 +84,8 @@ export const App: FC = () => {
               onSelectExhibit={handleSelectExhibit}
             />
           )}
+
+          {view === 'guided' && <GuidedJourneyView onExit={handleBackToSolar} />}
 
           {view === 'exhibit' && (
             <ExhibitView

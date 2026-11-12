@@ -27,6 +27,7 @@ export interface SolarSystemHandle {
 
 interface SolarSystemProps {
   onOpenDestination: (area: DestinationArea) => void;
+  onBeginGuidedTour: () => void;
 }
 
 interface PlanetSceneItem extends PlanetData {
@@ -39,12 +40,14 @@ interface PlanetSceneItem extends PlanetData {
 }
 
 export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
-  ({ onOpenDestination }, ref) => {
+  ({ onOpenDestination, onBeginGuidedTour }, ref) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [selectedPlanetKey, setSelectedPlanetKey] = useState<string | null>(null);
     const [destinationMenuOpen, setDestinationMenuOpen] = useState(false);
     const [isOrbitPaused, setIsOrbitPaused] = useState(false);
     const [webglError, setWebglError] = useState(false);
+    const [showWelcome, setShowWelcome] = useState(true);
+    useEffect(() => { if (!showWelcome) return; const timer = window.setTimeout(() => setShowWelcome(false), 20000); return () => window.clearTimeout(timer); }, [showWelcome]);
 
     const isOrbitPausedRef = useRef(false);
     isOrbitPausedRef.current = isOrbitPaused;
@@ -1056,6 +1059,20 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
           )}
         </div>
 
+        {showWelcome && <div className="guide-welcome" role="status">
+          <img className="guide-portrait" src="/assets/museum-guide.svg" alt="Illustration of your museum guide" />
+          <div className="guide-dialogue">
+            <button type="button" className="guide-dismiss" aria-label="Dismiss museum guide" onClick={() => setShowWelcome(false)}>×</button>
+            <span className="eyebrow">YOUR MUSEUM GUIDE</span>
+            <p>Hello, and welcome to the Cosmic Heroes of Steel Museum. I'll guide you through the story of humanity's robotic explorers of the cosmos.</p>
+            <p>Choose <strong>Begin Guided Tour</strong> below, or click a planet to explore freely.</p>
+          </div>
+        </div>}
+        <div className="guided-tour-invite">
+          <p className="eyebrow">THE MISSION JOURNEY</p>
+          <p>Deep dive into the narrated journey through the great robotic missions of space exploration.</p>
+          <button type="button" className="guided-tour-play" onClick={onBeginGuidedTour}><span aria-hidden="true">▶</span> Begin Guided Tour</button>
+        </div>
         <div className="hero-bottomline">
           <div className="interaction-hint">
             <span>DRAG</span> rotate <i>·</i> <span>SCROLL</span> zoom <i>·</i>{' '}

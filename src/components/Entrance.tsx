@@ -30,8 +30,16 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
     setIsOpening(true);
     setTimeout(() => {
       onEnter();
-    }, 650);
+    }, 1400);
   };
+
+  useEffect(() => {
+    const scrollToEnter = (event: WheelEvent) => {
+      if (event.deltaY > 22 && !isOpening) handleEnter();
+    };
+    window.addEventListener('wheel', scrollToEnter, { passive: true });
+    return () => window.removeEventListener('wheel', scrollToEnter);
+  }, [isOpening]);
 
   const handleSkip = () => {
     if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
@@ -53,7 +61,7 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
     }
 
     const narrationText =
-      "Welcome to the Cosmic Heroes of Steel Museum. Explore our Solar System and discover the extraordinary machines that carried humanity's curiosity beyond Earth.";
+      "Hello, and welcome to the Cosmic Heroes of Steel Museum. I’ll guide you through the story of humanity’s robotic explorers of the cosmos.";
     const u = new SpeechSynthesisUtterance(narrationText);
     u.rate = 0.92;
     u.onend = () => setIsPlayingNarration(false);
@@ -76,10 +84,11 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
           COSMIC HEROES <span>OF STEEL MUSEUM</span>
         </h1>
         <p className="entrance-copy">Every machine has a story. Every journey leaves a legacy.</p>
+        <p className="entrance-scroll-hint">Scroll down or select Welcome to open the curtains</p>
 
         <div className="entrance-actions">
           <button className="button button-primary" id="enter-button" onClick={handleEnter}>
-            Enter the museum ↗
+            Welcome · Step Inside ↗
           </button>
           <button className="button button-quiet" id="skip-button" onClick={handleSkip}>
             Skip intro
