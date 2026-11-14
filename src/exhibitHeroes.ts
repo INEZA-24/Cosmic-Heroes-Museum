@@ -18,6 +18,20 @@ export interface MuseumHero {
 }
 
 export const exhibitHeroes: Record<string, MuseumHero> = {
+  'surveyor-3': {
+    src: 'https://commons.wikimedia.org/wiki/Special:FilePath/Surveyor_3_on_the_Moon.jpg',
+    sourceUrl: 'https://science.nasa.gov/mission/surveyor-3/',
+    credit: 'NASA',
+    kind: 'NASA ARCHIVE PHOTOGRAPH',
+    description: 'Surveyor 3 on the lunar surface, photographed during Apollo 12.'
+  },
+  'viking-1': {
+    src: '/assets/exhibits/viking-1/hero.webp',
+    sourceUrl: 'https://science.nasa.gov/mission/viking-1/',
+    credit: 'Museum asset; verify original image credit before publication',
+    kind: 'MISSION ILLUSTRATION',
+    description: 'Viking 1 spacecraft and its exploration of Mars.'
+  },
   'apollo-15-lrv': {
     src: 'https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/09/2/2-apollo_15_on_moon-1.jpg?crop=faces%2Cfocalpoint&fit=clip&h=3025&w=4096',
     sourceUrl: 'https://science.nasa.gov/resource/apollo-15-on-the-moon/',
