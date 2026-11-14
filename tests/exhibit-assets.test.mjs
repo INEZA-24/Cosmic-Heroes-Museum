@@ -281,10 +281,12 @@ test('entrance says Begin Tour, keeps original curtains and never overlays title
   assert.ok(styles.includes('transition:transform 1.4s cubic-bezier'));
   assert.doesNotMatch(styles, /@keyframes curtain-sway-left/);
   assert.doesNotMatch(styles, /@keyframes curtain-sway-right/);
-  assert.ok(styles.includes('.entrance-content{') && styles.includes('display:grid;grid-template-rows:'));
-  assert.ok(styles.includes('grid-row:1;align-self:end'));
-  assert.ok(styles.includes('grid-row:2;position:static'));
-  assert.ok(styles.includes('grid-row:3;align-self:start'));
+  assert.ok(styles.includes('.entrance-content{') && styles.includes('display:flex;flex-direction:column;align-items:center;justify-content:center'));
+  assert.ok(styles.includes('.entrance-actions{') && styles.includes('display:flex;justify-content:center'));
+  assert.ok(styles.includes('.entrance-heading{') && styles.includes('position:static;transform:none'));
+  assert.doesNotMatch(entrance, /entrance-welcome-arrow/);
+  assert.doesNotMatch(entrance, /↗/);
+  assert.doesNotMatch(styles, /\.entrance-welcome-arrow/);
   assert.match(styles, /prefers-reduced-motion:reduce/);
 });
 
