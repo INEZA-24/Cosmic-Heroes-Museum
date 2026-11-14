@@ -361,57 +361,62 @@
   to{opacity:1;transform:translateY(0)}
 }
 
-/* Entry composition: true grid layout avoids the old button/title collision.
-   Original sliding curtains from the base stylesheet remain unchanged. */
+
+/* Entrance: vertically and horizontally center the full logo/title/CTA group,
+   instead of offsetting the action into its own row. Original curtains remain. */
 html{scroll-padding-top:92px}
 .entrance-content{
-  position:relative;z-index:3;width:min(1020px,100%);min-height:100svh;
-  display:grid;grid-template-rows:minmax(max-content,1fr) auto minmax(52px,1fr);
-  justify-items:center;align-items:center;
-  margin:0 auto;padding:clamp(24px,4vh,42px) 22px clamp(46px,7vh,75px);
-  text-align:center;
+  position:relative;z-index:3;
+  width:min(990px,100%);
+  min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(28px,5vh,48px) 22px clamp(64px,9vh,88px);
+  margin:0 auto;text-align:center;
 }
 .entrance-heading{
-  grid-row:1;align-self:end;width:100%;max-width:900px;
   position:static;transform:none;
-  margin:0 auto clamp(24px,4vh,43px);
+  flex:0 0 auto;width:100%;max-width:940px;margin:0 auto;
+  text-align:center;
 }
 .entrance .museum-emblem{
-  font-size:clamp(2.75rem,6vh,4.4rem);margin-bottom:12px;
+  font-size:clamp(2.85rem,6.5vh,4.4rem);margin-bottom:14px;
 }
-.entrance-heading .eyebrow{margin-bottom:11px}
+.entrance-heading .eyebrow{margin-bottom:12px}
 .entrance-heading h1{
-  font-size:clamp(2rem,5.15vw,4.25rem);line-height:1.08;letter-spacing:-.018em;
+  font-size:clamp(2.05rem,5.25vw,4.4rem);line-height:1.06;
+  letter-spacing:-.015em;
 }
 .entrance-heading h1 span{
   display:block;font-size:.59em;letter-spacing:.11em;margin-top:10px;
 }
 .entrance-heading .entrance-copy{
-  max-width:660px;margin:16px auto 0;
-  font-size:clamp(.82rem,1.1vw,.97rem);line-height:1.5;
+  max-width:650px;margin:18px auto 0;
+  font-size:clamp(.81rem,1.12vw,.97rem);line-height:1.55;
 }
 .entrance-actions{
-  grid-row:2;position:static;transform:none;
-  width:min(345px,100%);margin:0 auto;display:flex;justify-content:center;
+  position:static;transform:none;
+  display:flex;justify-content:center;
+  width:min(345px,100%);margin:clamp(25px,4.5vh,38px) auto 0;
+  flex:0 0 auto;
 }
 .entrance-welcome-button{
   position:relative;display:flex;align-items:center;justify-content:center;
-  width:100%;min-height:67px;gap:16px;padding:16px 22px;overflow:hidden;
+  width:100%;min-height:67px;padding:16px 24px;
   color:#14191e;background:linear-gradient(130deg,#edc796,#d99d59 58%,#b57b3e);
   border:1px solid #efcf9d;border-radius:7px;
   box-shadow:0 0 22px #d69a5d25,0 12px 35px #0006;
-  font-size:clamp(.88rem,1.04vw,1.02rem);letter-spacing:.11em;
+  font-size:clamp(.9rem,1.05vw,1.03rem);letter-spacing:.13em;
   font-weight:800;text-transform:uppercase;cursor:pointer;
   transition:transform .2s ease,box-shadow .2s ease;
 }
 .entrance-welcome-button:hover{
-  transform:translateY(-2px);box-shadow:0 0 30px #d69a5d52,0 17px 35px #0008;
+  transform:translateY(-2px);
+  box-shadow:0 0 30px #d69a5d52,0 17px 35px #0008;
 }
 .entrance-welcome-button:focus-visible{outline:3px solid #fff;outline-offset:5px}
 .entrance-welcome-button:disabled{opacity:.86;cursor:default}
-.entrance-welcome-arrow{font-size:1.32rem;line-height:1}
 .entrance-scroll-hint{
-  grid-row:3;align-self:start;position:static;margin:24px 0 0;
+  position:static;display:block;margin:17px 0 0;
   color:#dbb889;letter-spacing:.1em;font-size:.73rem;text-align:center;
 }
 @media(max-width:820px){
@@ -437,21 +442,20 @@ html{scroll-padding-top:92px}
   .museum-guide-float--right .museum-guide-speech::before{left:auto;right:-28px}
   .museum-guide-float--right .museum-guide-speech::after{left:auto;right:-24px}
   .entrance-content{padding:22px 16px 58px}
-  .entrance-heading{margin-bottom:22px}
   .entrance .museum-emblem{font-size:2.7rem;margin-bottom:9px}
-  .entrance-heading .entrance-copy{margin-top:10px}
-  .entrance-actions{width:min(320px,100%)}
+  .entrance-heading .entrance-copy{margin-top:11px}
+  .entrance-actions{width:min(320px,100%);margin-top:26px}
   .entrance-welcome-button{min-height:62px}
 }
 @media(max-height:650px){
-  .entrance-content{grid-template-rows:minmax(max-content,1fr) auto minmax(35px,1fr);padding-top:20px;padding-bottom:40px}
-  .entrance-heading{margin-bottom:20px}
-  .entrance .museum-emblem{font-size:2.75rem;margin-bottom:6px}
-  .entrance-heading .eyebrow{margin-bottom:6px}
-  .entrance-heading h1{font-size:clamp(1.65rem,4.4vw,3.1rem)}
+  .entrance-content{padding:18px 18px 50px}
+  .entrance .museum-emblem{font-size:clamp(2.5rem,5.2vh,3rem);margin-bottom:7px}
+  .entrance-heading .eyebrow{margin-bottom:7px}
+  .entrance-heading h1{font-size:clamp(1.75rem,4.4vw,3.1rem)}
   .entrance-heading h1 span{margin-top:6px}
-  .entrance-heading .entrance-copy{margin-top:8px}
-  .entrance-scroll-hint{margin-top:18px}
+  .entrance-heading .entrance-copy{margin-top:10px}
+  .entrance-actions{margin-top:24px}
+  .entrance-scroll-hint{margin-top:14px}
 }
 @media(max-height:600px){
   .museum-guide-float--solar{bottom:112px}
