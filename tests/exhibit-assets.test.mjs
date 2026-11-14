@@ -263,6 +263,15 @@ test('museum guide is a floating white cloud using only the uploaded WebP poses'
   assert.match(styles, /prefers-reduced-motion/);
 });
 
+test('museum guide thought dots point toward her head on both sides', () => {
+  const css = readFileSync('src/styles.css', 'utf8');
+  assert.ok(css.includes('.museum-guide-cloud::before {width:30px;height:30px;left:-40px;top:88px;bottom:auto;}'));
+  assert.ok(css.includes('.museum-guide-cloud::after {width:16px;height:16px;left:-78px;top:50px;bottom:auto;}'));
+  assert.ok(css.includes('.museum-guide-float--right .museum-guide-cloud::before {left:auto;right:-40px;}'));
+  assert.ok(css.includes('.museum-guide-float--right .museum-guide-cloud::after {left:auto;right:-78px;}'));
+  assert.ok(css.includes('.museum-guide-cloud::before{left:-22px;top:78px;}'));
+});
+
 test('entrance has one centered Welcome action with a fabric-sway curtain opening', () => {
   const entrance = readFileSync('src/components/Entrance.tsx', 'utf8');
   const styles = readFileSync('src/styles.css', 'utf8');
