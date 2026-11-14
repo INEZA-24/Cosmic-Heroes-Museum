@@ -306,3 +306,67 @@ test('museum guide dismisses after exactly ten seconds in both views', () => {
   assert.match(solar, /setTimeout\(\(\) => setShowWelcome\(false\), 10000\)/);
   assert.match(guided, /setTimeout\(\(\) => setGuideVisible\(false\), 10000\)/);
 });
+
+test('all eight recorded Stella tracks use the exact uploaded MP3 filenames', () => {
+  const tracks = readFileSync('src/audioTracks.ts', 'utf8');
+  const player = readFileSync('src/components/MissionAudioPlayer.tsx', 'utf8');
+  const guide = readFileSync('src/components/GuidedJourneyView.tsx', 'utf8');
+  const exhibit = readFileSync('src/components/ExhibitView.tsx', 'utf8');
+  const app = readFileSync('src/App.tsx', 'utf8');
+  const uploaded = [
+    [
+        "surveyor-3",
+        "surveyor3.mp3"
+    ],
+    [
+        "apollo-15-lrv",
+        "Apollo_lunar_sound.mp3"
+    ],
+    [
+        "pioneer-10",
+        "pioneer_10.mp3"
+    ],
+    [
+        "viking-1",
+        "Viking.mp3"
+    ],
+    [
+        "sojourner",
+        "sojourner.mp3"
+    ],
+    [
+        "cassini-huygens",
+        "Cassini–Huygens.mp3"
+    ],
+    [
+        "opportunity",
+        "Opportunity.mp3"
+    ],
+    [
+        "insight",
+        "Insight.mp3"
+    ]
+];
+
+  for (const [id, filename] of uploaded) {
+    assert.ok(tracks.includes("'"+id+"': '"+filename+"'"), 'Incorrect MP3 mapping for ' + id);
+    const pathname = `public/assets/audio/${id}/${filename}`;
+    assert.ok(existsSync(pathname), 'Missing recorded narration: ' + pathname);
+    assert.ok(statSync(pathname).size > 1000, 'Empty or invalid recording: ' + pathname);
+  }
+
+  assert.match(player, /<audio/);
+  assert.match(player, /onTimeUpdate/);
+  assert.match(player, /audio\.play\(\)/);
+  assert.match(player, /audio\.pause\(\)/);
+  assert.match(player, /Follow text/);
+  assert.match(player, /prefers-reduced-motion: reduce/);
+  assert.match(guide, /MissionAudioPlayer/);
+  assert.match(exhibit, /MissionAudioPlayer/);
+  assert.match(guide, /guided-snapshot-beats/);
+  assert.match(guide, /onExploreMachine/);
+  assert.doesNotMatch(guide, /guided-snapshot-spotlight/);
+  assert.doesNotMatch(exhibit, /exhibit-mission-moment/);
+  assert.doesNotMatch(exhibit, /exhibit-listen-btn/);
+  assert.match(app, /initialMissionId=\{guidedResumeId\}/);
+});

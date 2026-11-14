@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState, type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { machines } from '../data';
 import { exhibitHeroes } from '../exhibitHeroes';
+import { missionNarrations } from '../narrationScripts';
+import { MissionAudioPlayer } from './MissionAudioPlayer';
 import { MuseumGuideBubble, type MuseumGuidePose } from './MuseumGuideBubble';
 
 const ordered = [...machines].sort((a,b) => (a.launchDate ? new Date(a.launchDate).getTime() : 0) - (b.launchDate ? new Date(b.launchDate).getTime() : 0));
@@ -26,124 +28,126 @@ const guidePoseByMission: Record<string, MuseumGuidePose> = {
   'insight': 'neutral-hands-clasped'
 };
 
-interface GuidedJourneyProps { onExit: () => void; }
+interface GuidedJourneyProps {
+  onExit: () => void;
+  onExploreMachine: (machineId: string) => void;
+  initialMissionId?: string | null;
+}
 
-export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
-  const [index, setIndex] = useState(0);
+/**
+ * A chronological overview of each machine. The optional MP3 story uses the
+ * same Stella recording as the full exhibit, with approximate reading waypoints.
+ */
+export const GuidedJourneyView: FC<GuidedJourneyProps> = ({
+  onExit, onExploreMachine, initialMissionId
+}) => {
+  const [index, setIndex] = useState(() => Math.max(0, ordered.findIndex(m => m.id === initialMissionId)));
   const [guideVisible, setGuideVisible] = useState(true);
-  const [activeParagraph, setActiveParagraph] = useState(-1);
-  const [playing, setPlaying] = useState(false);
-  const [speechAvailable] = useState(() => typeof window !== 'undefined' && 'speechSynthesis' in window);
-  const paragraphRefs = useRef<Array<HTMLParagraphElement | null>>([]);
   const current = ordered[index];
-  const paragraphs = (current.story ?? []).map(c => c.content);
-  const stop = () => {
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    setPlaying(false);
-    setActiveParagraph(-1);
-  };
-  useEffect(() => () => { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); },[]);
+  const script = missionNarrations[current.id];
+  const photo = exhibitHeroes[current.id];
+
   useEffect(() => {
-    stop();
-    window.scrollTo({top:0,behavior:'smooth'});
-  },[index]);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [index]);
+
   useEffect(() => { setGuideVisible(true); }, [index]);
   useEffect(() => {
     if (!guideVisible) return;
     const timer = window.setTimeout(() => setGuideVisible(false), 10000);
     return () => window.clearTimeout(timer);
   }, [index, guideVisible]);
-  const speakParagraph = (position:number) => {
-    if (position >= paragraphs.length || !('speechSynthesis' in window)) {
-      setPlaying(false);
-      setActiveParagraph(-1);
-      return;
-    }
-    const utterance = new SpeechSynthesisUtterance(paragraphs[position]);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.91;
-    utterance.onstart = () => {
-      setActiveParagraph(position);
-      paragraphRefs.current[position]?.scrollIntoView({behavior:'smooth',block:'center'});
-    };
-    utterance.onend = () => speakParagraph(position + 1);
-    utterance.onerror = () => { setPlaying(false); setActiveParagraph(-1); };
-    window.speechSynthesis.speak(utterance);
-  };
-  const play = () => {
-    if (!speechAvailable) return;
-    if (playing) { stop(); return; }
-    window.speechSynthesis.cancel();
-    setGuideVisible(false);
-    setPlaying(true);
-    speakParagraph(0);
-  };
-  const change = (next:number) => {
-    stop();
-    setIndex(next);
-  };
-  const photo = exhibitHeroes[current.id];
+
+  const change = (next: number) => setIndex(next);
+  const leave = () => onExit();
+  const explore = () => onExploreMachine(current.id);
+
   return (
     <article className="guided-journey" aria-label="Chronological guided museum tour">
       <div className="guided-topbar">
-        <button type="button" onClick={() => {stop(); onExit();}} className="back-link">← Return to the Universe</button>
+        <button type="button" onClick={leave} className="back-link">← Return to the Universe</button>
         <span className="eyebrow">THE GUIDED JOURNEY · CHAPTER {index + 1} OF {ordered.length}</span>
         {!guideVisible && <button type="button" className="guided-guide-reopen" onClick={() => setGuideVisible(true)}>Show guide</button>}
       </div>
-      <div className="guided-progress" aria-label="Tour progress">{ordered.map((m,i)=><button type="button" key={m.id} className={i===index?'is-current':''} aria-current={i===index?'step':undefined} onClick={()=>change(i)} title={m.name} aria-label={`Go to chapter ${i+1}: ${m.name}`}/>)}</div>
+      <div className="guided-progress" aria-label="Tour progress">
+        {ordered.map((machine,i) => (
+          <button type="button" key={machine.id}
+            className={i===index?'is-current':''}
+            aria-current={i===index?'step':undefined}
+            title={machine.name}
+            aria-label={`Go to chapter ${i+1}: ${machine.name}`}
+            onClick={() => change(i)}
+          />
+        ))}
+      </div>
+
       <header className="guided-cover">
         <div className="guided-cover-copy">
           <p className="eyebrow">{current.place.toUpperCase()} · LAUNCHED {current.launchDate ?? current.year}</p>
           <h1>{current.name}</h1>
           <p>{current.summary}</p>
-          <button type="button" onClick={play} className="guided-audio" disabled={!speechAvailable} aria-pressed={playing}>
-            {speechAvailable ? (playing ? '■ Stop narration' : '▶ Listen to this chapter') : 'Narration is unavailable in this browser'}
-          </button>
-          <p className="guided-audio-note">You can read at your own pace. Narration follows each passage when started.</p>
+          <MissionAudioPlayer
+            key={current.id}
+            missionId={current.id}
+            onStart={() => setGuideVisible(false)}
+            waypoints={[0, 1, 2].map(i => () =>
+              document.querySelectorAll<HTMLElement>('.guided-snapshot-beat')[i] ?? null
+            )}
+          />
         </div>
         {photo && <img src={photo.src} alt={current.name} className="guided-cover-image"/>}
       </header>
+
       {guideVisible && (
         <MuseumGuideBubble
-          key={current.id}
-          context="journey"
-          side="right"
+          key={current.id} context="journey" side="right"
           pose={guidePoseByMission[current.id] ?? 'neutral-hands-clasped'}
           label={`YOUR MUSEUM GUIDE · CHAPTER ${index + 1}`}
-          message={guideIntroductions[current.id] ?? 'Welcome to the next chapter of our exploration.'}
+          message={guideIntroductions[current.id] ?? 'Welcome to our next mission.'}
           onDismiss={() => setGuideVisible(false)}
         />
       )}
-      <div className="guided-body">
-        <section className="guided-story" aria-label="Narrated mission story">
-          <p className="eyebrow">A STORY OF DISCOVERY</p>
-          {(current.story ?? []).map((chapter,i)=>(
-            <div key={i} className="guided-story-chapter">
-              <h2>{chapter.title}</h2>
-              <p ref={element => { paragraphRefs.current[i] = element; }} className={activeParagraph===i?'is-speaking':''}>{chapter.content}</p>
+
+      <section className="guided-snapshot" aria-label="Three moments from the mission">
+        <div className="guided-snapshot-heading">
+          <div>
+            <p className="eyebrow">MISSION OVERVIEW</p>
+            <h2>In context</h2>
+            <p>Key background for your visit.</p>
+          </div>
+          <button type="button" className="guided-snapshot-explore" onClick={explore}>
+            Explore full exhibit & {current.id==='surveyor-3'?'archive':'3D model'} →
+          </button>
+        </div>
+        <div className="guided-snapshot-beats">
+          {script.snapshot.map((text,i) => (
+            <div key={i}
+              className="guided-snapshot-beat">
+              <span className="guided-snapshot-number">0{i+1}</span>
+              <p>{text}</p>
             </div>
           ))}
-        </section>
-        <aside className="guided-details">
-          <p className="eyebrow">MISSION AT A GLANCE</p>
-          <dl>
-            <div><dt>LAUNCH</dt><dd>{current.launchDate ?? current.year}</dd></div>
-            <div><dt>DESTINATION</dt><dd>{current.place}</dd></div>
-            <div><dt>TYPE</dt><dd>{current.kind}</dd></div>
-            <div><dt>ARRIVAL / ENCOUNTER</dt><dd>{current.landingDate ?? '—'}</dd></div>
-          </dl>
-          <h3>What this explorer achieved</h3>
-          <ul>{(current.discoveries ?? []).map((achievement,i)=><li key={i}>{achievement}</li>)}</ul>
-        </aside>
-      </div>
-      <section className="guided-milestones">
-        <p className="eyebrow">THE MISSION CHRONICLE</p>
-        <h2>Moments that shaped the journey</h2>
-        <ol>{(current.timeline ?? []).map((moment,i)=><li key={i}><time>{moment.date}</time><strong>{moment.title}</strong><p>{moment.desc}</p></li>)}</ol>
+        </div>
       </section>
+
+      <div className="guided-snapshot-end">
+        <p className="eyebrow">FURTHER READING</p>
+        <p>Read the mission history, examine the equipment, and explore the findings.</p>
+        <button type="button" className="button button-primary" onClick={explore}>
+          View full exhibit →
+        </button>
+      </div>
       <nav className="guided-navigation" aria-label="Guided tour chapter navigation">
-        <button type="button" className="button button-quiet" onClick={()=>index===0?onExit():change(index-1)}>{index===0?'← Exit tour':'← Previous chapter'}</button>
-        {index+1<ordered.length ? <button type="button" className="button button-primary" onClick={()=>change(index+1)}>Next exhibit: {ordered[index+1].name} →</button> : <button type="button" className="button button-primary" onClick={()=>{stop();onExit();}}>Finish tour · Return to Universe ↗</button>}
+        <button type="button" className="button button-quiet" onClick={()=>index===0?leave():change(index-1)}>
+          {index===0?'← Exit tour':'← Previous mission'}
+        </button>
+        {index+1<ordered.length ? (
+          <button type="button" className="button button-primary" onClick={()=>change(index+1)}>
+            Next mission: {ordered[index+1].name} →
+          </button>
+        ) : (
+          <button type="button" className="button button-primary" onClick={leave}>Finish tour · Return to Universe</button>
+        )}
       </nav>
     </article>
   );
