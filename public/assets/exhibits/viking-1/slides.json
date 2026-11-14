@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "src": "/assets/exhibits/viking-1/hero.webp",
+      "title": "Viking 1 — Mars Lander",
+      "kind": "MISSION REFERENCE IMAGE",
+      "description": "Museum reference image for the Viking 1 Mars lander mission.",
+      "credit": "Museum-uploaded image; original source not yet verified",
+      "sourceUrl": null,
+      "lowResolution": false
+    }
+  ]
+}
