@@ -319,7 +319,7 @@ test('narration script pack covers all eight missions with short beats and speci
     assert.ok(doc.includes('(`' + id + '`)'), 'Missing voice export script ' + id);
   }
   for (const key of ['snapshot','milestone','opening','model','engineering','discoveries','chapters']) {
-    assert.ok(code.includes(key + ':'), 'Missing narration field ' + key);
+    assert.ok(code.includes('"' + key + '":'), 'Missing narration field ' + key);
   }
   assert.match(guide,/guided-snapshot-beats/);
   assert.match(guide,/onExploreMachine/);
