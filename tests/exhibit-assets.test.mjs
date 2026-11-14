@@ -299,3 +299,10 @@ test('navbar remains translucent and fixed while scrolling', () => {
   assert.match(header, /backdrop-filter:blur\(16px\)/);
   assert.ok(styles.includes('scroll-padding-top:92px'));
 });
+
+test('museum guide dismisses after exactly ten seconds in both views', () => {
+  const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
+  const guided = readFileSync('src/components/GuidedJourneyView.tsx', 'utf8');
+  assert.match(solar, /setTimeout\(\(\) => setShowWelcome\(false\), 10000\)/);
+  assert.match(guided, /setTimeout\(\(\) => setGuideVisible\(false\), 10000\)/);
+});
