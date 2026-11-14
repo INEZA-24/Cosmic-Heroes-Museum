@@ -1,13 +1,36 @@
 import { useEffect, useRef, useState, type FC } from 'react';
 import { machines } from '../data';
 import { exhibitHeroes } from '../exhibitHeroes';
+import { MuseumGuideBubble, type MuseumGuidePose } from './MuseumGuideBubble';
 
 const ordered = [...machines].sort((a,b) => (a.launchDate ? new Date(a.launchDate).getTime() : 0) - (b.launchDate ? new Date(b.launchDate).getTime() : 0));
+
+const guideIntroductions: Record<string, string> = {
+  'surveyor-3': "Before astronauts could walk on the Moon, robotic explorers tested the ground. Meet Surveyor 3, whose experiments helped prepare the way.",
+  'apollo-15-lrv': "Our next stop is 1971. Apollo 15's Falcon lander carried the first lunar rover to the Moon, allowing astronauts to travel farther than ever before.",
+  'pioneer-10': "Now we're heading much farther out. Pioneer 10 became the first spacecraft to explore Jupiter up close.",
+  'viking-1': "In 1976, Viking 1 touched down on Mars with its own laboratory. What could its experiments reveal about the Red Planet?",
+  'sojourner': "Let's meet the small rover that proved wheels could explore Mars. Sojourner opened a new era of robotic mobility.",
+  'cassini-huygens': "Our next destination is Saturn. Cassini explored the ringed giant, while Huygens descended to the surface of Titan.",
+  'opportunity': "Opportunity was supposed to explore Mars for just 90 sols. Instead, its extraordinary journey lasted almost fifteen years.",
+  'insight': "For our final mission, we'll listen beneath the surface of Mars. InSight used marsquakes to investigate the planet's hidden interior."
+};
+const guidePoseByMission: Record<string, MuseumGuidePose> = {
+  'surveyor-3': 'presenting-one-hand',
+  'apollo-15-lrv': 'neutral-hands-clasped',
+  'pioneer-10': 'explaining-two-hands',
+  'viking-1': 'presenting-one-hand',
+  'sojourner': 'explaining-two-hands',
+  'cassini-huygens': 'presenting-one-hand',
+  'opportunity': 'explaining-two-hands',
+  'insight': 'neutral-hands-clasped'
+};
 
 interface GuidedJourneyProps { onExit: () => void; }
 
 export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
   const [index, setIndex] = useState(0);
+  const [guideVisible, setGuideVisible] = useState(true);
   const [activeParagraph, setActiveParagraph] = useState(-1);
   const [playing, setPlaying] = useState(false);
   const [speechAvailable] = useState(() => typeof window !== 'undefined' && 'speechSynthesis' in window);
@@ -24,6 +47,12 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
     stop();
     window.scrollTo({top:0,behavior:'smooth'});
   },[index]);
+  useEffect(() => { setGuideVisible(true); }, [index]);
+  useEffect(() => {
+    if (!guideVisible) return;
+    const timer = window.setTimeout(() => setGuideVisible(false), 22000);
+    return () => window.clearTimeout(timer);
+  }, [index, guideVisible]);
   const speakParagraph = (position:number) => {
     if (position >= paragraphs.length || !('speechSynthesis' in window)) {
       setPlaying(false);
@@ -45,6 +74,7 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
     if (!speechAvailable) return;
     if (playing) { stop(); return; }
     window.speechSynthesis.cancel();
+    setGuideVisible(false);
     setPlaying(true);
     speakParagraph(0);
   };
@@ -58,6 +88,7 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
       <div className="guided-topbar">
         <button type="button" onClick={() => {stop(); onExit();}} className="back-link">← Return to the Universe</button>
         <span className="eyebrow">THE GUIDED JOURNEY · CHAPTER {index + 1} OF {ordered.length}</span>
+        {!guideVisible && <button type="button" className="guided-guide-reopen" onClick={() => setGuideVisible(true)}>Show guide</button>}
       </div>
       <div className="guided-progress" aria-label="Tour progress">{ordered.map((m,i)=><button type="button" key={m.id} className={i===index?'is-current':''} aria-current={i===index?'step':undefined} onClick={()=>change(i)} title={m.name} aria-label={`Go to chapter ${i+1}: ${m.name}`}/>)}</div>
       <header className="guided-cover">
@@ -72,6 +103,17 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
         </div>
         {photo && <img src={photo.src} alt={current.name} className="guided-cover-image"/>}
       </header>
+      {guideVisible && (
+        <MuseumGuideBubble
+          key={current.id}
+          context="journey"
+          side="right"
+          pose={guidePoseByMission[current.id] ?? 'neutral-hands-clasped'}
+          label={`YOUR MUSEUM GUIDE · CHAPTER ${index + 1}`}
+          message={guideIntroductions[current.id] ?? 'Welcome to the next chapter of our exploration.'}
+          onDismiss={() => setGuideVisible(false)}
+        />
+      )}
       <div className="guided-body">
         <section className="guided-story" aria-label="Narrated mission story">
           <p className="eyebrow">A STORY OF DISCOVERY</p>

@@ -29,7 +29,7 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
   // Start with the local image immediately: avoid fetching a large remote NASA
   // fallback while slides.json is loading, which caused an unnecessary flash.
   const localHeroPath = `/assets/exhibits/${machine.id}/hero.webp`;
-  const localHeroSource = fallback?.src.startsWith(localHeroPath) ? fallback.src : localHeroPath;
+  const localHeroSource = machine.id === 'surveyor-3' && fallback ? fallback.src : (fallback?.src.startsWith(localHeroPath) ? fallback.src : localHeroPath);
   const localHero: HeroScene = {
     src: localHeroSource,
     title: machine.name,
@@ -188,7 +188,7 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
           </div>
         )}
         <div className="exhibit-hero-actions">
-          <a href="#exhibit-model" className="exhibit-hero-cta">Explore the 3D model <span aria-hidden="true">↓</span></a>
+          <a href="#exhibit-model" className="exhibit-hero-cta">{machine.id === "surveyor-3" ? "Explore the mission archive" : "Explore the 3D model"} <span aria-hidden="true">↓</span></a>
           {src && displayed?.sourceUrl ? (
             <a href={displayed.sourceUrl} target="_blank" rel="noopener noreferrer" className="exhibit-hero-source">
               Image credit: {displayed.credit} <span aria-hidden="true">↗</span>

@@ -14,10 +14,24 @@ export interface MuseumHero {
   sourceUrl: string;
   credit: string;
   description: string;
-  kind: 'NASA ARCHIVE PHOTOGRAPH' | 'NASA MISSION ARTWORK' | 'NASA VISUAL COMPOSITE' | 'MISSION ILLUSTRATION';
+  kind: 'NASA ARCHIVE PHOTOGRAPH' | 'NASA MISSION ARTWORK' | 'NASA VISUAL COMPOSITE' | 'MISSION ILLUSTRATION' | 'MISSION REFERENCE IMAGE';
 }
 
 export const exhibitHeroes: Record<string, MuseumHero> = {
+  'surveyor-3': {
+    src: '/assets/exhibits/surveyor-3/Surveyor3.webp',
+    sourceUrl: '',
+    credit: 'Museum-uploaded image; original source not yet verified',
+    kind: 'MISSION REFERENCE IMAGE',
+    description: 'Surveyor 3 mission image from the museum collection.'
+  },
+  'viking-1': {
+    src: '/assets/exhibits/viking-1/hero.webp',
+    sourceUrl: '',
+    credit: 'Museum-uploaded image; original source not yet verified',
+    kind: 'MISSION REFERENCE IMAGE',
+    description: 'Viking 1 spacecraft and its exploration of Mars.'
+  },
   'apollo-15-lrv': {
     src: 'https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/09/2/2-apollo_15_on_moon-1.jpg?crop=faces%2Cfocalpoint&fit=clip&h=3025&w=4096',
     sourceUrl: 'https://science.nasa.gov/resource/apollo-15-on-the-moon/',

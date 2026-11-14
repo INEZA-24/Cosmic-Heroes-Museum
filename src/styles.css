@@ -199,7 +199,7 @@
 /* Guided tour: museum entrance and first-time welcome */
 .entrance-scroll-hint{font-size:.7rem;letter-spacing:.12em;color:#dfb77a;margin:8px 0 24px}
 .guide-welcome{position:absolute;z-index:7;left:clamp(16px,3.2vw,58px);bottom:clamp(170px,23vh,240px);display:flex;align-items:flex-end;gap:10px;width:min(390px,32vw);pointer-events:auto;animation:guide-arrive .6s ease-out both}
-.guide-portrait{display:grid;place-items:center;flex-shrink:0;border:1px solid #dba55d;border-radius:50%;width:66px;height:66px;background:linear-gradient(140deg,#795a37,#192e47);color:#f6cb8a;font-size:2rem;box-shadow:0 5px 30px #0009}
+.guide-portrait{display:block;flex-shrink:0;width:84px;height:112px;object-fit:contain;object-position:bottom center;background:transparent;filter:drop-shadow(0 7px 12px #000a)}
 .guide-dialogue{position:relative;background:#091627f0;border:1px solid #dba55da8;border-radius:16px 16px 16px 4px;padding:19px 24px;box-shadow:0 12px 45px #0009;backdrop-filter:blur(16px)}
 .guide-dialogue .eyebrow{font-size:.54rem;margin:0 0 9px}
 .guide-dialogue p{font-size:.76rem;line-height:1.6;color:#e2e8f0;margin:0 0 8px}
@@ -267,3 +267,120 @@
 }
 @media(max-width:480px){.guide-welcome{bottom:235px}.guide-dialogue p:last-child{display:none}.guided-tour-invite{bottom:88px}.guided-tour-invite .eyebrow{font-size:.57rem}.guided-navigation button{width:100%}}
 @media(prefers-reduced-motion:reduce){.guide-welcome{animation:none}.guided-tour-play{transition:none}}
+
+
+/* Local character portraits and verified-in-repo mission images */
+.guided-guide-intro{display:flex;align-items:flex-end;gap:16px;margin:34px 0 26px;padding:15px 22px;background:#0d1b2bdd;border:1px solid #dba55d63;border-radius:16px}
+.guided-guide-portrait{display:block;flex:0 0 auto;width:110px;height:145px;object-fit:contain;object-position:bottom center;filter:drop-shadow(0 5px 10px #0007)}
+.guided-guide-dialogue{flex:1;min-width:0;padding:12px 0}
+.guided-guide-dialogue .eyebrow{color:#dca35e;font-size:.59rem;letter-spacing:.12em}
+.guided-guide-dialogue p:last-child{color:#edf2f9;font-size:.94rem;line-height:1.7;margin:9px 0 0}
+.falcon-archive-photo{display:flex;flex-direction:column;align-items:center;margin:20px 0;padding:20px;background:#111d2a;border:1px solid #d69a5d40;border-radius:14px}
+.falcon-archive-photo img{display:block;width:100%;max-width:650px;max-height:425px;object-fit:contain}
+.falcon-archive-photo figcaption{align-self:stretch;text-align:center;color:#c4ccd5;font-size:.74rem;line-height:1.6;margin-top:14px}
+@media(max-width:780px){
+  .guide-portrait{width:58px;height:80px}
+  .guided-guide-intro{gap:10px;padding:12px;margin:22px 0}
+  .guided-guide-portrait{width:74px;height:110px}
+  .guided-guide-dialogue p:last-child{font-size:.82rem}
+  .falcon-archive-photo{padding:12px}
+}
+
+
+/* Floating museum educator: the white thought cloud is a viewport overlay, not
+   a page section. The cloud silhouette lives in MuseumGuideBubble.tsx. */
+.museum-guide-float {
+  position:fixed;z-index:75;bottom:18px;display:flex;align-items:flex-end;
+  width:min(535px,calc(100vw - 28px));gap:0;pointer-events:none;
+  animation:museum-guide-appear .28s ease-out both;
+}
+.museum-guide-float--left {left:clamp(12px,2.5vw,42px);}
+.museum-guide-float--right {right:clamp(12px,2.5vw,42px);flex-direction:row-reverse;}
+.museum-guide-float--solar {bottom:clamp(172px,24vh,258px);}
+.museum-guide-float--journey {bottom:clamp(14px,3vh,30px);}
+.museum-guide-avatar {
+  display:block;flex:0 0 110px;width:110px;height:155px;object-fit:contain;
+  object-position:center bottom;filter:drop-shadow(0 8px 10px #0009);
+  transform-origin:center center;
+}
+.museum-guide-avatar.is-flipped {transform:scaleX(-1);}
+.museum-guide-cloud {
+  position:relative;flex:1;min-width:0;min-height:225px;
+  max-height:min(60vh,370px);pointer-events:auto;
+}
+.museum-guide-cloud-shape {
+  position:absolute;inset:0;width:100%;height:100%;z-index:0;
+  overflow:visible;filter:drop-shadow(0 10px 18px #000a);
+}
+.museum-guide-cloud-shape path {
+  fill:#fff;stroke:#223044;stroke-width:2.1;vector-effect:non-scaling-stroke;
+}
+/* Two trailing thought circles guide the eye to her face. */
+.museum-guide-cloud::before,
+.museum-guide-cloud::after {
+  content:"";position:absolute;display:block;border:2px solid #223044;
+  border-radius:50%;background:#fff;z-index:2;box-sizing:border-box;
+}
+.museum-guide-cloud::before {width:25px;height:25px;left:22px;bottom:-8px;}
+.museum-guide-cloud::after {width:13px;height:13px;left:0;bottom:-28px;}
+.museum-guide-float--right .museum-guide-cloud::before {left:auto;right:22px;}
+.museum-guide-float--right .museum-guide-cloud::after {left:auto;right:0;}
+.museum-guide-cloud-content {
+  position:relative;z-index:3;padding:49px 55px 51px;
+  max-height:min(60vh,370px);overflow-y:auto;scrollbar-width:thin;
+  color:#192434;text-align:left;
+}
+.museum-guide-eyebrow {
+  display:block;color:#855924;font-weight:800;font-size:.57rem;
+  letter-spacing:.14em;line-height:1.5;padding-right:15px;
+}
+.museum-guide-cloud-content p {
+  font-size:clamp(.74rem,.9vw,.87rem);line-height:1.55;
+  margin:8px 0 0;color:#162335;font-weight:500;
+}
+.museum-guide-cloud-content .museum-guide-secondary {
+  color:#3c4d60;font-size:clamp(.71rem,.82vw,.79rem);
+}
+.museum-guide-close {
+  position:absolute;top:25px;right:35px;z-index:4;display:grid;place-items:center;
+  width:28px;height:28px;border:0;border-radius:50%;background:#edf0f4;
+  color:#172335;font-size:1.25rem;line-height:1;cursor:pointer;
+}
+.museum-guide-close:hover,.museum-guide-close:focus-visible {
+  background:#dce2e9;outline:2px solid #6e7d91;
+}
+.guided-guide-reopen {
+  border:1px solid #bb8d54;border-radius:30px;padding:7px 12px;
+  background:#122236;color:#f3ca96;font-size:.72rem;cursor:pointer;
+}
+.guided-guide-reopen:hover,.guided-guide-reopen:focus-visible {
+  background:#253750;color:#fff;
+}
+@keyframes museum-guide-appear {
+  from {opacity:0;transform:translateY(10px);}
+  to {opacity:1;transform:translateY(0);}
+}
+@media(max-width:780px) {
+  .museum-guide-float{width:min(465px,calc(100vw - 18px));}
+  .museum-guide-avatar{flex-basis:80px;width:80px;height:118px;}
+  .museum-guide-cloud-content{padding:43px 43px 46px;}
+  .museum-guide-float--solar{bottom:clamp(155px,23vh,220px);}
+}
+@media(max-width:540px) {
+  .museum-guide-float{width:calc(100vw - 12px);}
+  .museum-guide-float--left{left:6px;}
+  .museum-guide-float--right{right:6px;}
+  .museum-guide-avatar{flex:0 0 62px;width:62px;height:95px;}
+  .museum-guide-cloud{min-height:194px;max-height:54vh;}
+  .museum-guide-cloud-content{padding:39px 36px 40px;max-height:54vh;}
+  .museum-guide-eyebrow{font-size:.52rem;letter-spacing:.1em;}
+  .museum-guide-cloud-content p{font-size:.75rem;line-height:1.43;margin-top:6px;}
+  .museum-guide-cloud-content .museum-guide-secondary{font-size:.7rem;}
+  .museum-guide-close{top:22px;right:25px;width:25px;height:25px;}
+  .museum-guide-float--solar{bottom:clamp(138px,22vh,192px);}
+}
+@media(max-height:600px) {
+  .museum-guide-float--solar{bottom:115px;}
+  .museum-guide-cloud,.museum-guide-cloud-content{max-height:54vh;}
+}
+@media(prefers-reduced-motion:reduce){.museum-guide-float{animation:none}}
