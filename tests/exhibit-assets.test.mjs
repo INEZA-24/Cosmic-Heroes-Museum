@@ -41,11 +41,12 @@ test('exhibition navigation retains collection, Moon, Mars and deep space', () =
   for (const id of ids) assert.ok(data.includes('id: "' + id + '"'), `Missing machine: ${id}`);
 });
 
-test('M6 uses Cassini at Saturn and displays the approved transparent emblem', () => {
+test('Cassini remains at Saturn and the approved emblem is preserved', () => {
   const code = readFileSync('src/data.ts', 'utf8');
   assert.match(code, /id: "cassini-huygens"/);
   assert.match(code, /area: "saturn"/);
-  assert.doesNotMatch(code, /id: "surveyor-3"/);
+  assert.match(code, /id: "surveyor-3"/);
+  assert.match(code, /id: "viking-1"/);
   const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
   assert.match(solar, /Explore Saturn & Titan/);
   assert.ok(existsSync('public/assets/branding/museum-emblem.svg'));
@@ -190,4 +191,74 @@ test('M8 image loading is guarded on unmount and full-width backgrounds have no 
   const imageStyle = styles.slice(imageStart, styles.indexOf('}', imageStart));
   assert.ok(imageStyle.includes('object-fit:contain'));
   assert.ok(imageStyle.includes('right:0'));
+});
+
+
+test('eight-exhibit expansion uses uploaded local assets with exact case-sensitive paths', () => {
+  const data = readFileSync('src/data.ts', 'utf8');
+  const idsNow = [...ids, 'surveyor-3', 'viking-1'];
+  for (const id of idsNow) assert.ok(data.includes('id: "' + id + '"'), 'Missing machine: ' + id);
+
+  const assets = [
+    'public/assets/exhibits/surveyor-3/Surveyor3.webp',
+    'public/assets/exhibits/apollo-15-lrv/Falcon.webp',
+    'public/assets/exhibits/viking-1/hero.webp',
+    'public/assets/models/viking-1/model.glb',
+    'public/assets/models/apollo-lunar-module/model.glb',
+    'public/assets/tour-guide/welcome-wave.webp',
+    'public/assets/tour-guide/neutral-hands-clapseds.webp',
+    'public/assets/tour-guide/presenting-one-hand.webp',
+    'public/assets/tour-guide/explaining-two-hands.webp',
+  ];
+  for (const asset of assets) assert.ok(existsSync(asset), 'Missing uploaded asset: ' + asset);
+
+  for (const id of ['surveyor-3', 'viking-1']) {
+    const slideshow = JSON.parse(readFileSync(`public/assets/exhibits/${id}/slides.json`, 'utf8'));
+    assert.ok(slideshow.items.length > 0, 'No images for: ' + id);
+    for (const item of slideshow.items) {
+      assert.ok(existsSync(`public${item.src.split('?')[0]}`), 'Broken slide link: ' + item.src);
+    }
+  }
+
+  const apollo = JSON.parse(readFileSync('public/assets/exhibits/apollo-15-lrv/slides.json', 'utf8'));
+  assert.ok(apollo.items.some(item => item.src === '/assets/exhibits/apollo-15-lrv/Falcon.webp'));
+  const heroes = readFileSync('src/exhibitHeroes.ts', 'utf8');
+  assert.ok(heroes.includes("src: '/assets/exhibits/surveyor-3/Surveyor3.webp'"));
+  const guided = readFileSync('src/components/GuidedJourneyView.tsx', 'utf8');
+  assert.match(guided, /guidePoseByMission/);
+  assert.match(guided, /tour-guide/);
+
+  for (const id of ['viking-1', 'apollo-lunar-module']) {
+    const modelPath = `public/assets/models/${id}/model.glb`;
+    const fd = openSync(modelPath, 'r');
+    const header = Buffer.alloc(12);
+    try { assert.equal(readSync(fd, header, 0, 12, 0), 12); }
+    finally { closeSync(fd); }
+    assert.equal(header.toString('ascii', 0, 4), 'glTF');
+    assert.equal(header.readUInt32LE(4), 2);
+    assert.equal(header.readUInt32LE(8), statSync(modelPath).size);
+  }
+});
+
+test('museum guide is a floating white cloud using only the uploaded WebP poses', () => {
+  const guide = readFileSync('src/components/MuseumGuideBubble.tsx', 'utf8');
+  const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
+  const journey = readFileSync('src/components/GuidedJourneyView.tsx', 'utf8');
+  const styles = readFileSync('src/styles.css', 'utf8');
+
+  for (const name of [
+    'welcome-wave.webp',
+    'neutral-hands-clapseds.webp',
+    'presenting-one-hand.webp',
+    'explaining-two-hands.webp'
+  ]) assert.ok(guide.includes(name), 'Missing guide WebP reference: ' + name);
+  assert.match(guide, /museum-guide-cloud-shape/);
+  assert.match(guide, /is-flipped/);
+  assert.match(solar, /<MuseumGuideBubble/);
+  assert.match(journey, /<MuseumGuideBubble/);
+  assert.doesNotMatch(journey, /guided-guide-intro/);
+  assert.doesNotMatch(solar, /welcome-wave\\.png/);
+  assert.match(styles, /\\.museum-guide-float\\s*\\{[^}]*position:fixed/s);
+  assert.match(styles, /\\.museum-guide-cloud-shape path\\s*\\{[^}]*fill:#fff/s);
+  assert.match(styles, /prefers-reduced-motion/);
 });
