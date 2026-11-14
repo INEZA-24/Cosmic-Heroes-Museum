@@ -1060,7 +1060,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
         </div>
 
         {showWelcome && <div className="guide-welcome" role="status">
-          <img className="guide-portrait" src="/assets/museum-guide.svg" alt="Illustration of your museum guide" />
+          <img className="guide-portrait" src="/assets/tour-guide/welcome-wave.png" alt="Illustration of your museum guide" />
           <div className="guide-dialogue">
             <button type="button" className="guide-dismiss" aria-label="Dismiss museum guide" onClick={() => setShowWelcome(false)}>×</button>
             <span className="eyebrow">YOUR MUSEUM GUIDE</span>
