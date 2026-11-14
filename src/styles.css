@@ -505,3 +505,95 @@ html{scroll-padding-top:92px}
 @media(max-width:900px){.guided-snapshot-beats{grid-template-columns:1fr}.guided-snapshot-beat,.guided-snapshot-beat+.guided-snapshot-beat{padding:18px 0;border-left:0}.guided-snapshot-beat+.guided-snapshot-beat{border-top:1px solid rgba(242,238,231,.14)}.guided-snapshot-heading{flex-direction:column;align-items:flex-start}}
 @media(max-width:620px){.mission-audio{grid-template-columns:1fr;padding:16px;gap:12px}.mission-audio-footer{flex-wrap:wrap}.mission-audio-follow{padding-left:0}.guided-cover .mission-audio{max-width:100%}}
 @media(prefers-reduced-motion:reduce){.mission-audio *, .guided-snapshot-beat{transition:none!important}}
+
+
+/* Museum entrance: subdued revolving Earth, readable title and Stella welcome.
+   The existing curtains and centered Begin Tour action are deliberately unchanged. */
+.entrance{
+  background:radial-gradient(ellipse at 58% 48%,#14283a 0%,#06111f 55%,#030812 100%);
+  isolation:isolate;
+}
+.entrance-earth-scene{
+  position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:radial-gradient(ellipse at 63% 49%,#1b364656,transparent 55%);
+}
+.entrance-earth-fallback{
+  position:absolute;left:56%;top:48%;width:min(74vh,70vw);height:min(74vh,70vw);
+  transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle at 27% 24%,#6c9aa3 0%,#27647a 23%,#10304a 48%,#040d1d 72%);
+  box-shadow:0 0 48px #3c718238,0 0 145px #32638129,inset -80px -40px 110px #020711b8;
+  opacity:.45;
+}
+.entrance-earth-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;opacity:.87}
+.entrance:before{z-index:1;opacity:.45}
+.entrance:after{
+  z-index:1;
+  background:linear-gradient(90deg,rgba(3,8,18,.75) 0%,rgba(3,8,18,.58) 29%,rgba(3,8,18,.48) 55%,rgba(3,8,18,.75) 100%),
+             linear-gradient(180deg,rgba(3,8,18,.20),rgba(3,8,18,.48) 85%,rgba(3,8,18,.78));
+}
+.entrance-glow{z-index:1;opacity:.48}
+.entrance-heading{text-shadow:0 4px 28px #01050cd9,0 2px 8px #01050ca6}
+.entrance .museum-emblem{filter:drop-shadow(0 4px 15px #000a)}
+.entrance .entrance-copy{color:#e5e9ed;text-shadow:0 2px 15px #01050c}
+.entrance-footer{z-index:3}
+.museum-guide-float--entrance{
+  position:absolute;z-index:6;
+  left:clamp(22px,3.4vw,70px);bottom:clamp(84px,10vh,120px);
+  width:min(505px,38vw);
+  gap:8px;
+}
+.museum-guide-float--entrance .museum-guide-avatar{
+  flex:0 0 128px;width:128px;height:184px;
+}
+.museum-guide-float--entrance .museum-guide-speech{
+  padding:19px 22px 19px;border-width:2px;border-radius:30px 33px 30px 30px;
+}
+.museum-guide-float--entrance .museum-guide-speech p{
+  font-size:.81rem;line-height:1.5;
+}
+.entrance-stella-reopen{
+  position:absolute;z-index:6;bottom:clamp(30px,6vh,70px);
+  left:clamp(26px,3.5vw,75px);
+  color:#f0d7b9;background:#091727df;border:1px solid #cfa36d77;
+  padding:10px 16px;border-radius:3px;cursor:pointer;font-size:.76rem;
+}
+.entrance-stella-reopen:hover,.entrance-stella-reopen:focus-visible{
+  border-color:#f0c18f;outline:2px solid #f0c18f55;
+}
+@media(max-width:1050px){
+  .museum-guide-float--entrance{left:18px;width:min(410px,42vw);bottom:62px}
+  .museum-guide-float--entrance .museum-guide-avatar{flex-basis:105px;width:105px;height:152px}
+  .museum-guide-float--entrance .museum-guide-speech{padding:16px 20px}
+}
+@media(max-width:760px){
+  .entrance-content{padding-bottom:195px}
+  .museum-guide-float--entrance{
+    left:50%;bottom:38px;width:min(520px,calc(100vw - 32px));
+    transform:translateX(-50%);
+    animation:none;
+  }
+  .museum-guide-float--entrance .museum-guide-avatar{
+    flex:0 0 95px;width:95px;height:145px;
+  }
+  .museum-guide-float--entrance .museum-guide-speech{padding:16px 21px}
+  .entrance-stella-reopen{
+    bottom:28px;left:50%;transform:translateX(-50%);
+  }
+}
+@media(max-width:540px){
+  .entrance-content{padding-bottom:195px}
+  .entrance-earth-fallback{width:75vw;height:75vw;left:55%;top:42%}
+  .museum-guide-float--entrance{bottom:34px;width:calc(100vw - 20px)}
+  .museum-guide-float--entrance .museum-guide-avatar{flex:0 0 79px;width:79px;height:120px}
+  .museum-guide-float--entrance .museum-guide-speech{padding:13px 18px 13px}
+  .museum-guide-float--entrance .museum-guide-speech p{font-size:.73rem;line-height:1.43}
+  .museum-guide-float--entrance .museum-guide-eyebrow{font-size:.52rem;letter-spacing:.07em}
+}
+@media(max-height:650px) and (min-width:761px){
+  .museum-guide-float--entrance{bottom:35px}
+  .museum-guide-float--entrance .museum-guide-avatar{height:135px;flex-basis:96px;width:96px}
+  .museum-guide-float--entrance .museum-guide-speech{padding:14px 18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .entrance-earth-canvas,.entrance-earth-fallback{animation:none!important}
+}

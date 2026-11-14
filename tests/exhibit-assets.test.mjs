@@ -370,3 +370,29 @@ test('all eight recorded Stella tracks use the exact uploaded MP3 filenames', ()
   assert.doesNotMatch(exhibit, /exhibit-listen-btn/);
   assert.match(app, /initialMissionId=\{guidedResumeId\}/);
 });
+
+test('entrance features the ambient Earth, Stella welcome and unchanged curtain transition', () => {
+  const entrance = readFileSync('src/components/Entrance.tsx', 'utf8');
+  const earth = readFileSync('src/components/EntranceEarth.tsx', 'utf8');
+  const guide = readFileSync('src/components/MuseumGuideBubble.tsx', 'utf8');
+  const styles = readFileSync('src/styles.css', 'utf8');
+
+  assert.match(entrance, /<EntranceEarth\s*\/>/);
+  assert.match(entrance, /<MuseumGuideBubble/);
+  assert.match(entrance, /pose="welcome-wave"/);
+  assert.match(entrance, /STELLA · YOUR MUSEUM GUIDE/);
+  assert.match(entrance, /setTimeout\(\(\) => setShowStella\(false\), 10000\)/);
+  assert.match(entrance, /id="enter-button"/);
+  assert.match(entrance, /scrollToEnter/);
+  assert.match(earth, /createEarthTexture\(\)/);
+  assert.match(earth, /createEarthCloudsTexture\(\)/);
+  assert.match(earth, /requestAnimationFrame/);
+  assert.match(earth, /prefers-reduced-motion: reduce/);
+  assert.match(earth, /renderer\.dispose\(\)/);
+  assert.match(guide, /'entrance'/);
+  assert.match(styles, /\.entrance-earth-scene/);
+  assert.match(styles, /\.museum-guide-float--entrance/);
+  assert.match(styles, /\.entrance:after/);
+  assert.ok(styles.includes('transition:transform 1.4s cubic-bezier'));
+  assert.doesNotMatch(entrance, /speechSynthesis|new Audio\(/);
+});

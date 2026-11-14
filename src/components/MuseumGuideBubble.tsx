@@ -11,7 +11,7 @@ interface MuseumGuideBubbleProps {
   secondary?: string;
   pose: MuseumGuidePose;
   side?: 'left' | 'right';
-  context?: 'solar' | 'journey';
+  context?: 'solar' | 'journey' | 'entrance';
   label?: string;
   onDismiss: () => void;
 }
@@ -44,7 +44,7 @@ export const MuseumGuideBubble: FC<MuseumGuideBubbleProps> = ({
       className={`museum-guide-avatar${side === 'right' && pose === 'presenting-one-hand' ? ' is-flipped' : ''}`}
       src={imageByPose[pose]}
       alt="Illustrated museum guide"
-      loading={context === 'solar' ? 'eager' : 'lazy'}
+      loading={context === 'solar' || context === 'entrance' ? 'eager' : 'lazy'}
       decoding="async"
       width={120}
       height={170}
