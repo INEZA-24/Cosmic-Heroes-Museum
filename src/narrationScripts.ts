@@ -1,6 +1,6 @@
-/** Museum-original narration scripts, verified against linked NASA mission records.
- * The UI currently uses browser speech synthesis. These text clips are ready
- * for later voice-tool export as MP3/OGG and timestamped audio cues.
+/** Historical written snippets for the guided overview only.
+ * Spoken narration is one uploaded MP3 per mission, mapped in audioTracks.ts.
+ * Do not use these excerpts for automated speech synthesis.
  */
 export interface MissionNarration {
   name: string;

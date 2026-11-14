@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { machines } from '../data';
 import { exhibitHeroes } from '../exhibitHeroes';
 import { missionNarrations } from '../narrationScripts';
-import { useMuseumNarration } from '../hooks/useMuseumNarration';
+import { MissionAudioPlayer } from './MissionAudioPlayer';
 import { MuseumGuideBubble, type MuseumGuidePose } from './MuseumGuideBubble';
 
 const ordered = [...machines].sort((a,b) => (a.launchDate ? new Date(a.launchDate).getTime() : 0) - (b.launchDate ? new Date(b.launchDate).getTime() : 0));
@@ -35,25 +35,19 @@ interface GuidedJourneyProps {
 }
 
 /**
- * The tour is deliberately a snapshot, not the complete exhibit story.
- * Visitors can hear three concise beats and a featured milestone, then
- * explore the full exhibit, model and chapter narration at their own pace.
+ * A chronological overview of each machine. The optional MP3 story uses the
+ * same Stella recording as the full exhibit, with approximate reading waypoints.
  */
 export const GuidedJourneyView: FC<GuidedJourneyProps> = ({
   onExit, onExploreMachine, initialMissionId
 }) => {
   const [index, setIndex] = useState(() => Math.max(0, ordered.findIndex(m => m.id === initialMissionId)));
   const [guideVisible, setGuideVisible] = useState(true);
-  const paragraphs = useRef<Array<HTMLParagraphElement | null>>([]);
-  const milestoneRef = useRef<HTMLElement | null>(null);
-  const narrator = useMuseumNarration();
-
   const current = ordered[index];
   const script = missionNarrations[current.id];
   const photo = exhibitHeroes[current.id];
 
   useEffect(() => {
-    narrator.stop();
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [index]);
 
@@ -64,30 +58,12 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({
     return () => window.clearTimeout(timer);
   }, [index, guideVisible]);
 
-  const change = (next: number) => {
-    narrator.stop();
-    setIndex(next);
-  };
-
-  const listenSnapshot = () => {
-    if (narrator.playing && narrator.activeId?.startsWith('snapshot-')) { narrator.stop(); return; }
-    setGuideVisible(false);
-    narrator.play(script.snapshot.map((text,i) => ({
-      id: `snapshot-${i}`,
-      text,
-      target: () => paragraphs.current[i],
-    })));
-  };
-  const listenMilestone = () => {
-    if (narrator.playing && narrator.activeId === 'milestone') { narrator.stop(); return; }
-    setGuideVisible(false);
-    narrator.play([{id:'milestone',text:script.milestone.text,target:()=>milestoneRef.current}]);
-  };
-  const leave = () => { narrator.stop(); onExit(); };
-  const explore = () => { narrator.stop(); onExploreMachine(current.id); };
+  const change = (next: number) => setIndex(next);
+  const leave = () => onExit();
+  const explore = () => onExploreMachine(current.id);
 
   return (
-    <article className="guided-journey" aria-label="Short chronological guided museum tour">
+    <article className="guided-journey" aria-label="Chronological guided museum tour">
       <div className="guided-topbar">
         <button type="button" onClick={leave} className="back-link">← Return to the Universe</button>
         <span className="eyebrow">THE GUIDED JOURNEY · CHAPTER {index + 1} OF {ordered.length}</span>
@@ -110,13 +86,14 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({
           <p className="eyebrow">{current.place.toUpperCase()} · LAUNCHED {current.launchDate ?? current.year}</p>
           <h1>{current.name}</h1>
           <p>{current.summary}</p>
-          <button type="button" onClick={listenSnapshot} className="guided-audio"
-            disabled={!narrator.available} aria-pressed={narrator.playing && narrator.activeId?.startsWith('snapshot-')}>
-            {narrator.available
-              ? (narrator.playing && narrator.activeId?.startsWith('snapshot-') ? '■ Stop snapshot' : '▶ Listen to the 30-second story')
-              : 'Audio not supported in this browser'}
-          </button>
-          <p className="guided-audio-note">A short story, not the whole exhibit. Listening scrolls through the three moments; reading is always optional.</p>
+          <MissionAudioPlayer
+            key={current.id}
+            missionId={current.id}
+            onStart={() => setGuideVisible(false)}
+            waypoints={[0, 1, 2].map(i => () =>
+              document.querySelectorAll<HTMLElement>('.guided-snapshot-beat')[i] ?? null
+            )}
+          />
         </div>
         {photo && <img src={photo.src} alt={current.name} className="guided-cover-image"/>}
       </header>
@@ -134,9 +111,9 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({
       <section className="guided-snapshot" aria-label="Three moments from the mission">
         <div className="guided-snapshot-heading">
           <div>
-            <p className="eyebrow">THREE MOMENTS · ONE INCREDIBLE MISSION</p>
-            <h2>The short story</h2>
-            <p>Choose Listen or explore these moments in your own time.</p>
+            <p className="eyebrow">MISSION OVERVIEW</p>
+            <h2>In context</h2>
+            <p>Key background for your visit.</p>
           </div>
           <button type="button" className="guided-snapshot-explore" onClick={explore}>
             Explore full exhibit & {current.id==='surveyor-3'?'archive':'3D model'} →
@@ -145,32 +122,19 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({
         <div className="guided-snapshot-beats">
           {script.snapshot.map((text,i) => (
             <div key={i}
-              className={`guided-snapshot-beat${narrator.activeId === `snapshot-${i}` ? ' is-speaking' : ''}`}>
+              className="guided-snapshot-beat">
               <span className="guided-snapshot-number">0{i+1}</span>
-              <p ref={el => { paragraphs.current[i] = el; }}>{text}</p>
+              <p>{text}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <aside ref={milestoneRef} className={`guided-snapshot-spotlight${narrator.activeId==='milestone'?' is-speaking':''}`} aria-label="Defining mission milestone">
-        <div className="guided-snapshot-spotlight-mark" aria-hidden="true">✦</div>
-        <div>
-          <p className="eyebrow">A MOMENT THAT CHANGED SPACE EXPLORATION · {script.milestone.date}</p>
-          <h2>{script.milestone.title}</h2>
-          <p>{script.milestone.text}</p>
-          <button type="button" onClick={listenMilestone}
-            disabled={!narrator.available} className="guided-snapshot-listen">
-            {narrator.playing && narrator.activeId==='milestone' ? '■ Stop moment' : '▶ Hear this moment'}
-          </button>
-        </div>
-      </aside>
-
       <div className="guided-snapshot-end">
-        <p className="eyebrow">THE REST OF THE STORY IS WAITING</p>
-        <p>Explore the real mission timeline, scientific discoveries and the machine itself.</p>
+        <p className="eyebrow">FURTHER READING</p>
+        <p>Read the mission history, examine the equipment, and explore the findings.</p>
         <button type="button" className="button button-primary" onClick={explore}>
-          Explore {current.name} in detail →
+          View full exhibit →
         </button>
       </div>
       <nav className="guided-navigation" aria-label="Guided tour chapter navigation">
