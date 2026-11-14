@@ -1,11 +1,5 @@
-# Opportunity — Stella's museum narration
+# opportunity — Stella narration
 
-Upload **one complete audio recording** to this folder:
+One complete recording is stored here: `Opportunity.mp3`.
 
-`opportunity.mp3`
-
-The voice story should include the historical hook, the mission's key events, scientific discoveries, and its legacy. Visitors will select **Listen** once to hear the full story.
-
-The museum's later audio integration will synchronize playback with the exhibit's three story chapters through measured timestamps, without requiring separate files or clicks.
-
-This README preserves the folder in Git until the audio is uploaded. Audio playback is not automatically enabled merely by uploading the MP3.
+This is the actual uploaded filename (including capitalization and punctuation). The website maps it in `src/audioTracks.ts`. Do not split the narration into individual chapter files.

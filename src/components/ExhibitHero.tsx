@@ -15,7 +15,12 @@ interface HeroScene {
 const FIVE_MINUTES = 300_000;
 
 /** An accessible slideshow: use locally hosted slides.json when present, with a NASA fallback. */
-export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
+export const ExhibitHero: FC<{
+  machine: Machine;
+  onListenIntro?: () => void;
+  introPlaying?: boolean;
+  narrationAvailable?: boolean;
+}> = ({ machine, onListenIntro, introPlaying = false, narrationAvailable = true }) => {
   const fallback = exhibitHeroes[machine.id];
   const fallbackScene: HeroScene | null = fallback ? {
     src: fallback.src,
@@ -189,6 +194,12 @@ export const ExhibitHero: FC<{ machine: Machine }> = ({ machine }) => {
         )}
         <div className="exhibit-hero-actions">
           <a href="#exhibit-model" className="exhibit-hero-cta">{machine.id === "surveyor-3" ? "Explore the mission archive" : "Explore the 3D model"} <span aria-hidden="true">↓</span></a>
+          {onListenIntro && (
+            <button type="button" className="exhibit-hero-listen"
+              disabled={!narrationAvailable} aria-pressed={introPlaying} onClick={onListenIntro}>
+              {narrationAvailable ? (introPlaying ? '■ Stop welcome story' : '▶ Hear this mission’s story') : 'Narration unavailable'}
+            </button>
+          )}
           {src && displayed?.sourceUrl ? (
             <a href={displayed.sourceUrl} target="_blank" rel="noopener noreferrer" className="exhibit-hero-source">
               Image credit: {displayed.credit} <span aria-hidden="true">↗</span>

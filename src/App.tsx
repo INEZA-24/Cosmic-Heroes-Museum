@@ -13,6 +13,7 @@ export const App: FC = () => {
   const [selectedDestination, setSelectedDestination] = useState<DestinationArea>('moon');
   const [selectedMachineId, setSelectedMachineId] = useState<string>('apollo-15-lrv');
   const [previousView, setPreviousView] = useState<ViewType>('solar');
+  const [guidedResumeId, setGuidedResumeId] = useState<string | null>(null);
   const solarRef = useRef<SolarSystemHandle | null>(null);
 
   const handleOpenDestination = (area: DestinationArea) => {
@@ -29,7 +30,9 @@ export const App: FC = () => {
   };
 
   const handleBackFromExhibit = () => {
-    if (previousView === 'destination') {
+    if (previousView === 'guided') {
+      setView('guided');
+    } else if (previousView === 'destination') {
       setView('destination');
     } else if (previousView === 'collection') {
       setView('collection');
@@ -37,6 +40,14 @@ export const App: FC = () => {
       setView('solar');
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleExploreFromGuided = (machineId: string) => {
+    setGuidedResumeId(machineId);
+    setSelectedMachineId(machineId);
+    setPreviousView('guided');
+    setView('exhibit');
+    window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   const handleBackToSolar = () => {
@@ -70,7 +81,7 @@ export const App: FC = () => {
           />
 
           <div className={view !== 'solar' ? 'hidden' : ''}>
-            <SolarSystem ref={solarRef} onOpenDestination={handleOpenDestination} onBeginGuidedTour={() => { setView('guided'); window.scrollTo({top: 0, behavior: 'smooth'}); }} />
+            <SolarSystem ref={solarRef} onOpenDestination={handleOpenDestination} onBeginGuidedTour={() => { setGuidedResumeId(null); setView('guided'); window.scrollTo({top: 0, behavior: 'smooth'}); }} />
           </div>
 
           {view === 'collection' && (
@@ -85,7 +96,7 @@ export const App: FC = () => {
             />
           )}
 
-          {view === 'guided' && <GuidedJourneyView onExit={handleBackToSolar} />}
+          {view === 'guided' && <GuidedJourneyView onExit={handleBackToSolar} onExploreMachine={handleExploreFromGuided} initialMissionId={guidedResumeId} />}
 
           {view === 'exhibit' && (
             <ExhibitView

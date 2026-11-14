@@ -2,6 +2,7 @@ import { type FC } from 'react';
 import { machines } from '../data';
 import { MachineModelViewer } from './MachineModelViewer';
 import { ExhibitHero } from './ExhibitHero';
+import { MissionAudioPlayer } from './MissionAudioPlayer';
 
 interface ExhibitViewProps {
   machineId: string;
@@ -34,6 +35,14 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
       </div>
 
       <ExhibitHero key={machine.id} machine={machine} />
+
+      <MissionAudioPlayer
+        key={machine.id}
+        missionId={machine.id}
+        waypoints={[0, 1, 2].map(index => () =>
+          document.querySelectorAll<HTMLElement>('.story-chapter-card')[index] ?? null
+        )}
+      />
 
       {machine.id === 'surveyor-3' ? (
         <section id="exhibit-model" className="exhibit-model-section" aria-label="Surveyor 3 mission archive">
