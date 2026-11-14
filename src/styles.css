@@ -199,7 +199,7 @@
 /* Guided tour: museum entrance and first-time welcome */
 .entrance-scroll-hint{font-size:.7rem;letter-spacing:.12em;color:#dfb77a;margin:8px 0 24px}
 .guide-welcome{position:absolute;z-index:7;left:clamp(16px,3.2vw,58px);bottom:clamp(170px,23vh,240px);display:flex;align-items:flex-end;gap:10px;width:min(390px,32vw);pointer-events:auto;animation:guide-arrive .6s ease-out both}
-.guide-portrait{display:grid;place-items:center;flex-shrink:0;border:1px solid #dba55d;border-radius:50%;width:66px;height:66px;background:linear-gradient(140deg,#795a37,#192e47);color:#f6cb8a;font-size:2rem;box-shadow:0 5px 30px #0009}
+.guide-portrait{display:block;flex-shrink:0;width:84px;height:112px;object-fit:contain;object-position:bottom center;background:transparent;filter:drop-shadow(0 7px 12px #000a)}
 .guide-dialogue{position:relative;background:#091627f0;border:1px solid #dba55da8;border-radius:16px 16px 16px 4px;padding:19px 24px;box-shadow:0 12px 45px #0009;backdrop-filter:blur(16px)}
 .guide-dialogue .eyebrow{font-size:.54rem;margin:0 0 9px}
 .guide-dialogue p{font-size:.76rem;line-height:1.6;color:#e2e8f0;margin:0 0 8px}
@@ -267,3 +267,21 @@
 }
 @media(max-width:480px){.guide-welcome{bottom:235px}.guide-dialogue p:last-child{display:none}.guided-tour-invite{bottom:88px}.guided-tour-invite .eyebrow{font-size:.57rem}.guided-navigation button{width:100%}}
 @media(prefers-reduced-motion:reduce){.guide-welcome{animation:none}.guided-tour-play{transition:none}}
+
+
+/* Local character portraits and verified-in-repo mission images */
+.guided-guide-intro{display:flex;align-items:flex-end;gap:16px;margin:34px 0 26px;padding:15px 22px;background:#0d1b2bdd;border:1px solid #dba55d63;border-radius:16px}
+.guided-guide-portrait{display:block;flex:0 0 auto;width:110px;height:145px;object-fit:contain;object-position:bottom center;filter:drop-shadow(0 5px 10px #0007)}
+.guided-guide-dialogue{flex:1;min-width:0;padding:12px 0}
+.guided-guide-dialogue .eyebrow{color:#dca35e;font-size:.59rem;letter-spacing:.12em}
+.guided-guide-dialogue p:last-child{color:#edf2f9;font-size:.94rem;line-height:1.7;margin:9px 0 0}
+.falcon-archive-photo{display:flex;flex-direction:column;align-items:center;margin:20px 0;padding:20px;background:#111d2a;border:1px solid #d69a5d40;border-radius:14px}
+.falcon-archive-photo img{display:block;width:100%;max-width:650px;max-height:425px;object-fit:contain}
+.falcon-archive-photo figcaption{align-self:stretch;text-align:center;color:#c4ccd5;font-size:.74rem;line-height:1.6;margin-top:14px}
+@media(max-width:780px){
+  .guide-portrait{width:58px;height:80px}
+  .guided-guide-intro{gap:10px;padding:12px;margin:22px 0}
+  .guided-guide-portrait{width:74px;height:110px}
+  .guided-guide-dialogue p:last-child{font-size:.82rem}
+  .falcon-archive-photo{padding:12px}
+}
