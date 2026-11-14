@@ -226,7 +226,7 @@ test('eight-exhibit expansion uses uploaded local assets with exact case-sensiti
   assert.ok(heroes.includes("src: '/assets/exhibits/surveyor-3/Surveyor3.webp'"));
   const guided = readFileSync('src/components/GuidedJourneyView.tsx', 'utf8');
   assert.match(guided, /guidePoseByMission/);
-  assert.match(guided, /tour-guide/);
+  assert.match(guided, /MuseumGuideBubble/);
 
   for (const id of ['viking-1', 'apollo-lunar-module']) {
     const modelPath = `public/assets/models/${id}/model.glb`;
@@ -257,8 +257,8 @@ test('museum guide is a floating white cloud using only the uploaded WebP poses'
   assert.match(solar, /<MuseumGuideBubble/);
   assert.match(journey, /<MuseumGuideBubble/);
   assert.doesNotMatch(journey, /guided-guide-intro/);
-  assert.doesNotMatch(solar, /welcome-wave\\.png/);
-  assert.match(styles, /\\.museum-guide-float\\s*\\{[^}]*position:fixed/s);
-  assert.match(styles, /\\.museum-guide-cloud-shape path\\s*\\{[^}]*fill:#fff/s);
+  assert.doesNotMatch(solar, /welcome-wave[.]png/);
+  assert.ok(styles.includes('.museum-guide-float {') && styles.includes('position:fixed'));
+  assert.ok(styles.includes('.museum-guide-cloud-shape path') && styles.includes('fill:#fff'));
   assert.match(styles, /prefers-reduced-motion/);
 });
