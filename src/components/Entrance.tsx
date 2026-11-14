@@ -59,7 +59,6 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
             onClick={handleEnter}
           >
             <span>{isOpening ? 'OPENING THE MUSEUM' : 'BEGIN TOUR'}</span>
-            <span className="entrance-welcome-arrow" aria-hidden="true">↗</span>
           </button>
         </div>
         <p className="entrance-scroll-hint">Or scroll down to open the curtains</p>
