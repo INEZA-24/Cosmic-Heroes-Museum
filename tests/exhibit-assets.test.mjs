@@ -240,7 +240,7 @@ test('eight-exhibit expansion uses uploaded local assets with exact case-sensiti
   }
 });
 
-test('museum guide is a floating white cloud using only the uploaded WebP poses', () => {
+test('guide uses a single attached speech bubble, the four WebP poses and corner placement', () => {
   const guide = readFileSync('src/components/MuseumGuideBubble.tsx', 'utf8');
   const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
   const journey = readFileSync('src/components/GuidedJourneyView.tsx', 'utf8');
@@ -251,49 +251,49 @@ test('museum guide is a floating white cloud using only the uploaded WebP poses'
     'neutral-hands-clapseds.webp',
     'presenting-one-hand.webp',
     'explaining-two-hands.webp'
-  ]) assert.ok(guide.includes(name), 'Missing guide WebP reference: ' + name);
-  assert.match(guide, /museum-guide-cloud-shape/);
+  ]) assert.ok(guide.includes(name), 'Missing guide WebP: ' + name);
+
+  assert.match(guide, /museum-guide-speech/);
+  assert.match(guide, /museum-guide-speech-body/);
+  assert.doesNotMatch(guide, /museum-guide-cloud-shape/);
   assert.match(guide, /is-flipped/);
   assert.match(solar, /<MuseumGuideBubble/);
   assert.match(journey, /<MuseumGuideBubble/);
   assert.doesNotMatch(journey, /guided-guide-intro/);
-  assert.doesNotMatch(solar, /welcome-wave[.]png/);
-  assert.ok(styles.includes('.museum-guide-float {') && styles.includes('position:fixed'));
-  assert.ok(styles.includes('.museum-guide-cloud-shape path') && styles.includes('fill:#fff'));
-  assert.match(styles, /prefers-reduced-motion/);
+  assert.ok(styles.includes('position:fixed;z-index:75'));
+  assert.ok(styles.includes('.museum-guide-speech::before'));
+  assert.ok(styles.includes('.museum-guide-speech::after'));
+  assert.ok(styles.includes('clip-path:polygon(100% 0,0 17%,100% 100%)'));
+  assert.doesNotMatch(styles, /\\.museum-guide-cloud::before/);
+  assert.ok(styles.includes('.museum-guide-avatar{') && styles.includes('flex:0 0 176px'));
 });
 
-test('museum guide thought dots point toward her head on both sides', () => {
-  const css = readFileSync('src/styles.css', 'utf8');
-  assert.ok(css.includes('.museum-guide-cloud::before {width:30px;height:30px;left:-40px;top:88px;bottom:auto;}'));
-  assert.ok(css.includes('.museum-guide-cloud::after {width:16px;height:16px;left:-78px;top:50px;bottom:auto;}'));
-  assert.ok(css.includes('.museum-guide-float--right .museum-guide-cloud::before {left:auto;right:-40px;}'));
-  assert.ok(css.includes('.museum-guide-float--right .museum-guide-cloud::after {left:auto;right:-78px;}'));
-  assert.ok(css.includes('.museum-guide-cloud::before{left:-22px;top:78px;}'));
-});
-
-test('entrance has one centered Welcome action with a fabric-sway curtain opening', () => {
+test('entrance says Begin Tour, keeps original curtains and never overlays title', () => {
   const entrance = readFileSync('src/components/Entrance.tsx', 'utf8');
   const styles = readFileSync('src/styles.css', 'utf8');
   assert.match(entrance, /id="enter-button"/);
-  assert.match(entrance, /WELCOME · STEP INSIDE/);
+  assert.match(entrance, /BEGIN TOUR/);
+  assert.doesNotMatch(entrance, /WELCOME · STEP INSIDE/);
   assert.doesNotMatch(entrance, /id="skip-button"/);
   assert.doesNotMatch(entrance, /id="welcome-audio"/);
   assert.doesNotMatch(entrance, /Play welcome narration/);
   assert.match(entrance, /scrollToEnter/);
-  assert.match(styles, /\.entrance-actions\s*\{[^}]*top:50%;[^}]*left:50%;[^}]*transform:translate\(-50%,-50%\)/s);
-  assert.match(styles, /@keyframes curtain-sway-left/);
-  assert.match(styles, /@keyframes curtain-sway-right/);
+  assert.ok(styles.includes('transition:transform 1.4s cubic-bezier'));
+  assert.doesNotMatch(styles, /@keyframes curtain-sway-left/);
+  assert.doesNotMatch(styles, /@keyframes curtain-sway-right/);
+  assert.ok(styles.includes('.entrance-content{') && styles.includes('display:grid;grid-template-rows:'));
+  assert.ok(styles.includes('grid-row:1;align-self:end'));
+  assert.ok(styles.includes('grid-row:2;position:static'));
+  assert.ok(styles.includes('grid-row:3;align-self:start'));
   assert.match(styles, /prefers-reduced-motion:reduce/);
 });
 
-test('navigation stays visible while scrolling and the guide portrait is enlarged', () => {
+test('navbar remains translucent and fixed while scrolling', () => {
   const styles = readFileSync('src/styles.css', 'utf8');
   const headerStart = styles.indexOf('.museum-header{');
   const header = styles.slice(headerStart, styles.indexOf('}', headerStart));
   assert.match(header, /position:fixed/);
-  assert.match(header, /background:rgba\(4,11,22,\.74\)/);
-  assert.match(header, /backdrop-filter:blur\(16px\)/);
-  assert.match(styles, /\.museum-guide-avatar\s*\{[^}]*flex:0 0 176px/s);
-  assert.match(styles, /\.museum-guide-avatar\{flex:0 0 94px/);
+  assert.match(header, /background:rgba\\(4,11,22,\\.74\\)/);
+  assert.match(header, /backdrop-filter:blur\\(16px\\)/);
+  assert.ok(styles.includes('scroll-padding-top:92px'));
 });
