@@ -50,7 +50,7 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
   useEffect(() => { setGuideVisible(true); }, [index]);
   useEffect(() => {
     if (!guideVisible) return;
-    const timer = window.setTimeout(() => setGuideVisible(false), 22000);
+    const timer = window.setTimeout(() => setGuideVisible(false), 10000);
     return () => window.clearTimeout(timer);
   }, [index, guideVisible]);
   const speakParagraph = (position:number) => {

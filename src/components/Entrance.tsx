@@ -1,112 +1,67 @@
 import { BrandEmblem } from './BrandEmblem';
-import { useState, useEffect, useRef, type FC } from 'react';
+import { useEffect, useRef, useState, type FC } from 'react';
 
 interface EntranceProps {
   onEnter: () => void;
 }
 
+/**
+ * Opening retains the original curtain slide; the single Begin Tour action
+ * and wheel gesture enter through the same guarded transition.
+ */
 export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
   const [isOpening, setIsOpening] = useState(false);
-  const [isPlayingNarration, setIsPlayingNarration] = useState(false);
-  const [speechSupported, setSpeechSupported] = useState(true);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-
-  useEffect(() => {
-    if (!('speechSynthesis' in window)) {
-      setSpeechSupported(false);
-    }
-    return () => {
-      if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, []);
+  const openingRef = useRef(false);
+  const enterTimer = useRef<number | null>(null);
 
   const handleEnter = () => {
-    if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      setIsPlayingNarration(false);
-    }
+    if (openingRef.current) return;
+    openingRef.current = true;
     setIsOpening(true);
-    setTimeout(() => {
-      onEnter();
-    }, 1400);
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    enterTimer.current = window.setTimeout(onEnter, reduceMotion ? 140 : 1400);
   };
 
   useEffect(() => {
     const scrollToEnter = (event: WheelEvent) => {
-      if (event.deltaY > 22 && !isOpening) handleEnter();
+      if (event.deltaY > 22 && !openingRef.current) handleEnter();
     };
     window.addEventListener('wheel', scrollToEnter, { passive: true });
-    return () => window.removeEventListener('wheel', scrollToEnter);
-  }, [isOpening]);
-
-  const handleSkip = () => {
-    if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      setIsPlayingNarration(false);
-    }
-    onEnter();
-  };
-
-  const toggleNarration = () => {
-    if (!('speechSynthesis' in window)) {
-      return;
-    }
-
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      setIsPlayingNarration(false);
-      return;
-    }
-
-    const narrationText =
-      "Hello, and welcome to the Cosmic Heroes of Steel Museum. I’ll guide you through the story of humanity’s robotic explorers of the cosmos.";
-    const u = new SpeechSynthesisUtterance(narrationText);
-    u.rate = 0.92;
-    u.onend = () => setIsPlayingNarration(false);
-    u.onerror = () => setIsPlayingNarration(false);
-    utteranceRef.current = u;
-    window.speechSynthesis.speak(u);
-    setIsPlayingNarration(true);
-  };
+    return () => {
+      window.removeEventListener('wheel', scrollToEnter);
+      if (enterTimer.current !== null) window.clearTimeout(enterTimer.current);
+    };
+  }, []);
 
   return (
     <section className={`entrance ${isOpening ? 'opening' : ''}`} id="entrance" aria-labelledby="museum-title">
-      <div className="curtain curtain-left"></div>
-      <div className="curtain curtain-right"></div>
-      <div className="entrance-glow"></div>
+      <div className="curtain curtain-left" aria-hidden="true" />
+      <div className="curtain curtain-right" aria-hidden="true" />
+      <div className="entrance-glow" aria-hidden="true" />
 
       <div className="entrance-content">
-        <BrandEmblem className="museum-emblem" />
-        <p className="eyebrow">A DIGITAL MUSEUM OF EXPLORATION</p>
-        <h1 id="museum-title">
-          COSMIC HEROES <span>OF STEEL MUSEUM</span>
-        </h1>
-        <p className="entrance-copy">Every machine has a story. Every journey leaves a legacy.</p>
-        <p className="entrance-scroll-hint">Scroll down or select Welcome to open the curtains</p>
-
-        <div className="entrance-actions">
-          <button className="button button-primary" id="enter-button" onClick={handleEnter}>
-            Welcome · Step Inside ↗
-          </button>
-          <button className="button button-quiet" id="skip-button" onClick={handleSkip}>
-            Skip intro
-          </button>
+        <div className="entrance-heading">
+          <BrandEmblem className="museum-emblem" />
+          <p className="eyebrow">A DIGITAL MUSEUM OF EXPLORATION</p>
+          <h1 id="museum-title">
+            COSMIC HEROES <span>OF STEEL MUSEUM</span>
+          </h1>
+          <p className="entrance-copy">Every machine has a story. Every journey leaves a legacy.</p>
         </div>
 
-        <button
-          className="audio-control"
-          id="welcome-audio"
-          onClick={toggleNarration}
-          disabled={!speechSupported}
-        >
-          {!speechSupported
-            ? 'Narration unavailable'
-            : isPlayingNarration
-            ? '■ Stop narration'
-            : '▶ Play welcome narration'}
-        </button>
+        <div className="entrance-actions">
+          <button
+            className="entrance-welcome-button"
+            id="enter-button"
+            type="button"
+            disabled={isOpening}
+            onClick={handleEnter}
+          >
+            <span>{isOpening ? 'OPENING THE MUSEUM' : 'BEGIN TOUR'}</span>
+          </button>
+        </div>
+        <p className="entrance-scroll-hint">Or scroll down to open the curtains</p>
       </div>
 
       <p className="entrance-footer">HUMAN CURIOSITY · ENGINEERED TO EXPLORE</p>
