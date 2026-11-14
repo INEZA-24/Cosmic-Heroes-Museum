@@ -45,7 +45,8 @@ test('Cassini remains at Saturn and the approved emblem is preserved', () => {
   const code = readFileSync('src/data.ts', 'utf8');
   assert.match(code, /id: "cassini-huygens"/);
   assert.match(code, /area: "saturn"/);
-  assert.doesNotMatch(code, /id: "surveyor-3"/);
+  assert.match(code, /id: "surveyor-3"/);
+  assert.match(code, /id: "viking-1"/);
   const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
   assert.match(solar, /Explore Saturn & Titan/);
   assert.ok(existsSync('public/assets/branding/museum-emblem.svg'));
@@ -222,7 +223,7 @@ test('eight-exhibit expansion uses uploaded local assets with exact case-sensiti
   const apollo = JSON.parse(readFileSync('public/assets/exhibits/apollo-15-lrv/slides.json', 'utf8'));
   assert.ok(apollo.items.some(item => item.src === '/assets/exhibits/apollo-15-lrv/Falcon.webp'));
   const heroes = readFileSync('src/exhibitHeroes.ts', 'utf8');
-  assert.match(heroes, /surveyor-3\\/Surveyor3\\.webp/);
+  assert.ok(heroes.includes("src: '/assets/exhibits/surveyor-3/Surveyor3.webp'"));
   const guided = readFileSync('src/components/GuidedJourneyView.tsx', 'utf8');
   assert.match(guided, /guidePoseByMission/);
   assert.match(guided, /tour-guide/);
