@@ -58,10 +58,11 @@ export const MuseumGuideBubble: FC<MuseumGuideBubbleProps> = ({
       >
         ×
       </button>
-      <span className="museum-guide-eyebrow">{label}</span>
-      <p>{message}</p>
-      {secondary && <p className="museum-guide-secondary">{secondary}</p>}
-
+      <div className="museum-guide-speech-body">
+        <span className="museum-guide-eyebrow">{label}</span>
+        <p>{message}</p>
+        {secondary && <p className="museum-guide-secondary">{secondary}</p>}
+      </div>
     </div>
   </aside>
 );
