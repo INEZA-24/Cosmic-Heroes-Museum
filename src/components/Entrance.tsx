@@ -6,8 +6,8 @@ interface EntranceProps {
 }
 
 /**
- * The curtain animation is decorative; everyone enters through the same
- * Welcome action (including users who scroll down to reveal the museum).
+ * Opening retains the original curtain slide; the single Begin Tour action
+ * and wheel gesture enter through the same guarded transition.
  */
 export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
   const [isOpening, setIsOpening] = useState(false);
@@ -20,7 +20,7 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
     setIsOpening(true);
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    enterTimer.current = window.setTimeout(onEnter, reduceMotion ? 140 : 1880);
+    enterTimer.current = window.setTimeout(onEnter, reduceMotion ? 140 : 1400);
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export const Entrance: FC<EntranceProps> = ({ onEnter }) => {
             disabled={isOpening}
             onClick={handleEnter}
           >
-            <span>{isOpening ? 'OPENING THE MUSEUM' : 'WELCOME · STEP INSIDE'}</span>
+            <span>{isOpening ? 'OPENING THE MUSEUM' : 'BEGIN TOUR'}</span>
             <span className="entrance-welcome-arrow" aria-hidden="true">↗</span>
           </button>
         </div>
