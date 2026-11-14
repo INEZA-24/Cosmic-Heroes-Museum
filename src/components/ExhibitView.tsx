@@ -60,7 +60,11 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
             <p className="eyebrow">APOLLO 15 · THE LANDING SPACECRAFT</p>
             <h2>Meet Falcon, the rover's ride to the Moon.</h2>
             <p className="viewer-introduction">Before Apollo 15 astronauts could drive the lunar rover, the Lunar Module Falcon carried them down to the surface. The descent stage remained on the Moon when the astronauts lifted off. This interactive NASA model depicts the Apollo Lunar Module design, not an exact reconstruction of Falcon.</p>
-            <a href="https://www.nasa.gov/image-article/apollo-15-lunar-module-rover/" target="_blank" rel="noopener noreferrer" className="exhibit-hero-source">See the historical photograph of Falcon and the rover ↗</a>
+            <figure className="falcon-archive-photo">
+              <img src="/assets/exhibits/apollo-15-lrv/Falcon.webp" alt="Museum reference image of the Apollo 15 Lunar Module Falcon" loading="lazy" decoding="async" />
+              <figcaption>Falcon image from the museum collection · Original image credit pending verification.</figcaption>
+            </figure>
+            <a href="https://www.nasa.gov/image-article/apollo-15-lunar-module-rover/" target="_blank" rel="noopener noreferrer" className="exhibit-hero-source">View NASA's documented Falcon and rover photograph ↗</a>
           </div>
           <MachineModelViewer machineId="apollo-lunar-module" machineName="Apollo Lunar Module (Falcon design reference)" />
         </section>
