@@ -70,7 +70,7 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({
   };
 
   const listenSnapshot = () => {
-    if (narrator.playing) { narrator.stop(); return; }
+    if (narrator.playing && narrator.activeId?.startsWith('snapshot-')) { narrator.stop(); return; }
     setGuideVisible(false);
     narrator.play(script.snapshot.map((text,i) => ({
       id: `snapshot-${i}`,
