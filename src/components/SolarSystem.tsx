@@ -48,7 +48,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
     const [isOrbitPaused, setIsOrbitPaused] = useState(false);
     const [webglError, setWebglError] = useState(false);
     const [showWelcome, setShowWelcome] = useState(true);
-    useEffect(() => { if (!showWelcome) return; const timer = window.setTimeout(() => setShowWelcome(false), 20000); return () => window.clearTimeout(timer); }, [showWelcome]);
+    useEffect(() => { if (!showWelcome) return; const timer = window.setTimeout(() => setShowWelcome(false), 10000); return () => window.clearTimeout(timer); }, [showWelcome]);
 
     const isOrbitPausedRef = useRef(false);
     isOrbitPausedRef.current = isOrbitPaused;
