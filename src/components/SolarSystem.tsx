@@ -1,3 +1,4 @@
+import { MuseumGuideBubble } from './MuseumGuideBubble';
 import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import * as THREE from 'three';
 import { planetDataList, planetDescriptions } from '../data';
@@ -1059,15 +1060,16 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
           )}
         </div>
 
-        {showWelcome && <div className="guide-welcome" role="status">
-          <img className="guide-portrait" src="/assets/museum-guide.svg" alt="Illustration of your museum guide" />
-          <div className="guide-dialogue">
-            <button type="button" className="guide-dismiss" aria-label="Dismiss museum guide" onClick={() => setShowWelcome(false)}>×</button>
-            <span className="eyebrow">YOUR MUSEUM GUIDE</span>
-            <p>Hello, and welcome to the Cosmic Heroes of Steel Museum. I'll guide you through the story of humanity's robotic explorers of the cosmos.</p>
-            <p>Choose <strong>Begin Guided Tour</strong> below, or click a planet to explore freely.</p>
-          </div>
-        </div>}
+        {showWelcome && (
+          <MuseumGuideBubble
+            context="solar"
+            side="left"
+            pose="welcome-wave"
+            message="Hello, and welcome to the Cosmic Heroes of Steel Museum. I'll guide you through the story of humanity's robotic explorers of the cosmos."
+            secondary="Choose Begin Guided Tour below, or click a planet to explore freely."
+            onDismiss={() => setShowWelcome(false)}
+          />
+        )}
         <div className="guided-tour-invite">
           <p className="eyebrow">THE MISSION JOURNEY</p>
           <p>Deep dive into the narrated journey through the great robotic missions of space exploration.</p>
