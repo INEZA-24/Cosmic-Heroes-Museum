@@ -41,7 +41,7 @@ test('exhibition navigation retains collection, Moon, Mars and deep space', () =
   for (const id of ids) assert.ok(data.includes('id: "' + id + '"'), `Missing machine: ${id}`);
 });
 
-test('M6 uses Cassini at Saturn and displays the approved transparent emblem', () => {
+test('Cassini remains at Saturn and the approved emblem is preserved', () => {
   const code = readFileSync('src/data.ts', 'utf8');
   assert.match(code, /id: "cassini-huygens"/);
   assert.match(code, /area: "saturn"/);
@@ -190,4 +190,51 @@ test('M8 image loading is guarded on unmount and full-width backgrounds have no 
   const imageStyle = styles.slice(imageStart, styles.indexOf('}', imageStart));
   assert.ok(imageStyle.includes('object-fit:contain'));
   assert.ok(imageStyle.includes('right:0'));
+});
+
+
+test('eight-exhibit expansion uses uploaded local assets with exact case-sensitive paths', () => {
+  const data = readFileSync('src/data.ts', 'utf8');
+  const idsNow = [...ids, 'surveyor-3', 'viking-1'];
+  for (const id of idsNow) assert.ok(data.includes('id: "' + id + '"'), 'Missing machine: ' + id);
+
+  const assets = [
+    'public/assets/exhibits/surveyor-3/Surveyor3.webp',
+    'public/assets/exhibits/apollo-15-lrv/Falcon.webp',
+    'public/assets/exhibits/viking-1/hero.webp',
+    'public/assets/models/viking-1/model.glb',
+    'public/assets/models/apollo-lunar-module/model.glb',
+    'public/assets/tour-guide/welcome-wave.png',
+    'public/assets/tour-guide/neutral-hands-clasped.png',
+    'public/assets/tour-guide/presenting-one-hand.png',
+    'public/assets/tour-guide/explaining-two-hands.png',
+  ];
+  for (const asset of assets) assert.ok(existsSync(asset), 'Missing uploaded asset: ' + asset);
+
+  for (const id of ['surveyor-3', 'viking-1']) {
+    const slideshow = JSON.parse(readFileSync(`public/assets/exhibits/${id}/slides.json`, 'utf8'));
+    assert.ok(slideshow.items.length > 0, 'No images for: ' + id);
+    for (const item of slideshow.items) {
+      assert.ok(existsSync(`public${item.src.split('?')[0]}`), 'Broken slide link: ' + item.src);
+    }
+  }
+
+  const apollo = JSON.parse(readFileSync('public/assets/exhibits/apollo-15-lrv/slides.json', 'utf8'));
+  assert.ok(apollo.items.some(item => item.src === '/assets/exhibits/apollo-15-lrv/Falcon.webp'));
+  const heroes = readFileSync('src/exhibitHeroes.ts', 'utf8');
+  assert.match(heroes, /surveyor-3\\/Surveyor3\\.webp/);
+  const guided = readFileSync('src/components/GuidedJourneyView.tsx', 'utf8');
+  assert.match(guided, /guidePoseByMission/);
+  assert.match(guided, /tour-guide/);
+
+  for (const id of ['viking-1', 'apollo-lunar-module']) {
+    const modelPath = `public/assets/models/${id}/model.glb`;
+    const fd = openSync(modelPath, 'r');
+    const header = Buffer.alloc(12);
+    try { assert.equal(readSync(fd, header, 0, 12, 0), 12); }
+    finally { closeSync(fd); }
+    assert.equal(header.toString('ascii', 0, 4), 'glTF');
+    assert.equal(header.readUInt32LE(4), 2);
+    assert.equal(header.readUInt32LE(8), statSync(modelPath).size);
+  }
 });
