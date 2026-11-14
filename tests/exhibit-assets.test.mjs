@@ -306,3 +306,29 @@ test('museum guide dismisses after exactly ten seconds in both views', () => {
   assert.match(solar, /setTimeout\(\(\) => setShowWelcome\(false\), 10000\)/);
   assert.match(guided, /setTimeout\(\(\) => setGuideVisible\(false\), 10000\)/);
 });
+
+test('narration script pack covers all eight missions with short beats and special milestones', () => {
+  const code = readFileSync('src/narrationScripts.ts','utf8');
+  const guide = readFileSync('src/components/GuidedJourneyView.tsx','utf8');
+  const exhibit = readFileSync('src/components/ExhibitView.tsx','utf8');
+  const app = readFileSync('src/App.tsx','utf8');
+  const hook = readFileSync('src/hooks/useMuseumNarration.ts','utf8');
+  const doc = readFileSync('docs/narration-scripts.md','utf8');
+  for (const id of [...ids, 'surveyor-3','viking-1']) {
+    assert.ok(code.includes('"' + id + '": {'), 'Missing mission narration ' + id);
+    assert.ok(doc.includes('(`' + id + '`)'), 'Missing voice export script ' + id);
+  }
+  for (const key of ['snapshot','milestone','opening','model','engineering','discoveries','chapters']) {
+    assert.ok(code.includes(key + ':'), 'Missing narration field ' + key);
+  }
+  assert.match(guide,/guided-snapshot-beats/);
+  assert.match(guide,/onExploreMachine/);
+  assert.doesNotMatch(guide,/guided-milestones/);
+  assert.match(exhibit,/exhibit-mission-moment/);
+  assert.match(exhibit,/listenAllChapters/);
+  assert.match(exhibit,/exhibit-listen-btn/);
+  assert.match(app,/initialMissionId=\{guidedResumeId\}/);
+  assert.match(hook,/scrollIntoView/);
+  assert.match(hook,/speechSynthesis.cancel/);
+  assert.match(hook,/prefers-reduced-motion/);
+});
