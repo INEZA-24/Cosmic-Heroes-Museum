@@ -35,15 +35,36 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
 
       <ExhibitHero key={machine.id} machine={machine} />
 
-      {/* Machine first: real 3D structure, without blocking exhibition content if no model has been uploaded. */}
-      <section id="exhibit-model" className="exhibit-model-section" aria-label={machine.name + ' 3D model'}>
-        <div className="section-label">
-          <p className="eyebrow">THE ENGINEERING HALL · INTERACTIVE 3D</p>
-          <h2>Examine the machine.</h2>
-          <p className="viewer-introduction">Rotate, zoom and inspect the structure of {machine.name} from every side.</p>
-        </div>
-        <MachineModelViewer machineId={machine.id} machineName={machine.name} />
-      </section>
+      {machine.id === 'surveyor-3' ? (
+        <section id="exhibit-model" className="exhibit-model-section" aria-label="Surveyor 3 mission archive">
+          <div className="section-label">
+            <p className="eyebrow">THE ENGINEERING HALL · LUNAR ARCHIVE</p>
+            <h2>Explore the original lunar lander.</h2>
+            <p className="viewer-introduction">Surveyor 3 is presented through historical photographs while we look for an accurate 3D reconstruction. Its scoop and camera helped engineers understand the lunar surface before Apollo.</p>
+            <a className="button button-primary" href="https://science.nasa.gov/resource/apollo-12-and-surveyor-3/" target="_blank" rel="noopener noreferrer">See NASA's Surveyor 3 photograph ↗</a>
+          </div>
+        </section>
+      ) : (
+        <section id="exhibit-model" className="exhibit-model-section" aria-label={machine.name + ' 3D model'}>
+          <div className="section-label">
+            <p className="eyebrow">THE ENGINEERING HALL · INTERACTIVE 3D</p>
+            <h2>Examine the machine.</h2>
+            <p className="viewer-introduction">Rotate, zoom and inspect the structure of {machine.name} from every side.</p>
+          </div>
+          <MachineModelViewer machineId={machine.id} machineName={machine.name} />
+        </section>
+      )}
+      {machine.id === 'apollo-15-lrv' && (
+        <section className="exhibit-model-section" aria-label="Apollo 15 Falcon Lunar Module">
+          <div className="section-label">
+            <p className="eyebrow">APOLLO 15 · THE LANDING SPACECRAFT</p>
+            <h2>Meet Falcon, the rover's ride to the Moon.</h2>
+            <p className="viewer-introduction">Before Apollo 15 astronauts could drive the lunar rover, the Lunar Module Falcon carried them down to the surface. The descent stage remained on the Moon when the astronauts lifted off. This interactive NASA model depicts the Apollo Lunar Module design, not an exact reconstruction of Falcon.</p>
+            <a href="https://www.nasa.gov/image-article/apollo-15-lunar-module-rover/" target="_blank" rel="noopener noreferrer" className="exhibit-hero-source">See the historical photograph of Falcon and the rover ↗</a>
+          </div>
+          <MachineModelViewer machineId="apollo-lunar-module" machineName="Apollo Lunar Module (Falcon design reference)" />
+        </section>
+      )}
 
       {/* Key Quick Facts Grid */}
       <section className="exhibit-facts-grid" aria-label="Key Machine Specifications">
