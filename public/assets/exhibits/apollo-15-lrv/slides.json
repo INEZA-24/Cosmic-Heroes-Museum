@@ -26,6 +26,15 @@
       "credit": "Source not independently verified",
       "sourceUrl": null,
       "lowResolution": false
+    },
+    {
+      "src": "/assets/exhibits/apollo-15-lrv/Falcon.webp",
+      "title": "Apollo 15 Lunar Module Falcon",
+      "kind": "MISSION REFERENCE IMAGE",
+      "description": "Falcon, the Lunar Module that brought Apollo 15 astronauts and their rover to the Moon.",
+      "credit": "Museum-uploaded image; original source not yet verified",
+      "sourceUrl": null,
+      "lowResolution": true
     }
   ]
 }
