@@ -1,6 +1,131 @@
 import { Machine, PlanetData, DestinationArea } from './types';
 
-export const machines: Machine[] = [
+const unsortedMachines: Machine[] = [
+  {
+  id: "surveyor-3",
+  name: "Surveyor 3",
+  place: "Moon",
+  area: "moon",
+  kind: "Robotic lunar lander",
+  year: "1967",
+  summary: "The robotic lander that tested lunar soil and helped prepare for the Apollo Moon landings.",
+  location: "Oceanus Procellarum (Ocean of Storms), Moon",
+  detail: "Surveyor 3 analyzed lunar soil with a mechanical scoop; Apollo 12 astronauts later visited the spacecraft.",
+  launchDate: "April 17, 1967",
+  landingDate: "April 20, 1967 (UTC)",
+  status: "Mission complete · remains on the Moon",
+  engineering: [
+    "Three-legged robotic lander with a crushable landing structure",
+    "Television camera for surface images and remote operation",
+    "Motorized surface sampler that dug trenches and tested the soil"
+  ],
+  story: [
+    {
+      title: "Can a spacecraft land safely on the Moon?",
+      content: "Before astronauts set foot on the Moon, engineers had to find out what its surface was really like. Surveyor 3 arrived in the Ocean of Storms in April 1967, taking photographs and performing experiments on the lunar ground. Its landing was unusual: the spacecraft bounced before finally settling into a small crater."
+    },
+    {
+      title: "Digging into a distant world",
+      content: "From Earth, engineers commanded Surveyor 3's mechanical scoop to dig trenches and test how the lunar soil behaved. Together with the Surveyor program's other results, its measurements provided important confidence that the ground could support a crewed Apollo lander."
+    },
+    {
+      title: "A robot receives human visitors",
+      content: "In November 1969, Apollo 12 astronauts Pete Conrad and Alan Bean walked to the silent Surveyor 3 lander. They removed its camera and other parts and returned them to Earth, allowing scientists to study what years of exposure to the lunar environment had done to the spacecraft."
+    }
+  ],
+  discoveries: [
+    "Tested the bearing strength and mechanical behavior of lunar soil",
+    "Transmitted thousands of photographs of the Moon's surface",
+    "Allowed engineers to examine hardware recovered from the lunar surface by Apollo 12 astronauts"
+  ],
+  timeline: [
+    {
+      date: "1967-04-17",
+      title: "Launch",
+      desc: "Surveyor 3 began its journey to the Moon."
+    },
+    {
+      date: "1967-04-20",
+      title: "Lunar landing",
+      desc: "Touched down in the Ocean of Storms after bouncing during descent."
+    },
+    {
+      date: "1967-05-04",
+      title: "Final contact",
+      desc: "Communications ended after successful lunar imaging and soil experiments."
+    },
+    {
+      date: "1969-11-19",
+      title: "Apollo 12 visit",
+      desc: "Astronauts retrieved parts of Surveyor 3 for examination on Earth."
+    }
+  ],
+  sourceUrl: "https://science.nasa.gov/mission/surveyor-3/",
+  sourceLabel: "NASA Science — Surveyor 3"
+},
+  {
+  id: "viking-1",
+  name: "Viking 1",
+  place: "Mars",
+  area: "mars",
+  kind: "Mars orbiter and stationary lander",
+  year: "1975",
+  summary: "A pioneering Mars mission whose lander explored the Martian surface and investigated conditions relevant to life.",
+  location: "Chryse Planitia, Mars",
+  detail: "The Viking 1 orbiter photographed Mars while its lander examined soil, weather, and the surface from Chryse Planitia.",
+  launchDate: "August 20, 1975",
+  landingDate: "July 20, 1976",
+  status: "Mission complete · lander remains on Mars",
+  engineering: [
+    "Orbiter and lander traveled together before separating near Mars",
+    "Lander used a heat shield, parachute and retrorockets to descend",
+    "Surface cameras, robotic sampling arm, weather instruments and biology experiments"
+  ],
+  story: [
+    {
+      title: "Touching down on the Red Planet",
+      content: "Before Mars rovers could travel across the planet, Viking 1 helped show what sustained exploration from the surface could achieve. The spacecraft launched in 1975; its lander touched down safely on July 20, 1976, while the orbiter continued observations from above."
+    },
+    {
+      title: "A laboratory on Mars",
+      content: "Viking 1 carried cameras, instruments and a sampling arm to study Martian soil and atmosphere. Its biology experiments produced results that scientists have debated for decades; they did not establish that life had been found."
+    },
+    {
+      title: "A foundation for later explorers",
+      content: "Viking 1 returned remarkable views and environmental data from the Martian surface. The mission demonstrated approaches to landing, communicating, and investigating Mars that informed generations of later spacecraft, including the rovers that followed."
+    }
+  ],
+  discoveries: [
+    "Returned historic panoramic images and measurements from the Martian surface",
+    "Studied the physical and chemical properties of Martian soil",
+    "Measured weather and atmospheric conditions over an extended mission",
+    "Investigated possible biological activity without confirming life on Mars"
+  ],
+  timeline: [
+    {
+      date: "1975-08-20",
+      title: "Launch",
+      desc: "Viking 1 launched toward Mars."
+    },
+    {
+      date: "1976-06-19",
+      title: "Mars orbit insertion",
+      desc: "The spacecraft entered orbit to survey potential landing sites."
+    },
+    {
+      date: "1976-07-20",
+      title: "Landing at Chryse Planitia",
+      desc: "Viking 1 made a successful powered landing and began surface science."
+    },
+    {
+      date: "1982-11-13",
+      title: "End of lander communications",
+      desc: "The lander's long-running mission ended."
+    }
+  ],
+  sourceUrl: "https://science.nasa.gov/mission/viking-1/",
+  sourceLabel: "NASA Science — Viking 1"
+},
   {
     id: "apollo-15-lrv",
     name: "Apollo 15 Lunar Roving Vehicle",
@@ -294,6 +419,10 @@ export const machines: Machine[] = [
   },
 
 ];
+
+export const machines: Machine[] = [...unsortedMachines].sort(
+  (a, b) => new Date(a.launchDate ?? a.year).getTime() - new Date(b.launchDate ?? b.year).getTime()
+);
 
 export const destinationNames: Record<DestinationArea, string> = {
   moon: "The Moon",
