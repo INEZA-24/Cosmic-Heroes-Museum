@@ -4,6 +4,16 @@ import { exhibitHeroes } from '../exhibitHeroes';
 
 const ordered = [...machines].sort((a,b) => (a.launchDate ? new Date(a.launchDate).getTime() : 0) - (b.launchDate ? new Date(b.launchDate).getTime() : 0));
 
+const guideIntroductions: Record<string, string> = {
+  'surveyor-3': "Before astronauts could walk on the Moon, robotic explorers tested the ground. Meet Surveyor 3, whose experiments helped prepare the way.",
+  'apollo-15-lrv': "Our next stop is 1971. Apollo 15's Falcon lander carried the first lunar rover to the Moon, allowing astronauts to travel farther than ever before.",
+  'pioneer-10': "Now we're heading much farther out. Pioneer 10 became the first spacecraft to explore Jupiter up close.",
+  'viking-1': "In 1976, Viking 1 touched down on Mars with its own laboratory. What could its experiments reveal about the Red Planet?",
+  'sojourner': "Let's meet the small rover that proved wheels could explore Mars. Sojourner opened a new era of robotic mobility.",
+  'cassini-huygens': "Our next destination is Saturn. Cassini explored the ringed giant, while Huygens descended to the surface of Titan.",
+  'opportunity': "Opportunity was supposed to explore Mars for just 90 sols. Instead, its extraordinary journey lasted almost fifteen years.",
+  'insight': "For our final mission, we'll listen beneath the surface of Mars. InSight used marsquakes to investigate the planet's hidden interior."
+};
 interface GuidedJourneyProps { onExit: () => void; }
 
 export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
@@ -72,6 +82,10 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
         </div>
         {photo && <img src={photo.src} alt={current.name} className="guided-cover-image"/>}
       </header>
+      <aside className="guided-details" aria-label="Your museum guide introduces this chapter">
+        <p className="eyebrow">YOUR MUSEUM GUIDE · CHAPTER INTRODUCTION</p>
+        <p>{guideIntroductions[current.id] ?? 'Welcome to the next chapter of our exploration.'}</p>
+      </aside>
       <div className="guided-body">
         <section className="guided-story" aria-label="Narrated mission story">
           <p className="eyebrow">A STORY OF DISCOVERY</p>
