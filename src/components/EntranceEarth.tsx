@@ -87,7 +87,7 @@ export const EntranceEarth: FC = () => {
       };
       onResize = resize;
       resize();
-      if ('ResizeObserver' in window) {
+      if (typeof ResizeObserver !== 'undefined') {
         observer = new ResizeObserver(resize);
         observer.observe(host);
       } else {
