@@ -307,7 +307,7 @@ test('museum guide dismisses after exactly ten seconds in both views', () => {
   assert.match(guided, /setTimeout\(\(\) => setGuideVisible\(false\), 10000\)/);
 });
 
-test('all eight recorded Stella tracks use the exact uploaded MP3 filenames', () => {
+test('all eight recorded Dave tracks use the exact uploaded MP3 filenames', () => {
   const tracks = readFileSync('src/audioTracks.ts', 'utf8');
   const player = readFileSync('src/components/MissionAudioPlayer.tsx', 'utf8');
   const guide = readFileSync('src/components/GuidedJourneyView.tsx', 'utf8');
@@ -356,6 +356,9 @@ test('all eight recorded Stella tracks use the exact uploaded MP3 filenames', ()
   }
 
   assert.match(player, /<audio/);
+  assert.match(player, /Listen to Dave/);
+  assert.match(player, /Mission narration · Dave/);
+  assert.doesNotMatch(player, /Listen to Stella/);
   assert.match(player, /onTimeUpdate/);
   assert.match(player, /audio\.play\(\)/);
   assert.match(player, /audio\.pause\(\)/);
