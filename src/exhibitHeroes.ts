@@ -14,22 +14,22 @@ export interface MuseumHero {
   sourceUrl: string;
   credit: string;
   description: string;
-  kind: 'NASA ARCHIVE PHOTOGRAPH' | 'NASA MISSION ARTWORK' | 'NASA VISUAL COMPOSITE' | 'MISSION ILLUSTRATION';
+  kind: 'NASA ARCHIVE PHOTOGRAPH' | 'NASA MISSION ARTWORK' | 'NASA VISUAL COMPOSITE' | 'MISSION ILLUSTRATION' | 'MISSION REFERENCE IMAGE';
 }
 
 export const exhibitHeroes: Record<string, MuseumHero> = {
   'surveyor-3': {
-    src: 'https://commons.wikimedia.org/wiki/Special:FilePath/Surveyor_3_on_the_Moon.jpg',
-    sourceUrl: 'https://science.nasa.gov/mission/surveyor-3/',
-    credit: 'NASA',
-    kind: 'NASA ARCHIVE PHOTOGRAPH',
-    description: 'Surveyor 3 on the lunar surface, photographed during Apollo 12.'
+    src: '/assets/exhibits/surveyor-3/Surveyor3.webp',
+    sourceUrl: '',
+    credit: 'Museum-uploaded image; original source not yet verified',
+    kind: 'MISSION REFERENCE IMAGE',
+    description: 'Surveyor 3 mission image from the museum collection.'
   },
   'viking-1': {
     src: '/assets/exhibits/viking-1/hero.webp',
-    sourceUrl: 'https://science.nasa.gov/mission/viking-1/',
-    credit: 'Museum asset; verify original image credit before publication',
-    kind: 'MISSION ILLUSTRATION',
+    sourceUrl: '',
+    credit: 'Museum-uploaded image; original source not yet verified',
+    kind: 'MISSION REFERENCE IMAGE',
     description: 'Viking 1 spacecraft and its exploration of Mars.'
   },
   'apollo-15-lrv': {
