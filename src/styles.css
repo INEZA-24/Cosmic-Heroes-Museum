@@ -465,3 +465,145 @@ html{scroll-padding-top:92px}
   .museum-guide-float{animation:none}
   .entrance-welcome-button{transition:none}
 }
+
+
+/* MUSEUM AUDIO: opt-in listening, visible transcripts and chapter-following */
+.guided-journey{padding-bottom:100px}
+.guided-cover{min-height:450px}
+.guided-snapshot{margin:45px 0 28px;scroll-margin-top:110px}
+.guided-snapshot-heading{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:24px;margin-bottom:19px
+}
+.guided-snapshot-heading h2{
+  font:500 clamp(1.8rem,3.4vw,2.8rem)/1.2 "Playfair Display",Georgia,serif;
+  margin:4px 0 9px
+}
+.guided-snapshot-heading>div>p:last-child{
+  color:#b9c8d8;font-size:.86rem;line-height:1.6;margin:0
+}
+.guided-snapshot-explore{
+  flex:0 0 auto;background:transparent;border:1px solid #d69a5d88;
+  padding:13px 18px;border-radius:4px;color:#eec397;
+  font-size:.78rem;cursor:pointer;line-height:1.4;
+  transition:background .2s
+}
+.guided-snapshot-explore:hover,.guided-snapshot-explore:focus-visible{
+  background:#d69a5d22;outline:2px solid #d69a5d
+}
+.guided-snapshot-beats{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px
+}
+.guided-snapshot-beat{
+  scroll-margin-top:120px;min-width:0;min-height:175px;
+  padding:23px 25px;background:#101d2b;
+  border:1px solid #ffffff1f;border-top:3px solid #b18b61;
+  transition:border-color .25s,background .25s,box-shadow .25s
+}
+.guided-snapshot-beat.is-speaking,.guided-snapshot-spotlight.is-speaking,
+.story-chapter-card.is-speaking,.exhibit-mission-moment.is-speaking{
+  background:#252431;border-color:#e5b57d;box-shadow:0 0 0 2px #dba56744
+}
+.guided-snapshot-number{
+  display:block;color:#dba567;font-weight:800;letter-spacing:.18em;
+  font-size:.64rem;margin-bottom:13px
+}
+.guided-snapshot-beat p{
+  font-size:.87rem;line-height:1.7;color:#e0e6ed;margin:0
+}
+.guided-snapshot-spotlight{
+  display:flex;gap:24px;scroll-margin-top:110px;
+  margin:26px 0 0;padding:30px clamp(22px,4vw,44px);
+  background:linear-gradient(120deg,#392c22,#182532 72%);
+  border:1px solid #d69a5d88;border-left:4px solid #e2a964
+}
+.guided-snapshot-spotlight-mark{
+  flex:0 0 auto;align-self:flex-start;
+  font-size:clamp(2.1rem,4vw,3.5rem);color:#e9bb78;line-height:1
+}
+.guided-snapshot-spotlight h2,.exhibit-mission-moment h2{
+  font:500 clamp(1.55rem,3vw,2.35rem)/1.23 "Playfair Display",Georgia,serif;
+  margin:2px 0 11px
+}
+.guided-snapshot-spotlight p:not(.eyebrow),.exhibit-mission-moment p:not(.eyebrow){
+  max-width:850px;font-size:.9rem;color:#f0e5da;line-height:1.75;margin:0 0 15px
+}
+.guided-snapshot-listen{
+  border:0;border-bottom:1px solid #e6b778;background:none;color:#efc08b;
+  padding:8px 0;cursor:pointer;font-size:.78rem
+}
+.guided-snapshot-listen:hover,.guided-snapshot-listen:focus-visible{color:#fff}
+.guided-snapshot-end{
+  margin:29px 0 0;padding:27px 28px;
+  text-align:center;border:1px solid #ffffff23;background:#0b1522
+}
+.guided-snapshot-end p:not(.eyebrow){color:#b8c6d6;font-size:.86rem;line-height:1.6}
+.guided-snapshot-end .button{margin-top:8px}
+.guided-navigation{margin-top:22px;padding-top:24px}
+.exhibit-hero-listen{
+  background:#132338e8;color:#f3cf9d;border:1px solid #d89b5c;
+  padding:13px 17px;cursor:pointer;font-weight:650;font-size:.77rem
+}
+.exhibit-hero-listen:hover,.exhibit-hero-listen:focus-visible{background:#2d3e4f}
+.exhibit-hero-listen:disabled{opacity:.5;cursor:not-allowed}
+.exhibit-audio-choice{
+  display:flex;align-items:center;gap:15px;
+  padding:16px 20px;margin:24px 0 34px;
+  background:#111e2b;border:1px solid #cf9b5d55;
+  scroll-margin-top:110px
+}
+.exhibit-audio-choice>span{color:#e1ac67;font-size:1.6rem}
+.exhibit-audio-choice p{flex:1;color:#bccbd9;font-size:.81rem;line-height:1.6;margin:0}
+.exhibit-audio-choice strong{color:#f8d6a8}
+.exhibit-audio-choice button{
+  border:1px solid #cf9b5d88;background:#293547;
+  color:#f2c590;padding:9px 13px;cursor:pointer;white-space:nowrap;font-size:.75rem
+}
+.exhibit-audio-description{font-size:.84rem;color:#bdcbd9;line-height:1.6}
+.exhibit-listen-btn,.exhibit-chapter-listen{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:9px 13px;margin:10px 0 18px;border:1px solid #d5a26677;
+  border-radius:4px;background:#182c3c;color:#f0c68f;
+  cursor:pointer;font-size:.75rem;font-weight:650;
+  transition:background .18s,border-color .18s
+}
+.exhibit-listen-btn:hover,.exhibit-chapter-listen:hover,
+.exhibit-listen-btn:focus-visible,.exhibit-chapter-listen:focus-visible{
+  background:#273f53;border-color:#e5b67d
+}
+.exhibit-listen-btn:disabled,.exhibit-chapter-listen:disabled{opacity:.55;cursor:not-allowed}
+.story-chapter-card{
+  scroll-margin-top:110px;transition:background .2s,border-color .2s;
+}
+.story-chapter-card.is-speaking{border-color:#e5b57d}
+.story-chapter-card .exhibit-chapter-listen{margin-top:0;margin-bottom:14px}
+.exhibit-mission-moment{
+  display:flex;gap:24px;padding:32px clamp(22px,4vw,46px);
+  margin:12px 0 50px;scroll-margin-top:110px;
+  border:1px solid #d69a5d66;border-left:4px solid #dfac6b;
+  background:linear-gradient(120deg,#392d24,#101e2c 80%)
+}
+.exhibit-moment-symbol{flex:0 0 auto;font-size:2.8rem;color:#e9b875;line-height:1}
+.exhibit-mission-moment .exhibit-listen-btn{margin:5px 0 0}
+.exhibit-model-section,.exhibit-engineering-section,.exhibit-discoveries-section,
+.exhibit-story-section,.exhibit-timeline-section{scroll-margin-top:105px}
+@media(max-width:900px){
+  .guided-snapshot-beats{grid-template-columns:1fr;gap:11px}
+  .guided-snapshot-beat{min-height:0;padding:19px 22px}
+  .guided-snapshot-heading{align-items:stretch;flex-direction:column}
+  .guided-snapshot-explore{align-self:flex-start}
+  .guided-cover{min-height:550px}
+}
+@media(max-width:540px){
+  .guided-snapshot{margin-top:28px}
+  .guided-snapshot-spotlight,.exhibit-mission-moment{gap:12px;padding:22px 18px}
+  .guided-snapshot-spotlight-mark,.exhibit-moment-symbol{font-size:1.75rem}
+  .guided-snapshot-end{padding:20px 16px}
+  .exhibit-audio-choice{flex-wrap:wrap;gap:10px}
+  .exhibit-audio-choice p{flex-basis:80%}
+  .exhibit-audio-choice button{margin-left:auto}
+  .exhibit-hero-listen{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  .guided-snapshot-beat,.exhibit-listen-btn,.exhibit-chapter-listen{transition:none}
+}
