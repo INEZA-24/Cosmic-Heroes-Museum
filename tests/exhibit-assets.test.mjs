@@ -262,3 +262,29 @@ test('museum guide is a floating white cloud using only the uploaded WebP poses'
   assert.ok(styles.includes('.museum-guide-cloud-shape path') && styles.includes('fill:#fff'));
   assert.match(styles, /prefers-reduced-motion/);
 });
+
+test('entrance has one centered Welcome action with a fabric-sway curtain opening', () => {
+  const entrance = readFileSync('src/components/Entrance.tsx', 'utf8');
+  const styles = readFileSync('src/styles.css', 'utf8');
+  assert.match(entrance, /id="enter-button"/);
+  assert.match(entrance, /WELCOME · STEP INSIDE/);
+  assert.doesNotMatch(entrance, /id="skip-button"/);
+  assert.doesNotMatch(entrance, /id="welcome-audio"/);
+  assert.doesNotMatch(entrance, /Play welcome narration/);
+  assert.match(entrance, /scrollToEnter/);
+  assert.match(styles, /\\.entrance-actions\\s*\\{[^}]*top:50%;[^}]*left:50%;[^}]*transform:translate\\(-50%,-50%\\)/s);
+  assert.match(styles, /@keyframes curtain-sway-left/);
+  assert.match(styles, /@keyframes curtain-sway-right/);
+  assert.match(styles, /prefers-reduced-motion:reduce/);
+});
+
+test('navigation stays visible while scrolling and the guide portrait is enlarged', () => {
+  const styles = readFileSync('src/styles.css', 'utf8');
+  const headerStart = styles.indexOf('.museum-header{');
+  const header = styles.slice(headerStart, styles.indexOf('}', headerStart));
+  assert.match(header, /position:fixed/);
+  assert.match(header, /background:rgba\\(4,11,22,\\.74\\)/);
+  assert.match(header, /backdrop-filter:blur\\(16px\\)/);
+  assert.match(styles, /\\.museum-guide-avatar\\s*\\{[^}]*flex:0 0 176px/s);
+  assert.match(styles, /\\.museum-guide-avatar\\{flex:0 0 94px/);
+});
