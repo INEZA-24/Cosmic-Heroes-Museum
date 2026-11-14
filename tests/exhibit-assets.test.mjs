@@ -264,7 +264,7 @@ test('guide uses a single attached speech bubble, the four WebP poses and corner
   assert.ok(styles.includes('.museum-guide-speech::before'));
   assert.ok(styles.includes('.museum-guide-speech::after'));
   assert.ok(styles.includes('clip-path:polygon(100% 0,0 17%,100% 100%)'));
-  assert.doesNotMatch(styles, /\\.museum-guide-cloud::before/);
+  assert.doesNotMatch(styles, /\.museum-guide-cloud::before/);
   assert.ok(styles.includes('.museum-guide-avatar{') && styles.includes('flex:0 0 176px'));
 });
 
@@ -293,7 +293,7 @@ test('navbar remains translucent and fixed while scrolling', () => {
   const headerStart = styles.indexOf('.museum-header{');
   const header = styles.slice(headerStart, styles.indexOf('}', headerStart));
   assert.match(header, /position:fixed/);
-  assert.match(header, /background:rgba\\(4,11,22,\\.74\\)/);
-  assert.match(header, /backdrop-filter:blur\\(16px\\)/);
+  assert.match(header, /background:rgba\(4,11,22,\.74\)/);
+  assert.match(header, /backdrop-filter:blur\(16px\)/);
   assert.ok(styles.includes('scroll-padding-top:92px'));
 });
