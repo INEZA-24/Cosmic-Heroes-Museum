@@ -321,10 +321,18 @@
   content:"";position:absolute;display:block;border:2px solid #223044;
   border-radius:50%;background:#fff;z-index:2;box-sizing:border-box;
 }
-.museum-guide-cloud::before {width:25px;height:25px;left:22px;bottom:-8px;}
-.museum-guide-cloud::after {width:13px;height:13px;left:0;bottom:-28px;}
-.museum-guide-float--right .museum-guide-cloud::before {left:auto;right:22px;}
-.museum-guide-float--right .museum-guide-cloud::after {left:auto;right:0;}
+.museum-guide-cloud::before {width:30px;height:30px;left:-40px;top:88px;bottom:auto;}
+.museum-guide-cloud::after {width:16px;height:16px;left:-78px;top:50px;bottom:auto;}
+.museum-guide-float--right .museum-guide-cloud::before {left:auto;right:-40px;}
+.museum-guide-float--right .museum-guide-cloud::after {left:auto;right:-78px;}
+/* Position the small thought dots between the character's face and the cloud,
+   instead of below the bubble near her waist. */
+@media(max-width:540px){
+  .museum-guide-cloud::before{left:-22px;top:78px;}
+  .museum-guide-cloud::after{left:-43px;top:55px;}
+  .museum-guide-float--right .museum-guide-cloud::before{left:auto;right:-22px;}
+  .museum-guide-float--right .museum-guide-cloud::after{left:auto;right:-43px;}
+}
 .museum-guide-cloud-content {
   position:relative;z-index:3;padding:49px 55px 51px;
   max-height:min(60vh,370px);overflow-y:auto;scrollbar-width:thin;
