@@ -418,7 +418,7 @@ export const machines: Machine[] = [
     sourceLabel: "NASA Science — Cassini-Huygens"
   },
 
-];
+].sort((a, b) => new Date(a.launchDate ?? a.year).getTime() - new Date(b.launchDate ?? b.year).getTime());
 
 export const destinationNames: Record<DestinationArea, string> = {
   moon: "The Moon",
