@@ -14,6 +14,17 @@ const guideIntroductions: Record<string, string> = {
   'opportunity': "Opportunity was supposed to explore Mars for just 90 sols. Instead, its extraordinary journey lasted almost fifteen years.",
   'insight': "For our final mission, we'll listen beneath the surface of Mars. InSight used marsquakes to investigate the planet's hidden interior."
 };
+const guidePoseByMission: Record<string, string> = {
+  'surveyor-3': 'presenting-one-hand.png',
+  'apollo-15-lrv': 'neutral-hands-clasped.png',
+  'pioneer-10': 'explaining-two-hands.png',
+  'viking-1': 'presenting-one-hand.png',
+  'sojourner': 'explaining-two-hands.png',
+  'cassini-huygens': 'presenting-one-hand.png',
+  'opportunity': 'explaining-two-hands.png',
+  'insight': 'neutral-hands-clasped.png'
+};
+
 interface GuidedJourneyProps { onExit: () => void; }
 
 export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
@@ -82,9 +93,18 @@ export const GuidedJourneyView: FC<GuidedJourneyProps> = ({onExit}) => {
         </div>
         {photo && <img src={photo.src} alt={current.name} className="guided-cover-image"/>}
       </header>
-      <aside className="guided-details" aria-label="Your museum guide introduces this chapter">
-        <p className="eyebrow">YOUR MUSEUM GUIDE · CHAPTER INTRODUCTION</p>
-        <p>{guideIntroductions[current.id] ?? 'Welcome to the next chapter of our exploration.'}</p>
+      <aside className="guided-guide-intro" aria-label="Your museum guide introduces this chapter">
+        <img
+          className="guided-guide-portrait"
+          src={`/assets/tour-guide/${guidePoseByMission[current.id] ?? 'neutral-hands-clasped.png'}`}
+          alt="Illustrated museum guide"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="guided-guide-dialogue">
+          <p className="eyebrow">YOUR MUSEUM GUIDE · CHAPTER INTRODUCTION</p>
+          <p>{guideIntroductions[current.id] ?? 'Welcome to the next chapter of our exploration.'}</p>
+        </div>
       </aside>
       <div className="guided-body">
         <section className="guided-story" aria-label="Narrated mission story">
