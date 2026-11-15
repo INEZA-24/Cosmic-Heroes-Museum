@@ -400,3 +400,15 @@ test('destinations and collection show mission images with a dedicated explore b
   assert.match(solar, /planet-popover-media/);
   assert.match(solar, /Explore lunar missions/);
 });
+
+test('Solar System Stella welcome remains short and does not dominate the planets', () => {
+  const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
+  const styles = readFileSync('src/styles.css', 'utf8');
+  assert.match(solar, /label="STELLA"/);
+  assert.match(solar, /Select a planet to explore, or choose Begin Guided Tour/);
+  assert.doesNotMatch(solar, /I'll guide you through the story of humanity's robotic explorers/);
+  assert.match(styles, /\.museum-guide-float--solar\{/);
+  assert.match(styles, /width:min\(390px,calc\(100vw - 28px\)\)/);
+  assert.match(styles, /\.museum-guide-float--solar \.museum-guide-avatar/);
+  assert.match(solar, /setTimeout\(\(\) => setShowWelcome\(false\), 10000\)/);
+});

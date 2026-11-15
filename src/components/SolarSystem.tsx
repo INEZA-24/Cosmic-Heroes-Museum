@@ -1057,8 +1057,8 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
             context="solar"
             side="left"
             pose="welcome-wave"
-            message="Hello, and welcome to the Cosmic Heroes of Steel Museum. I'll guide you through the story of humanity's robotic explorers of the cosmos."
-            secondary="Choose Begin Guided Tour below, or click a planet to explore freely."
+            label="STELLA"
+            message="Hi, I'm Stella! Select a planet to explore, or choose Begin Guided Tour."
             onDismiss={() => setShowWelcome(false)}
           />
         )}
