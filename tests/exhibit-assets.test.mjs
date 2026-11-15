@@ -433,7 +433,7 @@ test('real planetary maps have pinned integrity, visible credits, and procedural
   assert.match(artwork, /image\.crossOrigin = 'anonymous'/);
   assert.match(credit, /Solar System Scope/);
   assert.match(credit, /CC BY 4\.0/);
-  assert.match(surface, /Solar System Scope/);
+  assert.match(surface, /SOLAR SYSTEM SCOPE/i);
   assert.match(pkg.scripts.prebuild, /sync-planet-textures\.mjs/);
   assert.match(pkg.scripts.predev, /sync-planet-textures\.mjs/);
 });
