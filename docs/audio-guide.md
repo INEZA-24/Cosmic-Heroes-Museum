@@ -1,4 +1,4 @@
-# Stella's recorded audio guide
+# Dave's recorded mission narrations
 
 Each exhibit has **one professionally narrated MP3**. The recorded files use the original filenames uploaded by the team:
 
@@ -11,6 +11,6 @@ Each exhibit has **one professionally narrated MP3**. The recorded files use the
 - `opportunity` — `public/assets/audio/opportunity/Opportunity.mp3`
 - `insight` — `public/assets/audio/insight/Insight.mp3`
 
-Playback is opt-in, with pause, resume, stop, and seeking. The optional Follow text control scrolls through broad narrative phases, estimated from recording progress (16%, 43%, and 71%). These are **approximate**, not manually timed word-level cues. They can be replaced with verified timestamps later. The guide speech bubble's 10-second timeout is independent of audio playback.
+Playback is opt-in, with pause, resume, stop, and seeking. The optional Follow text control scrolls through broad narrative phases, estimated from recording progress (16%, 43%, and 71%). These are **approximate**, not manually timed word-level cues. They can be replaced with verified timestamps later. Stella's guide speech bubble's 10-second timeout is independent of audio playback.
 
 The existing highlighted mission-moment cards and text-to-speech segment controls were intentionally removed to keep the museum editorial, restrained, and focused on original audio.

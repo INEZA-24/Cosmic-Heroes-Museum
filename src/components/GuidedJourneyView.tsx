@@ -36,7 +36,7 @@ interface GuidedJourneyProps {
 
 /**
  * A chronological overview of each machine. The optional MP3 story uses the
- * same Stella recording as the full exhibit, with approximate reading waypoints.
+ * same Dave recording as the full exhibit, with approximate reading waypoints.
  */
 export const GuidedJourneyView: FC<GuidedJourneyProps> = ({
   onExit, onExploreMachine, initialMissionId
