@@ -1035,7 +1035,8 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
             <h2>Our Solar System</h2>
           </div>
           <div className="scale-note">
-            ILLUSTRATIVE DISTANCES · ENHANCED PLANETARY SURFACES
+            <span>ILLUSTRATIVE DISTANCES · REAL PLANET MAPS</span>
+            <span className="scale-source">TEXTURES: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener noreferrer">SOLAR SYSTEM SCOPE</a> · CC BY 4.0</span>
           </div>
         </div>
 
@@ -1101,9 +1102,6 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
           <p className="eyebrow">THE MISSION JOURNEY</p>
           <p>Deep dive into the narrated journey through the great robotic missions of space exploration.</p>
           <button type="button" className="guided-tour-play" onClick={onBeginGuidedTour}><span aria-hidden="true">▶</span> Begin Guided Tour</button>
-        </div>
-        <div className="solar-texture-credit">
-          Surface maps: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener noreferrer">Solar System Scope</a> · CC BY 4.0
         </div>
         <div className="hero-bottomline">
           <div className="interaction-hint">
