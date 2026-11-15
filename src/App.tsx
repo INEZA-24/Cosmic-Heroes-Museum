@@ -1,4 +1,4 @@
-import { useState, useRef, type FC } from 'react';
+import { useState, useRef, useLayoutEffect, type FC } from 'react';
 import { ViewType, DestinationArea } from './types';
 import { Entrance } from './components/Entrance';
 import { Header } from './components/Header';
@@ -16,6 +16,14 @@ export const App: FC = () => {
   const [guidedResumeId, setGuidedResumeId] = useState<string | null>(null);
   const solarRef = useRef<SolarSystemHandle | null>(null);
 
+  // Navigation between long exhibits must move to the new exhibit's beginning
+  // before the browser paints it, rather than smoothly passing old content.
+  useLayoutEffect(() => {
+    if (view === 'exhibit') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  }, [view, selectedMachineId]);
+
   const handleOpenDestination = (area: DestinationArea) => {
     setSelectedDestination(area);
     setView('destination');
@@ -26,7 +34,6 @@ export const App: FC = () => {
     setSelectedMachineId(machineId);
     setPreviousView(view);
     setView('exhibit');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBackFromExhibit = () => {
@@ -100,12 +107,10 @@ export const App: FC = () => {
 
           {view === 'exhibit' && (
             <ExhibitView
+              key={selectedMachineId}
               machineId={selectedMachineId}
               onBack={handleBackFromExhibit}
-              onSelectMachine={(id) => {
-                setSelectedMachineId(id);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onSelectMachine={setSelectedMachineId}
             />
           )}
 

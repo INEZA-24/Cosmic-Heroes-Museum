@@ -505,3 +505,116 @@ html{scroll-padding-top:92px}
 @media(max-width:900px){.guided-snapshot-beats{grid-template-columns:1fr}.guided-snapshot-beat,.guided-snapshot-beat+.guided-snapshot-beat{padding:18px 0;border-left:0}.guided-snapshot-beat+.guided-snapshot-beat{border-top:1px solid rgba(242,238,231,.14)}.guided-snapshot-heading{flex-direction:column;align-items:flex-start}}
 @media(max-width:620px){.mission-audio{grid-template-columns:1fr;padding:16px;gap:12px}.mission-audio-footer{flex-wrap:wrap}.mission-audio-follow{padding-left:0}.guided-cover .mission-audio{max-width:100%}}
 @media(prefers-reduced-motion:reduce){.mission-audio *, .guided-snapshot-beat{transition:none!important}}
+
+
+/* M11: quieter image-led destination and mission exploration */
+.destination-view{max-width:1450px}
+.destination-hero{
+  position:relative;isolation:isolate;overflow:hidden;min-height:345px;
+  display:flex;align-items:center;margin:25px 0 32px;
+  padding:clamp(30px,5vw,70px);background:radial-gradient(ellipse at 76% 47%,#203349 0%,#0c1928 48%,#07111c 100%);
+  border:1px solid rgba(231,237,244,.17);
+}
+.destination-hero::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,#07121ff2 0%,#091728ed 30%,#09172866 68%,#07121f70 100%);
+}
+.destination-hero-copy{position:relative;z-index:2;max-width:620px}
+.destination-hero h2{font-size:clamp(2.6rem,5.5vw,4.4rem)}
+.destination-hero #destination-description{max-width:500px;color:#d7e0e9;line-height:1.76;font-size:.9rem;margin:14px 0 21px}
+.destination-count{font-size:.71rem;color:#e7c18e;letter-spacing:.075em}
+.destination-list-header{margin:8px 0 23px}
+.destination-list-header h3{margin:0;font:500 clamp(1.6rem,3vw,2.15rem)/1.2 "Playfair Display",Georgia,serif}
+.destination-list-header .eyebrow{margin:0 0 8px}
+.planet-artwork{position:absolute;pointer-events:none;aspect-ratio:1;overflow:visible}
+.planet-artwork canvas{position:absolute;width:100%;height:100%;inset:0;display:block;filter:drop-shadow(0 0 28px #5f8ca838)}
+.planet-artwork-fallback{
+  position:absolute;inset:18%;border-radius:50%;
+  background:radial-gradient(circle at 35% 28%,#97b0bc,#426279 42%,#07111c 82%);
+  box-shadow:0 0 48px #44667c55;
+}
+.planet-artwork--destination{
+  z-index:0;right:-4%;top:50%;width:min(46vw,560px);transform:translateY(-50%);opacity:.93
+}
+.planet-popover{
+  width:min(420px,calc(100vw - 28px));right:clamp(18px,5vw,76px);
+  top:50%;transform:translateY(-34%);max-height:min(76vh,590px);overflow-y:auto;
+  padding:0;border:1px solid rgba(230,236,244,.20);border-radius:8px;
+  background:#0c1726ef;box-shadow:0 24px 70px #000b;
+  backdrop-filter:blur(18px);
+}
+.planet-popover-media{
+  height:145px;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse at 65% 50%,#314155 0%,#111d2c 55%,#080f1a 100%);
+}
+.planet-artwork--popover{height:230px;width:230px;top:50%;right:-12px;transform:translateY(-50%);opacity:.96}
+.planet-popover-media::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#0c1726cc,transparent 72%)}
+.planet-popover-body{padding:22px 25px 25px}
+.planet-popover .eyebrow{font-size:.61rem;letter-spacing:.13em;margin-bottom:10px}
+.planet-popover h3{font:500 clamp(1.9rem,4vw,2.5rem)/1.15 "Playfair Display",Georgia,serif;margin:0 0 10px}
+.planet-popover #planet-copy{font-size:.84rem;line-height:1.7;color:#c9d4df;margin:0 0 21px}
+.planet-popover .popover-close{
+  z-index:4;right:11px;top:11px;width:32px;height:32px;
+  display:grid;place-items:center;color:#f5f2ea;border:1px solid #ffffff48;
+  border-radius:50%;background:#07111dcc;font-size:1.3rem;cursor:pointer;
+}
+.planet-popover .popover-close:focus-visible{outline:2px solid #f0c18f}
+.planet-popover .popover-action{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:13px 16px;background:#c99558;color:#09121d;border:1px solid #e3b47b;
+  border-radius:4px;font-size:.79rem;font-weight:700;text-align:left;
+}
+.planet-popover .popover-action:hover,.planet-popover .popover-action:focus-visible{
+  background:#edbc81;color:#07121b;outline:2px solid #f0d6b28c;
+}
+.planet-popover .popover-action span{font-size:1.15rem}
+.collection-grid,.mission-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}
+.machine-card.museum-exhibit-card,.mission-card.museum-exhibit-card{
+  padding:0;min-height:0;display:flex;overflow:hidden;flex-direction:column;
+  background:#0d1926;border:1px solid rgba(237,242,248,.17);border-radius:5px;
+  transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.machine-card.museum-exhibit-card:hover,.mission-card.museum-exhibit-card:hover{
+  border-color:#c995587e;transform:translateY(-2px);box-shadow:0 12px 32px #0005;
+}
+.museum-card-media{position:relative;width:100%;height:190px;overflow:hidden;background:#15273b}
+.museum-card-media img{width:100%;height:100%;display:block;object-fit:cover;object-position:center 43%}
+.museum-card-media::after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,#07121d66,transparent 48%,#07121d55)}
+.museum-card-index{
+  position:absolute;z-index:2;top:16px;left:18px;
+  padding:5px 8px;font-size:.61rem;letter-spacing:.11em;font-weight:700;
+  color:#f1e0ca;background:#07111dbb;border-radius:2px;
+}
+.museum-card-copy{padding:21px 22px 20px;display:flex;flex:1;flex-direction:column;align-items:stretch}
+.museum-exhibit-card .museum-card-copy h3{margin:0 0 11px;font:500 1.45rem/1.18 "Playfair Display",Georgia,serif}
+.museum-exhibit-card .museum-card-copy>p{margin:0 0 21px;color:#becbd8;font-size:.81rem;line-height:1.67}
+.museum-card-bottom{margin-top:auto;border-top:1px solid #e0e6eb1a;padding-top:14px;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.museum-card-location{font-size:.64rem;line-height:1.45;color:#99aab9;letter-spacing:.05em}
+.museum-card-explore{
+  display:inline-flex;align-items:center;justify-content:space-between;gap:18px;
+  min-height:41px;max-width:100%;border:1px solid #d7a86d;background:#cb975a;
+  border-radius:3px;padding:10px 14px;color:#09131f;font-size:.77rem;font-weight:700;
+  cursor:pointer;text-align:left;
+}
+.museum-card-explore:hover,.museum-card-explore:focus-visible{
+  background:#e4b57a;outline:2px solid #e6c29488;
+}
+.museum-card-explore span{font-size:1rem}
+@media(max-width:1080px){.collection-grid,.mission-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+  .planet-popover{top:auto;bottom:90px;right:14px;transform:none;max-height:60vh}
+  .destination-hero{min-height:330px;padding:32px 25px}
+  .planet-artwork--destination{width:340px;right:-116px;opacity:.8}
+  .destination-hero::after{background:linear-gradient(90deg,#07121ff4,#07121fce 62%,#07121f72)}
+  .collection-grid,.mission-grid{grid-template-columns:1fr}
+  .museum-card-media{height:210px}
+}
+@media(max-width:450px){
+  .planet-popover{bottom:78px}
+  .planet-popover-media{height:105px}
+  .planet-artwork--popover{width:180px;height:180px}
+  .planet-popover-body{padding:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .machine-card.museum-exhibit-card,.mission-card.museum-exhibit-card{transition:none!important}
+}

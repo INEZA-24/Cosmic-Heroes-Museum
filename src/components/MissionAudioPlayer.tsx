@@ -16,7 +16,7 @@ const formatTime = (seconds: number) => {
   return `${Math.floor(time / 60)}:${String(time % 60).padStart(2, '0')}`;
 };
 
-/** One visitor-initiated, recorded Stella story per mission. */
+/** One visitor-initiated, recorded Dave story per mission. */
 export const MissionAudioPlayer: FC<MissionAudioPlayerProps> = ({
   missionId, waypoints = [], onStart
 }) => {
@@ -92,7 +92,7 @@ export const MissionAudioPlayer: FC<MissionAudioPlayerProps> = ({
   if (!src) return null;
 
   return (
-    <section className="mission-audio" aria-label="Stella's recorded mission story">
+    <section className="mission-audio" aria-label="Dave's recorded mission story">
       <audio
         key={src}
         ref={audioRef}
@@ -106,13 +106,13 @@ export const MissionAudioPlayer: FC<MissionAudioPlayerProps> = ({
         onError={() => setError('Recording unavailable. Please check the uploaded MP3.')}
       />
       <div className="mission-audio-heading">
-        <span className="mission-audio-eyebrow">Museum audio guide · Stella</span>
+        <span className="mission-audio-eyebrow">Mission narration · Dave</span>
         <p>Hear the mission story</p>
       </div>
       <div className="mission-audio-controls">
         <button type="button" className="mission-audio-primary"
-          onClick={toggle} aria-label={playing ? 'Pause Stella narration' : 'Play Stella narration'}>
-          {playing ? 'Pause' : elapsed > 0 && elapsed < duration ? 'Resume' : 'Listen to Stella'}
+          onClick={toggle} aria-label={playing ? 'Pause Dave narration' : 'Play Dave narration'}>
+          {playing ? 'Pause' : elapsed > 0 && elapsed < duration ? 'Resume' : 'Listen to Dave'}
         </button>
         {(playing || elapsed > 0) && (
           <button type="button" className="mission-audio-secondary" onClick={stop}>Stop</button>
