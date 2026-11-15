@@ -618,3 +618,60 @@ html{scroll-padding-top:92px}
 @media(prefers-reduced-motion:reduce){
   .machine-card.museum-exhibit-card,.mission-card.museum-exhibit-card{transition:none!important}
 }
+
+/* Solar-System welcome is intentionally compact. Other Stella placements
+   retain their existing sizes and character treatment. */
+.museum-guide-float--solar{
+  width:min(390px,calc(100vw - 28px));
+  bottom:clamp(88px,14vh,145px);
+  gap:8px;
+}
+.museum-guide-float--solar .museum-guide-avatar{
+  flex:0 0 83px;
+  width:83px;
+  height:124px;
+}
+.museum-guide-float--solar .museum-guide-speech{
+  padding:16px 19px 16px;
+  border-width:2px;
+  border-radius:26px;
+}
+.museum-guide-float--solar .museum-guide-eyebrow{
+  font-size:.65rem;
+  letter-spacing:.12em;
+}
+.museum-guide-float--solar .museum-guide-speech p{
+  margin-top:7px;
+  font-size:.77rem;
+  line-height:1.48;
+}
+.museum-guide-float--solar .museum-guide-speech::before{
+  left:-27px;top:18px;width:32px;height:35px;
+}
+.museum-guide-float--solar .museum-guide-speech::after{
+  left:-23px;top:22px;width:29px;height:28px;
+}
+@media(max-width:540px){
+  .museum-guide-float--solar{
+    left:8px;
+    bottom:clamp(98px,19vh,150px);
+    width:min(345px,calc(100vw - 16px));
+    gap:5px;
+  }
+  .museum-guide-float--solar .museum-guide-avatar{
+    flex:0 0 66px;width:66px;height:100px;
+  }
+  .museum-guide-float--solar .museum-guide-speech{
+    padding:13px 16px 13px;
+    border-radius:20px;
+  }
+  .museum-guide-float--solar .museum-guide-speech p{
+    font-size:.72rem;line-height:1.42;
+  }
+  .museum-guide-float--solar .museum-guide-eyebrow{
+    font-size:.57rem;
+  }
+}
+@media(max-height:600px){
+  .museum-guide-float--solar{bottom:78px}
+}
