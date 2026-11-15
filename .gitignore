@@ -1,0 +1,12 @@
+# Local development and build output
+node_modules/
+dist/
+*.log
+.env
+.env.*
+!.env.example
+
+# Rebuilt from pinned, credited sources during prebuild/predev.
+public/assets/planet-textures/*.jpg
+public/assets/nasa-maps/*_2k.webp
+public/assets/nasa-maps/sources.json

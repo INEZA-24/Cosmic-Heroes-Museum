@@ -675,3 +675,68 @@ html{scroll-padding-top:92px}
 @media(max-height:600px){
   .museum-guide-float--solar{bottom:78px}
 }
+
+
+/* Mission landing atlas — a distinct editorial journey, not a cloned archive. */
+.planetary-site-explorer{margin:28px 0 46px;overflow:hidden;border:1px solid rgba(219,228,239,.19);border-radius:8px;background:#060e18}
+.planetary-site-heading{display:flex;gap:20px;align-items:end;justify-content:space-between;padding:28px clamp(20px,3vw,40px) 18px}
+.planetary-site-heading .eyebrow{font-size:.6rem;margin:0 0 11px}
+.planetary-site-heading h3{font:500 clamp(1.85rem,3vw,2.65rem)/1.1 "Playfair Display",Georgia,serif;margin:0 0 9px}
+.planetary-site-heading p:not(.eyebrow){max-width:570px;margin:0;color:#b6c5d3;font-size:.84rem;line-height:1.65}
+.planetary-site-count{flex:0 0 auto;color:#d8a979;border:1px solid #c6986944;padding:9px 11px;border-radius:4px;font-size:.7rem;letter-spacing:.06em}
+.planetary-site-years{display:flex;flex-wrap:wrap;gap:8px;padding:0 clamp(20px,3vw,40px) 23px}
+.mission-site-year{display:flex;flex-direction:column;align-items:flex-start;gap:5px;flex:1 1 135px;max-width:240px;cursor:pointer;padding:12px 14px;text-align:left;background:#0d1825;border:1px solid #afbdcb2d;border-radius:4px;min-height:74px}
+.mission-site-year:hover,.mission-site-year:focus-visible{border-color:#d5a66a;outline:2px solid #d5a66a40}
+.mission-site-year.is-selected{border-color:#d5a66a;background:#34291f}
+.mission-site-year-number{color:#e0af75;font-size:.86rem;font-weight:750;letter-spacing:.09em}
+.mission-site-year-title{font-size:.72rem;color:#e0e5ef}
+.planetary-site-stage{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(0,1.35fr);gap:0;min-height:455px;background:radial-gradient(ellipse at 70% 45%,#1a2735 0%,#0a1420 44%,#060c15 84%);border-top:1px solid #e9eef41c}
+.planetary-site-story{padding:clamp(25px,4.2vw,48px);position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;border-right:1px solid #ffffff1b}
+.planetary-site-story .eyebrow{font-size:.61rem}
+.planetary-site-story h4{font:500 clamp(1.7rem,3.1vw,2.7rem)/1.13 "Playfair Display",Georgia,serif;margin:7px 0 8px;max-width:430px}
+.planetary-site-region{color:#d7ab79;letter-spacing:.075em;font-size:.77rem}
+.planetary-site-story>p:not(.eyebrow){color:#c5d0dc;font-size:.85rem;line-height:1.75;margin:20px 0 23px;max-width:460px}
+.planetary-site-meta{border-top:1px solid #ffffff1d;border-bottom:1px solid #ffffff1d;padding:13px 0;color:#9eafc0;font-size:.7rem;display:flex;flex-wrap:wrap;gap:8px 18px}
+.planetary-site-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:24px}
+.planetary-site-primary{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;max-width:100%;padding:12px 14px;background:#cc985c;border:1px solid #e3b67e;border-radius:3px;color:#08131f;cursor:pointer;font-weight:750;font-size:.75rem}
+.planetary-site-primary:hover,.planetary-site-primary:focus-visible{background:#efc38c;outline:2px solid #f1c59460}
+.planetary-site-actions a{color:#dcb183;font-size:.75rem;text-decoration:underline;text-underline-offset:4px}
+.planetary-site-globe-area{position:relative;min-height:455px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 50%,#21334a 0%,#07121e 63%,#050913 100%)}
+.planetary-site-globe-area::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.15;background-image:radial-gradient(#eff6ff 1px,transparent 1px);background-size:71px 79px}
+.planetary-site-globe{position:absolute;z-index:1;inset:0}
+.planetary-site-globe canvas{display:block;width:100%;height:100%;cursor:grab}
+.planetary-site-globe canvas:active{cursor:grabbing}
+.planetary-site-machine-plate{position:absolute;z-index:2;bottom:22px;right:18px;width:clamp(96px,20%,136px);padding:5px;background:#101b2af2;border:1px solid #f0f3f43b;border-radius:4px;pointer-events:none}
+.planetary-site-machine-plate img{display:block;width:100%;height:89px;object-fit:cover;border-radius:2px}
+.planetary-site-machine-plate span{display:block;padding:5px 3px 2px;font-size:.6rem;line-height:1.4;color:#dce3ea}
+.planetary-site-globe-caption{position:absolute;z-index:2;left:20px;bottom:20px;font-size:.59rem;letter-spacing:.12em;color:#9dafc0;pointer-events:none}
+.planetary-site-provenance{display:flex;align-items:center;gap:8px 17px;flex-wrap:wrap;padding:14px clamp(20px,3vw,40px);border-top:1px solid #ffffff20;color:#9daebb;font-size:.67rem}
+.planetary-site-provenance>span:first-child{color:#d5ba96}
+.planetary-site-provenance a{color:#d5a66a;text-decoration:underline}
+.planetary-site-accuracy{margin-left:auto;font-size:.62rem;max-width:500px;text-align:right;line-height:1.5}
+.planetary-site-2d{position:absolute;inset:35px 15px 65px;z-index:2;display:block}
+.planetary-site-2d>img{display:block;width:100%;height:100%;object-fit:contain}
+.planetary-site-map-pin{position:absolute;display:block;transform:translate(-50%,-50%);width:20px;height:20px;border:2px solid #fbf1d9;background:#c17e47;border-radius:50%;cursor:pointer}
+.planetary-site-map-pin.active{background:#f6cf99;box-shadow:0 0 0 5px #d6a06455}
+.planetary-site-map-pin:focus-visible{outline:3px solid white}
+.planetary-site-art-fallback{inset:0;width:100%;height:100%;opacity:.9}
+@media(max-width:950px){
+  .planetary-site-stage{grid-template-columns:minmax(250px,.9fr) minmax(0,1.1fr)}
+  .planetary-site-machine-plate{display:none}
+  .planetary-site-accuracy{margin-left:0;text-align:left}
+}
+@media(max-width:760px){
+  .planetary-site-heading{align-items:flex-start;flex-direction:column;gap:13px}
+  .planetary-site-stage{grid-template-columns:1fr}
+  .planetary-site-globe-area{min-height:370px;order:0}
+  .planetary-site-story{order:1;border-right:0;border-top:1px solid #ffffff26}
+  .mission-site-year{flex:1 1 calc(50% - 8px);max-width:none}
+}
+@media(max-width:450px){
+  .planetary-site-globe-area{min-height:325px}
+  .planetary-site-years{gap:6px}
+  .mission-site-year{padding:10px 11px;min-height:68px}
+  .mission-site-year-title{font-size:.66rem}
+  .planetary-site-story{padding:24px 20px}
+}
+@media(prefers-reduced-motion:reduce){.planetary-site-globe canvas{scroll-behavior:auto}}
