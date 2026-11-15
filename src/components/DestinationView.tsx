@@ -3,6 +3,7 @@ import { DestinationArea } from '../types';
 import { destinationNames, destinationDescriptions, machines } from '../data';
 import { PlanetArtwork } from './PlanetArtwork';
 import { MuseumMachineCard } from './MuseumMachineCard';
+import { PlanetarySiteExplorer } from './PlanetarySiteExplorer';
 
 interface DestinationViewProps {
   destinationId: DestinationArea;
@@ -35,6 +36,13 @@ export const DestinationView: FC<DestinationViewProps> = ({
           <span className="destination-count">{destinationMachines.length} missions to explore</span>
         </div>
       </header>
+      {(destinationId === 'moon' || destinationId === 'mars') && (
+        <PlanetarySiteExplorer
+          key={destinationId}
+          world={destinationId}
+          onSelectExhibit={onSelectExhibit}
+        />
+      )}
       <div className="destination-list-header">
         <p className="eyebrow">THE EXHIBITS</p>
         <h3>Explore the machines</h3>

@@ -8,7 +8,9 @@
     "build": "tsc && vite build",
     "lint": "tsc --noEmit",
     "preview": "vite preview --port 3000",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "prebuild": "node scripts/sync-nasa-globes.mjs",
+    "predev": "node scripts/sync-nasa-globes.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -21,6 +23,7 @@
     "@types/three": "^0.169.0",
     "@vitejs/plugin-react": "^4.3.3",
     "typescript": "^5.6.3",
-    "vite": "^5.4.10"
+    "vite": "^5.4.10",
+    "sharp": "^0.34.5"
   }
 }

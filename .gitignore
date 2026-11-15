@@ -1,0 +1,4 @@
+# Generated during build from NASA Trek tiles; if a fallback is used,
+# provenance is recorded in sources.json. Do not commit generated mosaic files.
+public/assets/nasa-maps/*_2k.webp
+public/assets/nasa-maps/sources.json
