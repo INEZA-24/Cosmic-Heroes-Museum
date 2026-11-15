@@ -1,4 +1,5 @@
 import { MuseumGuideBubble } from './MuseumGuideBubble';
+import { PlanetArtwork } from './PlanetArtwork';
 import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import * as THREE from 'three';
 import { planetDataList, planetDescriptions } from '../data';
@@ -968,19 +969,10 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
     };
 
     const getActionLabel = (key: string): string => {
-      if (key === 'earth' || key === 'moon') {
-        return "Explore Apollo 15 lunar rover ↗";
-      }
-      if (key === 'mars') {
-        return 'Explore Mars Missions (Sojourner, Opportunity, InSight) ↗';
-      }
-      if (key === 'jupiter') {
-        return 'Explore Jupiter Encounter (Pioneer 10) ↗';
-      }
-      if (key === 'saturn') {
-        return 'Explore Saturn & Titan (Cassini–Huygens) ↗';
-      }
-      return 'Explore Deep Space Missions (Pioneer 10) ↗';
+      if (key === 'earth' || key === 'moon') return 'Explore lunar missions';
+      if (key === 'mars') return 'Explore Mars missions';
+      if (key === 'saturn') return 'Explore Saturn missions';
+      return 'Explore deep-space missions';
     };
 
     const getPopoverEyebrow = (key: string): string => {
@@ -1133,34 +1125,25 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
         )}
 
         {selectedPlanet && (
-          <div className="planet-popover" id="planet-popover">
-            <button
-              className="popover-close"
-              id="close-popover"
-              aria-label="Close"
-              onClick={() => setSelectedPlanetKey(null)}
-            >
-              ×
-            </button>
-            <p className="eyebrow" id="planet-kind">
-              {getPopoverEyebrow(selectedPlanetKey || '')}
-            </p>
-            <h3 id="planet-name">{selectedPlanet.name}</h3>
-            <p id="planet-copy">{selectedDescription}</p>
-            <div id="planet-missions">
+          <aside className="planet-popover" id="planet-popover"
+            aria-label={`${selectedPlanet.name} destination overview`}>
+            <div className="planet-popover-media">
+              <PlanetArtwork planetKey={selectedPlanetKey || 'earth'} className="planet-artwork--popover" />
+            </div>
+            <button className="popover-close" id="close-popover" type="button"
+              aria-label="Close planet details" onClick={() => setSelectedPlanetKey(null)}>×</button>
+            <div className="planet-popover-body">
+              <p className="eyebrow" id="planet-kind">{getPopoverEyebrow(selectedPlanetKey || '')}</p>
+              <h3 id="planet-name">{selectedPlanet.name}</h3>
+              <p id="planet-copy">{selectedDescription}</p>
               {hasMissionAction && (
-                <button
-                  className="popover-action"
-                  onClick={() => {
-                    const dest = getMissionTargetArea(selectedPlanetKey!);
-                    onOpenDestination(dest);
-                  }}
-                >
-                  {getActionLabel(selectedPlanetKey!)}
+                <button type="button" className="popover-action"
+                  onClick={() => onOpenDestination(getMissionTargetArea(selectedPlanetKey!))}>
+                  {getActionLabel(selectedPlanetKey!)} <span aria-hidden="true">→</span>
                 </button>
               )}
             </div>
-          </div>
+          </aside>
         )}
       </section>
     );

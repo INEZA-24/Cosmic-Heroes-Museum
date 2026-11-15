@@ -48,7 +48,7 @@ test('Cassini remains at Saturn and the approved emblem is preserved', () => {
   assert.match(code, /id: "surveyor-3"/);
   assert.match(code, /id: "viking-1"/);
   const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
-  assert.match(solar, /Explore Saturn & Titan/);
+  assert.match(solar, /Explore Saturn missions/);
   assert.ok(existsSync('public/assets/branding/museum-emblem.svg'));
   const brand = readFileSync('src/components/BrandEmblem.tsx', 'utf8');
   assert.match(brand, /museum-emblem\.svg/);
@@ -369,4 +369,31 @@ test('all eight recorded Stella tracks use the exact uploaded MP3 filenames', ()
   assert.doesNotMatch(exhibit, /exhibit-mission-moment/);
   assert.doesNotMatch(exhibit, /exhibit-listen-btn/);
   assert.match(app, /initialMissionId=\{guidedResumeId\}/);
+});
+
+test('switching exhibits mounts one new exhibit and resets to its top without smooth scrolling', () => {
+  const app = readFileSync('src/App.tsx', 'utf8');
+  assert.match(app, /useLayoutEffect/);
+  assert.match(app, /\[view, selectedMachineId\]/);
+  assert.match(app, /key=\{selectedMachineId\}/);
+  assert.match(app, /behavior: 'instant'/);
+  assert.match(app, /onSelectMachine=\{setSelectedMachineId\}/);
+});
+
+test('destinations and collection show mission images with a dedicated explore button', () => {
+  const destination = readFileSync('src/components/DestinationView.tsx', 'utf8');
+  const collection = readFileSync('src/components/CollectionView.tsx', 'utf8');
+  const card = readFileSync('src/components/MuseumMachineCard.tsx', 'utf8');
+  const art = readFileSync('src/components/PlanetArtwork.tsx', 'utf8');
+  const solar = readFileSync('src/components/SolarSystem.tsx', 'utf8');
+  for (const view of [destination, collection]) assert.match(view, /MuseumMachineCard/);
+  assert.match(destination, /PlanetArtwork/);
+  assert.match(card, /assets\/exhibits/);
+  assert.match(card, /loading="lazy"/);
+  assert.match(card, /Explore \{shortNames\[machine.id\] \|\| machine.name\}/);
+  assert.doesNotMatch(card, /Enter Exhibit/);
+  assert.match(art, /createMoonTexture/);
+  assert.match(art, /createMarsTexture/);
+  assert.match(solar, /planet-popover-media/);
+  assert.match(solar, /Explore lunar missions/);
 });
