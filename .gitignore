@@ -1,0 +1,10 @@
+# Local development and build output
+node_modules/
+dist/
+*.log
+.env
+.env.*
+!.env.example
+
+# Rebuilt from pinned Solar System Scope (CC BY 4.0) source by prebuild/predev
+public/assets/planet-textures/*.jpg

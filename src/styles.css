@@ -675,3 +675,13 @@ html{scroll-padding-top:92px}
 @media(max-height:600px){
   .museum-guide-float--solar{bottom:78px}
 }
+
+/* Compact, visible CC BY 4.0 planetary imagery credit in the existing
+   Solar System header. No extra floating panel over the planets. */
+.scale-note{display:flex;flex-direction:column;align-items:flex-end;gap:4px;line-height:1.5}
+.scale-note .scale-source{color:#bac2cd;letter-spacing:.08em}
+.scale-note .scale-source a{color:#d9b88e;text-decoration:underline;text-underline-offset:2px;pointer-events:auto}
+.scale-note .scale-source a:focus-visible{outline:2px solid #d9b88e;outline-offset:2px}
+@media(max-width:680px){
+  .scale-note{max-width:45vw;font-size:.47rem;line-height:1.4}
+}
