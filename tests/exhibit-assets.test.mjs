@@ -412,3 +412,28 @@ test('Solar System Stella welcome remains short and does not dominate the planet
   assert.match(styles, /\.museum-guide-float--solar \.museum-guide-avatar/);
   assert.match(solar, /setTimeout\(\(\) => setShowWelcome\(false\), 10000\)/);
 });
+
+test('real planetary maps have pinned integrity, visible credits, and procedural fallbacks', () => {
+  const script = readFileSync('scripts/sync-planet-textures.mjs', 'utf8');
+  const surface = readFileSync('src/components/SolarSystem.tsx', 'utf8');
+  const artwork = readFileSync('src/components/PlanetArtwork.tsx', 'utf8');
+  const images = readFileSync('src/planetTextureAssets.ts', 'utf8');
+  const credit = readFileSync('public/assets/planet-textures/README.md', 'utf8');
+  const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+  for (const name of ['earth','moon','mars','jupiter','saturn']) {
+    assert.match(images, new RegExp('"' + name + '"'));
+    assert.match(script, new RegExp('"' + name + '"'));
+  }
+  assert.match(script, /blobSha/);
+  assert.match(script, /AbortSignal\.timeout/);
+  assert.match(surface, /upgradeSurface\(data.key, material\)/);
+  assert.match(surface, /upgradeSurface\('moon', moonMat\)/);
+  assert.match(surface, /imageLoader\.setCrossOrigin\('anonymous'\)/);
+  assert.match(artwork, /planetTextureUrls\(planetKey\)/);
+  assert.match(artwork, /image\.crossOrigin = 'anonymous'/);
+  assert.match(credit, /Solar System Scope/);
+  assert.match(credit, /CC BY 4\.0/);
+  assert.match(surface, /Solar System Scope/);
+  assert.match(pkg.scripts.prebuild, /sync-planet-textures\.mjs/);
+  assert.match(pkg.scripts.predev, /sync-planet-textures\.mjs/);
+});

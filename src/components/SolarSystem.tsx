@@ -2,6 +2,7 @@ import { MuseumGuideBubble } from './MuseumGuideBubble';
 import { PlanetArtwork } from './PlanetArtwork';
 import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import * as THREE from 'three';
+import { planetTextureUrls } from '../planetTextureAssets';
 import { planetDataList, planetDescriptions } from '../data';
 import { DestinationArea, PlanetData } from '../types';
 import {
@@ -99,6 +100,36 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
       let resizeObserver: ResizeObserver | null = null;
 
       const planets = new Map<string, PlanetSceneItem>();
+      // One loader handles credited 2K image maps. Existing canvas maps remain
+      // instantly visible until a verified map finishes loading.
+      const imageLoader = new THREE.TextureLoader();
+      imageLoader.setCrossOrigin('anonymous');
+      const ownedImages = new Set<THREE.Texture>();
+      let textureLoadsActive = true;
+      const upgradeSurface = (key: string, material: THREE.MeshStandardMaterial) => {
+        const urls = planetTextureUrls(key);
+        let sourceIndex = 0;
+        const tryNext = () => {
+          if (!textureLoadsActive || sourceIndex >= urls.length) return;
+          imageLoader.load(
+            urls[sourceIndex++],
+            texture => {
+              if (!textureLoadsActive) { texture.dispose(); return; }
+              texture.colorSpace = THREE.SRGBColorSpace;
+              texture.wrapS = THREE.RepeatWrapping;
+              texture.wrapT = THREE.ClampToEdgeWrapping;
+              texture.anisotropy = Math.min(renderer?.capabilities.getMaxAnisotropy() ?? 1, 8);
+              ownedImages.add(texture);
+              material.map = texture;
+              material.needsUpdate = true;
+            },
+            undefined,
+            () => { if (textureLoadsActive) tryNext(); },
+          );
+        };
+        tryNext();
+      };
+
       const clock = new THREE.Clock();
       const currentTarget = new THREE.Vector3(0, 0, 0);
       const targetLookAt = new THREE.Vector3(0, 0, 0);
@@ -229,6 +260,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
           roughness: 0.95,
           metalness: 0.05,
         });
+        upgradeSurface('moon', moonMat);
         const moon = new THREE.Mesh(new THREE.SphereGeometry(0.22, 48, 36), moonMat);
         moon.position.set(1.5, 0, 0);
         moon.userData = { planet: 'moon' };
@@ -480,7 +512,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
         createStars(scene);
         createNebulaDust(scene);
 
-        // Generate procedural textures for all planets
+        // Procedural textures render immediately while real 2K surface maps load
         const mercuryTexture = createMercuryTexture();
         const venusTexture = createVenusTexture();
         const earthTexture = createEarthTexture();
@@ -537,6 +569,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
             metalness: data.metalness !== undefined ? data.metalness : 0.02,
           });
 
+          upgradeSurface(data.key, material);
           const sphere = new THREE.Mesh(
             new THREE.SphereGeometry(data.radius, 64, 48),
             material
@@ -585,7 +618,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
             const cloudsMat = new THREE.MeshStandardMaterial({
               map: earthCloudsTexture,
               transparent: true,
-              opacity: 0.42,
+              opacity: 0.26,
               depthWrite: false,
               roughness: 0.9,
             });
@@ -915,6 +948,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
         animate();
 
         return () => {
+          textureLoadsActive = false;
           cancelAnimationFrame(rafId);
           if (resizeObserver) resizeObserver.disconnect();
           container.removeEventListener('pointerdown', onPointerDown);
@@ -923,6 +957,7 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
           window.removeEventListener('pointercancel', onPointerCancel);
           container.removeEventListener('wheel', onWheel);
 
+          ownedImages.forEach(texture => texture.dispose());
           if (renderer) {
             renderer.dispose();
             if (renderer.domElement.parentNode === container) {
@@ -1066,6 +1101,9 @@ export const SolarSystem = forwardRef<SolarSystemHandle, SolarSystemProps>(
           <p className="eyebrow">THE MISSION JOURNEY</p>
           <p>Deep dive into the narrated journey through the great robotic missions of space exploration.</p>
           <button type="button" className="guided-tour-play" onClick={onBeginGuidedTour}><span aria-hidden="true">▶</span> Begin Guided Tour</button>
+        </div>
+        <div className="solar-texture-credit">
+          Surface maps: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener noreferrer">Solar System Scope</a> · CC BY 4.0
         </div>
         <div className="hero-bottomline">
           <div className="interaction-hint">
