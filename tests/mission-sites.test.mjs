@@ -35,5 +35,5 @@ test('destination view adds the history explorer without removing the machine ca
   assert.match(explorer, /onSelectExhibit/);
   assert.match(explorer, /mission-site-year/);
   assert.match(explorer, /NASA/);
-  assert.match(explorer, /textured globe/);
+  assert.match(explorer, /surfacePoint\(site.latitude, site.longitude/);
 });
