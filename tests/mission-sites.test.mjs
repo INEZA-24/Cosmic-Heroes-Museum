@@ -22,7 +22,10 @@ test('Moon and Mars globes are NASA Trek sourced with honest fallback attributio
   assert.match(script, /solar-system-scope/);
   assert.match(script, /sources.json/);
   assert.match(doc, /CC BY 4.0/);
-  assert.match(packageJson.scripts.prebuild, /sync-nasa-globes/);
+  assert.match(packageJson.scripts.prebuild, /prepare-textures/);
+  const prep = readFileSync('scripts/prepare-textures.mjs', 'utf8');
+  assert.match(prep, /sync-nasa-globes/);
+  assert.match(prep, /sync-planet-textures/);
 });
 
 test('destination view adds the history explorer without removing the machine cards', () => {
