@@ -1,8 +1,21 @@
-import { type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { machines } from '../data';
 import { MachineModelViewer } from './MachineModelViewer';
 import { ExhibitHero } from './ExhibitHero';
 import { MissionAudioPlayer } from './MissionAudioPlayer';
+import { MuseumGuideBubble } from './MuseumGuideBubble';
+
+// Stella introduces the exhibit and its controls; Dave tells the mission story.
+const exhibitIntroductions: Record<string, string> = {
+  'surveyor-3': "Welcome to Surveyor 3. Explore its lunar archive and discoveries, or listen to Dave's full story.",
+  'apollo-15-lrv': "Welcome to Apollo 15's rover. Examine the lunar vehicle and Falcon, or hear Dave tell their story.",
+  'pioneer-10': "Meet Pioneer 10. Explore the spacecraft that reached Jupiter, or listen to Dave's mission story.",
+  'viking-1': "Welcome to Viking 1. Examine its Mars laboratory and discoveries, or listen to Dave's narration.",
+  'sojourner': "Meet Sojourner, the little Mars rover. Explore its design and journey, or hear the story from Dave.",
+  'cassini-huygens': "Welcome to Cassini–Huygens. Explore the mission at Saturn and Titan, or listen to Dave's story.",
+  opportunity: "Meet Opportunity. Examine the rover and its discoveries on Mars, or listen to Dave's narration.",
+  insight: "Welcome to InSight. Discover how this lander studied Mars from within, or hear Dave's full story.",
+};
 
 interface ExhibitViewProps {
   machineId: string;
@@ -15,6 +28,18 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
   onBack,
   onSelectMachine,
 }) => {
+  const [showStella, setShowStella] = useState(true);
+
+  useEffect(() => {
+    setShowStella(true);
+  }, [machineId]);
+
+  useEffect(() => {
+    if (!showStella) return;
+    const timer = window.setTimeout(() => setShowStella(false), 10000);
+    return () => window.clearTimeout(timer);
+  }, [machineId, showStella]);
+
   const currentIndex = machines.findIndex((m) => m.id === machineId);
   const machine = machines[currentIndex >= 0 ? currentIndex : 0];
 
@@ -29,16 +54,36 @@ export const ExhibitView: FC<ExhibitViewProps> = ({
         <button className="back-link" onClick={onBack}>
           ← Back
         </button>
-        <span className="exhibit-counter">
-          MACHINE 0{currentIndex + 1} OF 0{machines.length}
-        </span>
+        <div className="exhibit-nav-extras">
+          <span className="exhibit-counter">
+            MACHINE 0{currentIndex + 1} OF 0{machines.length}
+          </span>
+          {!showStella && (
+            <button type="button" className="exhibit-guide-reopen" onClick={() => setShowStella(true)}>
+              Meet Stella
+            </button>
+          )}
+        </div>
       </div>
+
+      {showStella && (
+        <MuseumGuideBubble
+          key={machine.id}
+          context="exhibit"
+          side="right"
+          pose="presenting-one-hand"
+          label="STELLA"
+          message={exhibitIntroductions[machine.id] ?? `Welcome to ${machine.name}. Explore the exhibit or listen to Dave's story.`}
+          onDismiss={() => setShowStella(false)}
+        />
+      )}
 
       <ExhibitHero key={machine.id} machine={machine} />
 
       <MissionAudioPlayer
         key={machine.id}
         missionId={machine.id}
+        onStart={() => setShowStella(false)}
         waypoints={[0, 1, 2].map(index => () =>
           document.querySelectorAll<HTMLElement>('.story-chapter-card')[index] ?? null
         )}

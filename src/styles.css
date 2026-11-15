@@ -618,3 +618,41 @@ html{scroll-padding-top:92px}
 @media(prefers-reduced-motion:reduce){
   .machine-card.museum-exhibit-card,.mission-card.museum-exhibit-card{transition:none!important}
 }
+
+/* Stella's exhibit introduction: deliberately smaller than the tour bubble.
+   Anchored away from the title and auto-dismisses after 10 seconds. */
+.exhibit-nav-extras{display:flex;align-items:center;justify-content:flex-end;gap:16px}
+.exhibit-guide-reopen{
+  border:1px solid #c69a65b0;border-radius:4px;background:#111d2a;
+  color:#eed2b0;padding:8px 12px;font-size:.7rem;cursor:pointer;
+}
+.exhibit-guide-reopen:hover,.exhibit-guide-reopen:focus-visible{
+  background:#243449;border-color:#ebbe87;outline:2px solid #ebbe8755;
+}
+.museum-guide-float--exhibit{
+  width:min(415px,calc(100vw - 28px));bottom:clamp(18px,5vh,42px);
+  gap:8px;
+}
+.museum-guide-float--exhibit .museum-guide-avatar{
+  flex:0 0 98px;width:98px;height:142px;
+}
+.museum-guide-float--exhibit .museum-guide-speech{
+  padding:17px 22px 18px;border-width:2px;border-radius:27px;
+}
+.museum-guide-float--exhibit .museum-guide-eyebrow{font-size:.62rem;letter-spacing:.12em}
+.museum-guide-float--exhibit .museum-guide-speech p{font-size:.78rem;line-height:1.5;margin-top:8px}
+.museum-guide-float--exhibit .museum-guide-speech::before{
+  right:-30px;left:auto;top:22px;width:36px;height:39px;transform:scaleX(-1);
+}
+.museum-guide-float--exhibit .museum-guide-speech::after{
+  right:-25px;left:auto;top:27px;width:32px;height:30px;transform:scaleX(-1);
+}
+@media(max-width:600px){
+  .exhibit-nav-extras{gap:9px}
+  .exhibit-guide-reopen{padding:7px 9px;font-size:.67rem}
+  .museum-guide-float--exhibit{right:8px;bottom:18px;width:min(335px,calc(100vw - 16px));gap:5px}
+  .museum-guide-float--exhibit .museum-guide-avatar{flex:0 0 69px;width:69px;height:108px}
+  .museum-guide-float--exhibit .museum-guide-speech{padding:14px 18px 14px;border-radius:22px}
+  .museum-guide-float--exhibit .museum-guide-eyebrow{font-size:.55rem}
+  .museum-guide-float--exhibit .museum-guide-speech p{font-size:.72rem;line-height:1.42}
+}

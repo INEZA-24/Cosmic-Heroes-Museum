@@ -11,7 +11,7 @@ interface MuseumGuideBubbleProps {
   secondary?: string;
   pose: MuseumGuidePose;
   side?: 'left' | 'right';
-  context?: 'solar' | 'journey';
+  context?: 'solar' | 'journey' | 'exhibit';
   label?: string;
   onDismiss: () => void;
 }

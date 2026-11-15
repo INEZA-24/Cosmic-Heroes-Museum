@@ -400,3 +400,23 @@ test('destinations and collection show mission images with a dedicated explore b
   assert.match(solar, /planet-popover-media/);
   assert.match(solar, /Explore lunar missions/);
 });
+
+test('Stella introduces each exhibit briefly while Dave remains its audio narrator', () => {
+  const exhibit = readFileSync('src/components/ExhibitView.tsx', 'utf8');
+  const bubble = readFileSync('src/components/MuseumGuideBubble.tsx', 'utf8');
+  const player = readFileSync('src/components/MissionAudioPlayer.tsx', 'utf8');
+  const styles = readFileSync('src/styles.css', 'utf8');
+  for (const id of ["surveyor-3","apollo-15-lrv","pioneer-10","viking-1","sojourner","cassini-huygens","opportunity","insight"]) {
+    assert.ok(exhibit.includes("'"+id+"':") || exhibit.includes(id+":"), 'No Stella introduction for ' + id);
+  }
+  assert.match(exhibit, /<MuseumGuideBubble/);
+  assert.match(exhibit, /context="exhibit"/);
+  assert.match(exhibit, /label="STELLA"/);
+  assert.match(exhibit, /Meet Stella/);
+  assert.match(exhibit, /setTimeout\(\(\) => setShowStella\(false\), 10000\)/);
+  assert.match(exhibit, /onStart=\{\(\) => setShowStella\(false\)\}/);
+  assert.match(player, /Listen to Dave/);
+  assert.match(bubble, /'exhibit'/);
+  assert.match(styles, /\.museum-guide-float--exhibit/);
+  assert.match(styles, /\.museum-guide-float--exhibit \.museum-guide-avatar/);
+});
